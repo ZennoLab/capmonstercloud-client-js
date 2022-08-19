@@ -16,11 +16,9 @@
     "url": "git+https://github.com/ZennoLab/capmonstercloud-client-js.git"
   },
   "keywords": [
-    "AntiCaptcha v1, v2",
-    "RuCaptcha/2captcha",
-    "RipCaptcha",
-    "BypassCaptcha",
-    "DeathByCaptcha"
+    "CapMonster",
+    "CapMonster Cloud",
+    "ZennoPoster"
   ],
   "scripts": {
     "build": "tsc"
