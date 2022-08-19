@@ -6,8 +6,8 @@ Official JS client library for [capmonster.cloud](https://capmonster.cloud/) cap
 
 Via [NPM](https://www.npmjs.com/):
 
-    npm i capmonstercloud-client-js
+    npm i npm i @zennolab_com/capmonstercloud-client
 
 ## Usage
 
-    var clientOptions = new ClientOptions
+    const clientOptions = new ClientOptions({ ClientKey: '<your capmonster.cloud API key>' });
