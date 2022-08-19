@@ -1,8 +1,20 @@
 {
-  "name": "capmonstercloud-client-js",
+  "name": "@zennolab_com/capmonstercloud-client",
   "version": "0.0.1",
   "description": "Official JS client library for https://capmonster.cloud/ captcha recognition service",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "engines": {
+    "node": ">=10"
+  },
+  "files": [
+    "dist"
+  ],
+  "homepage": "https://github.com/ZennoLab/capmonstercloud-client-js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ZennoLab/capmonstercloud-client-js.git"
+  },
   "keywords": [
     "AntiCaptcha v1, v2",
     "RuCaptcha/2captcha",
@@ -11,8 +23,17 @@
     "DeathByCaptcha"
   ],
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc"
   },
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.33.1",
+    "@typescript-eslint/parser": "^5.33.1",
+    "eslint": "^8.22.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.7.1",
+    "typescript": "^4.7.4"
+  }
 }
