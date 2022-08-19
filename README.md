@@ -6,7 +6,7 @@ Official JS client library for [capmonster.cloud](https://capmonster.cloud/) cap
 
 Via [NPM](https://www.npmjs.com/):
 
-    npm i npm i @zennolab_com/capmonstercloud-client
+    npm i @zennolab_com/capmonstercloud-client
 
 ## Usage
 
