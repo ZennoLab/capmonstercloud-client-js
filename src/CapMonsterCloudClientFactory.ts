@@ -1,5 +1,6 @@
 import { CapMonsterCloudClient } from './CapMonsterCloudClient';
 import { ClientOptions } from './ClientOptions';
+import { ClientURL } from './ClientURL';
 import { CsMap } from './CsMap';
 import { HttpClient } from './HttpClient';
 
@@ -11,16 +12,19 @@ export class CapMonsterCloudClientFactory {
     return new CapMonsterCloudClient(
       options,
       //   HttpClients.GetOrAdd(options.ServiceUri, (uri) => CreateHttpClient(uri, httpMessageHandlerFactory, configureClient)),
-      CapMonsterCloudClientFactory.HttpClients.GetOrAdd(options.ServiceUri.href, new HttpClient(options.ServiceUri)),
+      CapMonsterCloudClientFactory.HttpClients.GetOrAdd(
+        options.serviceUrl.href,
+        CapMonsterCloudClientFactory.CreateHttpClient(options.serviceUrl),
+      ),
     );
   }
 
-  static CreateHttpClient(url: URL) {
+  static CreateHttpClient(url: ClientURL) {
     const httpClient = new HttpClient(url);
 
-    httpClient.Timeout = CapMonsterCloudClientFactory.HttpTimeout;
+    httpClient.timeout = CapMonsterCloudClientFactory.HttpTimeout;
 
-    httpClient.DefaultRequestHeaders.UserAgent = CapMonsterCloudClientFactory.CreateUserAgentString();
+    httpClient.defaultRequestHeaders.UserAgent = CapMonsterCloudClientFactory.CreateUserAgentString();
 
     return httpClient;
   }
