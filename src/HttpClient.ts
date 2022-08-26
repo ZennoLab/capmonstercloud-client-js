@@ -25,7 +25,7 @@ export class HttpStatusError extends HttpClientError {
 }
 
 export class HttpContentTypeError extends HttpClientError {
-  constructor(public statusMessage?: string, public statusCode?: number) {
+  constructor(public statusMessage?: string, public contentType?: string) {
     super(statusMessage);
   }
 }
@@ -34,6 +34,10 @@ export class JSONParseError extends Error {
   constructor(public message: string, public responseBody: string) {
     super(message);
   }
+}
+
+export enum HttpStatusCode {
+  ServiceUnavailable = 503,
 }
 
 export class HttpClient {
@@ -46,9 +50,9 @@ export class HttpClient {
   };
   constructor(public url: ClientURL) {}
 
-  async post<T extends JSONResponseT>(method: MethodT, data: string): Promise<T> {
+  async post<T extends JSONResponseT>(method: MethodT, data: string, cancellationToken: AbortController): Promise<T> {
     await this.netConnectOrUse();
-    return await this.postJSON<T>(method, data);
+    return await this.postJSON<T>(method, data, cancellationToken);
   }
 
   private netConnect(): Promise<void> {
@@ -110,10 +114,10 @@ export class HttpClient {
         ) {
           resolve(res);
         } else {
-          reject(new HttpContentTypeError(`Unexpected content type. Got ${contentType}`));
+          reject(new HttpContentTypeError(`Unexpected content type. Got ${contentType}`, contentType));
         }
       } else {
-        reject(new HttpContentTypeError('Unknown content type'));
+        reject(new HttpContentTypeError('Unknown content type', contentType));
       }
     });
   }
@@ -147,8 +151,9 @@ export class HttpClient {
     return this.responseBodyHandler(res);
   }
 
-  private requestHandler(method: MethodT, data: string): Promise<IncomingMessage> {
+  private requestHandler(method: MethodT, data: string, cancellationToken: AbortController): Promise<IncomingMessage> {
     return new Promise((resolve, reject) => {
+      debugHttps('Request body', data);
       https
         .request(
           {
@@ -161,6 +166,7 @@ export class HttpClient {
             },
             agent: this._agent,
             method: 'POST',
+            signal: cancellationToken.signal,
           },
           (res) => {
             debugHttps('Response headers received', res.statusCode, res.statusMessage);
@@ -175,17 +181,10 @@ export class HttpClient {
     });
   }
 
-  private async postJSON<T extends JSONResponseT>(method: MethodT, data: string): Promise<T> {
-    const res = await this.requestHandler(method, data);
+  private async postJSON<T extends JSONResponseT>(method: MethodT, data: string, cancellationToken: AbortController): Promise<T> {
+    const res = await this.requestHandler(method, data, cancellationToken);
     await this.responseStatusHandler(res, 200);
     await this.responseContentTypeHandler(res, [ResponseContentType.json, ResponseContentType.text]);
     return await this.responseJSONHandler(res);
-  }
-
-  private async postText(method: MethodT, data: string): Promise<string> {
-    const res = await this.requestHandler(method, data);
-    await this.responseStatusHandler(res, 200);
-    await this.responseContentTypeHandler(res, ResponseContentType.text);
-    return await this.responseTextHandler(res);
   }
 }

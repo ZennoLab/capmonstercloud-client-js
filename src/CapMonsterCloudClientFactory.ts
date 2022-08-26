@@ -1,11 +1,11 @@
 import { CapMonsterCloudClient } from './CapMonsterCloudClient';
 import { ClientOptions } from './ClientOptions';
 import { ClientURL } from './ClientURL';
-import { CsMap } from './CsMap';
+import { CsMap } from './Utils';
 import { HttpClient } from './HttpClient';
 
 export class CapMonsterCloudClientFactory {
-  static HttpTimeout = 21 * 1000;
+  static HttpTimeout = 1000 * 21;
   static HttpClients = new CsMap<string, HttpClient>();
 
   static Create(options: ClientOptions) {
