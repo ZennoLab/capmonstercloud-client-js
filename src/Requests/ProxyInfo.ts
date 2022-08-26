@@ -1,5 +1,13 @@
 import { ProxyType } from './ProxyType';
 
+export type ProxyInfoIn = {
+  proxyType: ProxyType;
+  proxyAddress: string;
+  proxyPort: number;
+  proxyLogin?: string;
+  proxyPassword?: string;
+};
+
 /**
  * Interface for captcha recognition with proxy requests
  */

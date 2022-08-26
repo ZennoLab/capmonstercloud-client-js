@@ -1,4 +1,12 @@
-import { CaptchaRequestBase } from './CaptchaRequestBase';
+import { CaptchaRequestBase, CaptchaRequestBaseIn } from './CaptchaRequestBase';
+
+export type RecaptchaV2RequestBaseIn = {
+  websiteURL: string;
+  websiteKey: string;
+  recaptchaDataSValue?: string;
+  userAgent?: string;
+  cookies?: string;
+} & CaptchaRequestBaseIn;
 
 /**
  * Base Recaptcha V2 recognition request
@@ -34,4 +42,13 @@ export abstract class RecaptchaV2RequestBase extends CaptchaRequestBase {
    * Additional cookies which we must use during interaction with target page or Google.
    */
   public cookies?: string;
+
+  constructor({ type, nocache, websiteURL, websiteKey, recaptchaDataSValue, userAgent, cookies }: RecaptchaV2RequestBaseIn) {
+    super({ type, nocache });
+    this.websiteURL = websiteURL;
+    this.websiteKey = websiteKey;
+    this.recaptchaDataSValue = recaptchaDataSValue;
+    this.userAgent = userAgent;
+    this.cookies = cookies;
+  }
 }

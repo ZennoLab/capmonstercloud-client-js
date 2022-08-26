@@ -1,17 +1,23 @@
 import { CapMonsterModules } from '../CapMonsterModules';
-import { CaptchaRequestBase } from './CaptchaRequestBase';
+import { CaptchaRequestBase, CaptchaRequestBaseIn } from './CaptchaRequestBase';
 import { TaskType } from '../TaskType';
+
+type ImageToTextRequestBaseIn = {
+  body: string;
+  CapMonsterModule?: CapMonsterModules;
+  recognizingThreshold?: number;
+  Case?: boolean;
+  numeric?: 1 | 0;
+  math?: boolean;
+} & CaptchaRequestBaseIn;
+
+export type ImageToTextRequestIn = Pick<ImageToTextRequestBaseIn, Exclude<keyof ImageToTextRequestBaseIn, 'type'>>;
 
 /**
  * ImageToText recognition request
  * {@link https://zennolab.atlassian.net/wiki/spaces/APIS/pages/655469/ImageToTextTask+solve+image+captcha}
  */
 export class ImageToTextRequest extends CaptchaRequestBase {
-  /**
-   * Recognition task type
-   */
-  public type = TaskType.ImageToText;
-
   /**
    * File body encoded in base64. Make sure to send it without line breaks.
    */
@@ -44,4 +50,14 @@ export class ImageToTextRequest extends CaptchaRequestBase {
    * Captcha 2 + 6 = will return a value of 8
    */
   public math?: boolean;
+
+  constructor({ nocache, body, CapMonsterModule, recognizingThreshold, Case, numeric, math }: ImageToTextRequestIn) {
+    super({ type: TaskType.ImageToText, nocache });
+    this.body = body;
+    this.CapMonsterModule = CapMonsterModule;
+    this.recognizingThreshold = recognizingThreshold;
+    this.Case = Case;
+    this.numeric = numeric;
+    this.math = math;
+  }
 }

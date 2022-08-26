@@ -5,10 +5,17 @@ import { ErrorCodeConverter } from './ErrorCodeConverter';
 import { ErrorType } from './ErrorType';
 import { GetBalanceError, GetBalanceResponse, GetBalanceResponseError, GetBalanceResponseSuccess } from './GetBalance';
 import {
+  FunCaptchaTimeouts,
+  GeeTestTimeouts,
   GetResultTimeouts,
   GetTaskResultResponse,
   GetTaskResultResponseError,
   GetTaskResultResponseSuccess,
+  HCaptchaTimeouts,
+  ImageToTextTimeouts,
+  RecaptchaV2EnterpriseTimeouts,
+  RecaptchaV2Timeouts,
+  RecaptchaV3Timeouts,
   TaskResult,
   TaskResultStatus,
   TaskResultType,
@@ -16,6 +23,8 @@ import {
 import { HttpClient, HttpStatusCode, HttpStatusError, JSONParseError } from './HttpClient';
 import { AnyObject } from './Utils';
 import { Task } from './Requests/Task';
+import { debugTask } from './Logger';
+import { TaskType } from './TaskType';
 
 export class CapmonsterCloudClientError extends Error {}
 
@@ -26,12 +35,12 @@ export class CapMonsterCloudClient {
     return { clientKey: this._options.clientKey, ...options };
   }
 
-  public async getBalance(cancellationToken: AbortController = new AbortController()): Promise<GetBalanceResponseSuccess> {
+  public async getBalance(cancellationController: AbortController = new AbortController()): Promise<GetBalanceResponseSuccess> {
     try {
       const response = await this._httpClient.post<GetBalanceResponse>(
         'getBalance',
         JSON.stringify(this.calcJSONData()),
-        cancellationToken,
+        cancellationController,
       );
 
       if (response.errorId !== 0) {
@@ -48,13 +57,14 @@ export class CapMonsterCloudClient {
     }
   }
 
-  private async CreateTask(task: Task, cancellationToken: AbortController = new AbortController()): Promise<CreateTaskResponse> {
+  private async CreateTask(task: Task, cancellationController: AbortController = new AbortController()): Promise<CreateTaskResponse> {
     try {
       const response = await this._httpClient.post<CreateTaskResponse>(
         'createTask',
         JSON.stringify(this.calcJSONData({ task, softId: this._options.softId || ClientOptions.defaultSoftId })),
-        cancellationToken,
+        cancellationController,
       );
+      debugTask('create task response', response);
 
       return response;
     } catch (err) {
@@ -67,13 +77,14 @@ export class CapMonsterCloudClient {
     }
   }
 
-  private async GetTaskResult(taskId: number, cancellationToken: AbortController = new AbortController()): Promise<TaskResult> {
+  private async GetTaskResult(taskId: number, cancellationController: AbortController = new AbortController()): Promise<TaskResult> {
     try {
       const response = await this._httpClient.post<GetTaskResultResponse>(
         'getTaskResult',
         JSON.stringify(this.calcJSONData({ taskId })),
-        cancellationToken,
+        cancellationController,
       );
+      debugTask('GetTaskResult() response', response);
 
       if (response.errorId !== 0) {
         if ((response as GetTaskResultResponseError).errorCode.includes('CAPTCHA_NOT_READY')) {
@@ -101,27 +112,56 @@ export class CapMonsterCloudClient {
     }
   }
 
+  private detectResultTimeouts(task: Task) {
+    switch (task.type) {
+      case TaskType.FunCaptchaTaskProxyless:
+      case TaskType.FunCaptchaTask:
+        return FunCaptchaTimeouts;
+      case TaskType.GeeTestTaskProxyless:
+      case TaskType.GeeTestTask:
+        return GeeTestTimeouts;
+      case TaskType.HCaptchaTaskProxyless:
+      case TaskType.HCaptchaTask:
+        return HCaptchaTimeouts;
+      case TaskType.ImageToText:
+        return ImageToTextTimeouts;
+      case TaskType.RecaptchaV2EnterpriseTaskProxyless:
+      case TaskType.RecaptchaV2EnterpriseTask:
+        return RecaptchaV2EnterpriseTimeouts;
+      case TaskType.NoCaptchaTaskProxyless:
+      case TaskType.NoCaptchaTask:
+        return RecaptchaV2Timeouts;
+      case TaskType.RecaptchaV3TaskProxyless:
+        return RecaptchaV3Timeouts;
+      default:
+        throw new CaptchaResult({ error: ErrorType.UnknownTask });
+    }
+  }
+
   public async Solve<TSolution extends AnyObject>(
     task: Task,
-    getResultTimeouts: GetResultTimeouts,
-    cancellationToken: AbortController = new AbortController(),
+    resultTimeouts: GetResultTimeouts = this.detectResultTimeouts(task),
+    cancellationController: AbortController = new AbortController(),
   ): Promise<CaptchaResult<TSolution>> {
-    const createdTask = await this.CreateTask(task, cancellationToken);
+    debugTask('task in', task);
+    debugTask('resultTimeouts in', resultTimeouts);
+    const createdTask = await this.CreateTask(task, cancellationController);
     if (createdTask.errorId !== 0) {
       return { error: ErrorCodeConverter.convert((createdTask as CreateTaskResponseError).errorCode) };
     }
 
-    const firstRequestDelay = task.nocache ? getResultTimeouts.firstRequestNoCacheDelay : getResultTimeouts.firstRequestDelay;
-
+    const firstRequestDelay = task.nocache ? resultTimeouts.firstRequestNoCacheDelay : resultTimeouts.firstRequestDelay;
+    debugTask('firstRequestDelay', firstRequestDelay);
     await new Promise((resolve) => setTimeout(resolve, firstRequestDelay));
 
     setTimeout(() => {
-      cancellationToken.abort();
-    }, getResultTimeouts.timeout);
+      cancellationController.abort();
+      debugTask('cancellationController abort()');
+    }, resultTimeouts.timeout);
 
-    while (!cancellationToken.signal.aborted) {
+    while (!cancellationController.signal.aborted) {
       try {
-        const result = await this.GetTaskResult(createdTask.taskId, cancellationToken);
+        const result = await this.GetTaskResult(createdTask.taskId, cancellationController);
         switch (result.type) {
           case TaskResultType.Failed:
             return new CaptchaResult<TSolution>({ error: result.error });
@@ -132,17 +172,18 @@ export class CapMonsterCloudClient {
             break;
         }
       } catch (err) {
-        if (cancellationToken.signal.aborted) {
+        if (cancellationController.signal.aborted) {
           break;
         }
 
         throw err;
       }
 
-      if (cancellationToken.signal.aborted) {
+      if (cancellationController.signal.aborted) {
         break;
       }
-      await new Promise((resolve) => setTimeout(resolve, getResultTimeouts.requestsInterval));
+      debugTask('requestsInterval', resultTimeouts.requestsInterval);
+      await new Promise((resolve) => setTimeout(resolve, resultTimeouts.requestsInterval));
     }
 
     return new CaptchaResult<TSolution>({ error: ErrorType.Timeout });

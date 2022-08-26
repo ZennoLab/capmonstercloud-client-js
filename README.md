@@ -11,23 +11,30 @@ Via [NPM](https://www.npmjs.com/):
 ## Usage with Node
 
 ```javascript
-    const { CapMonsterCloudClientFactory, ClientOptions } = require('@zennolab_com/capmonstercloud-client');
+const { CapMonsterCloudClientFactory, ClientOptions, RecaptchaV2ProxylessRequest } = require('@zennolab_com/capmonstercloud-client');
 
-    async function run () {
-        const clientOptions = new ClientOptions({ ClientKey: '<your capmonster.cloud API key>' });
-        const cmcClient = CapMonsterCloudClientFactory.Create(clientOptions);
-        console.log(await cmcClient.getBalance());
-        console.log(await cmcClient.getBalance());
-        console.log(await cmcClient.getBalance());
-    }
+async function run() {
+  const cmcClient = CapMonsterCloudClientFactory.Create(new ClientOptions({ clientKey: '<your capmonster.cloud API key>' }));
+  console.log(await cmcClient.getBalance());
 
-    run().then(() => {
-        console.log('DONE');
-        process.exit(0)
-    }).catch(err => {
-        console.error(err);
-        process.exit(1);
-    })
+  const recaptchaV2ProxylessRequest = new RecaptchaV2ProxylessRequest({
+    websiteURL: 'https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=high',
+    websiteKey: '6Lcg7CMUAAAAANphynKgn9YAgA4tQ2KI_iqRyTwd',
+  });
+
+  console.log(await cmcClient.Solve(recaptchaV2ProxylessRequest));
+}
+
+run()
+  .then(() => {
+    console.log('DONE');
+    process.exit(0);
+  })
+  .catch((err) => {
+    console.error(err);
+    process.exit(1);
+  });
+
 ```
 
 ## Debug
@@ -35,5 +42,5 @@ Via [NPM](https://www.npmjs.com/):
 For debugging set `DEBUG` environmental variable (see [debug module](https://www.npmjs.com/package/debug))
 
 ```bash
-DEBUG=net,http node app.js
+DEBUG=cmc-* node app.js
 ```

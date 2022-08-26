@@ -50,9 +50,9 @@ export class HttpClient {
   };
   constructor(public url: ClientURL) {}
 
-  async post<T extends JSONResponseT>(method: MethodT, data: string, cancellationToken: AbortController): Promise<T> {
+  async post<T extends JSONResponseT>(method: MethodT, data: string, cancellationController: AbortController): Promise<T> {
     await this.netConnectOrUse();
-    return await this.postJSON<T>(method, data, cancellationToken);
+    return await this.postJSON<T>(method, data, cancellationController);
   }
 
   private netConnect(): Promise<void> {
@@ -147,11 +147,7 @@ export class HttpClient {
     }
   }
 
-  private async responseTextHandler(res: IncomingMessage): Promise<string> {
-    return this.responseBodyHandler(res);
-  }
-
-  private requestHandler(method: MethodT, data: string, cancellationToken: AbortController): Promise<IncomingMessage> {
+  private requestHandler(method: MethodT, data: string, cancellationController: AbortController): Promise<IncomingMessage> {
     return new Promise((resolve, reject) => {
       debugHttps('Request body', data);
       https
@@ -166,7 +162,7 @@ export class HttpClient {
             },
             agent: this._agent,
             method: 'POST',
-            signal: cancellationToken.signal,
+            signal: cancellationController.signal,
           },
           (res) => {
             debugHttps('Response headers received', res.statusCode, res.statusMessage);
@@ -181,8 +177,8 @@ export class HttpClient {
     });
   }
 
-  private async postJSON<T extends JSONResponseT>(method: MethodT, data: string, cancellationToken: AbortController): Promise<T> {
-    const res = await this.requestHandler(method, data, cancellationToken);
+  private async postJSON<T extends JSONResponseT>(method: MethodT, data: string, cancellationController: AbortController): Promise<T> {
+    const res = await this.requestHandler(method, data, cancellationController);
     await this.responseStatusHandler(res, 200);
     await this.responseContentTypeHandler(res, [ResponseContentType.json, ResponseContentType.text]);
     return await this.responseJSONHandler(res);

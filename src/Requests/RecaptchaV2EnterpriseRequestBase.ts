@@ -1,4 +1,11 @@
-import { CaptchaRequestBase } from './CaptchaRequestBase';
+import { CaptchaRequestBase, CaptchaRequestBaseIn } from './CaptchaRequestBase';
+
+export type RecaptchaV2EnterpriseRequestBaseIn = {
+  websiteURL: string;
+  websiteKey: string;
+  enterprisePayload?: string;
+  recaptchaDataSValue?: string;
+} & CaptchaRequestBaseIn;
 
 /**
  * Base Recaptcha V2 Enterprise recognition request
@@ -39,4 +46,12 @@ export abstract class RecaptchaV2EnterpriseRequestBase extends CaptchaRequestBas
    * <![CDATA[<div class="g-recaptcha" data-sitekey="some sitekey" data-s="THIS_ONE"></div>]]>
    */
   public recaptchaDataSValue?: string;
+
+  constructor({ type, nocache, websiteURL, websiteKey, enterprisePayload, recaptchaDataSValue }: RecaptchaV2EnterpriseRequestBaseIn) {
+    super({ type, nocache });
+    this.websiteURL = websiteURL;
+    this.websiteKey = websiteKey;
+    this.enterprisePayload = enterprisePayload;
+    this.recaptchaDataSValue = recaptchaDataSValue;
+  }
 }

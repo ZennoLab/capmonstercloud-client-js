@@ -1,4 +1,13 @@
-import { CaptchaRequestBase } from './CaptchaRequestBase';
+import { CaptchaRequestBase, CaptchaRequestBaseIn } from './CaptchaRequestBase';
+
+export type HCaptchaRequestBaseIn = {
+  websiteURL: string;
+  websiteKey: string;
+  isInvisible?: boolean;
+  data?: string;
+  userAgent?: string;
+  cookies?: string;
+} & CaptchaRequestBaseIn;
 
 /**
  * Base HCaptcha recognition request
@@ -37,4 +46,14 @@ export abstract class HCaptchaRequestBase extends CaptchaRequestBase {
    * Additional cookies which we must use during interaction with target page.
    */
   public cookies?: string;
+
+  constructor({ type, nocache, websiteURL, websiteKey, isInvisible, data, userAgent, cookies }: HCaptchaRequestBaseIn) {
+    super({ type, nocache });
+    this.websiteURL = websiteURL;
+    this.websiteKey = websiteKey;
+    this.isInvisible = isInvisible;
+    this.data = data;
+    this.userAgent = userAgent;
+    this.cookies = cookies;
+  }
 }

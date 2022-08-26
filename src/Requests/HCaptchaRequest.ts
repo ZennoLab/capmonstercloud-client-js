@@ -1,19 +1,18 @@
 import { TaskType } from '../TaskType';
 import { applyMixins } from '../Utils';
-import { HCaptchaRequestBase } from './HCaptchaRequestBase';
-import { ProxyInfo } from './ProxyInfo';
+import { HCaptchaRequestBase, HCaptchaRequestBaseIn } from './HCaptchaRequestBase';
+import { ProxyInfo, ProxyInfoIn } from './ProxyInfo';
+
+export type HCaptchaRequestIn = Pick<HCaptchaRequestBaseIn, Exclude<keyof HCaptchaRequestBaseIn, 'type'>> & ProxyInfoIn;
 
 /**
  * HCaptcha recognition request (with proxy).
  * {@link https://zennolab.atlassian.net/wiki/spaces/APIS/pages/1203240988/HCaptchaTask+hCaptcha+puzzle+solving}
  */
-export class HCaptchaRequest {
-  /**
-   * Recognition task type
-   */
-  public type = TaskType.HCaptchaTask;
+export class HCaptchaRequest extends HCaptchaRequestBase {
+  constructor(argsObj: HCaptchaRequestIn) {
+    super({ type: TaskType.HCaptchaTask, ...argsObj });
+  }
 }
 
-export interface HCaptchaRequest extends HCaptchaRequestBase, ProxyInfo {}
-
-applyMixins(HCaptchaRequest, [HCaptchaRequestBase, ProxyInfo]);
+applyMixins(HCaptchaRequest, [ProxyInfo]);

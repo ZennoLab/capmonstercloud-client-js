@@ -1,4 +1,12 @@
-import { CaptchaRequestBase } from './CaptchaRequestBase';
+import { CaptchaRequestBase, CaptchaRequestBaseIn } from './CaptchaRequestBase';
+
+export type FunCaptchaRequestBaseIn = {
+  websiteURL: string;
+  websitePublicKey: string;
+  funcaptchaApiJSSubdomain?: string;
+  data?: string;
+  cookies?: string;
+} & CaptchaRequestBaseIn;
 
 /**
  * Base FunCaptcha recognition request
@@ -40,4 +48,13 @@ export abstract class FunCaptchaRequestBase extends CaptchaRequestBase {
    * Additional cookies which we must use during interaction with target page.
    */
   public cookies?: string;
+
+  constructor({ type, nocache, websiteURL, websitePublicKey, funcaptchaApiJSSubdomain, data, cookies }: FunCaptchaRequestBaseIn) {
+    super({ type, nocache });
+    this.websiteURL = websiteURL;
+    this.websitePublicKey = websitePublicKey;
+    this.funcaptchaApiJSSubdomain = funcaptchaApiJSSubdomain;
+    this.data = data;
+    this.cookies = cookies;
+  }
 }

@@ -1,4 +1,13 @@
-import { CaptchaRequestBase } from './CaptchaRequestBase';
+import { CaptchaRequestBase, CaptchaRequestBaseIn } from './CaptchaRequestBase';
+
+export type GeeTestRequestBaseIn = {
+  websiteURL: string;
+  gt: string;
+  challenge: string;
+  geetestApiServerSubdomain?: string;
+  geetestGetLib?: string;
+  userAgent?: string;
+} & CaptchaRequestBaseIn;
 
 /**
  * Base GeeTest recognition request
@@ -49,4 +58,14 @@ export abstract class GeeTestRequestBase extends CaptchaRequestBase {
    * otherwise Google will ask you to "update your browser".
    */
   public userAgent?: string;
+
+  constructor({ type, nocache, websiteURL, gt, challenge, geetestApiServerSubdomain, geetestGetLib, userAgent }: GeeTestRequestBaseIn) {
+    super({ type, nocache });
+    this.websiteURL = websiteURL;
+    this.gt = gt;
+    this.challenge = challenge;
+    this.geetestApiServerSubdomain = geetestApiServerSubdomain;
+    this.geetestGetLib = geetestGetLib;
+    this.userAgent = userAgent;
+  }
 }

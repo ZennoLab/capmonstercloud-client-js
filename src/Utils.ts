@@ -18,7 +18,7 @@ export type AnyObject = Record<string, unknown>;
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /**
- * This can live anywhere in your codebase:
+ * Apply multiple class inheritance in JS runtime
  */
 export function applyMixins(derivedCtor: any, constructors: any[]) {
   constructors.forEach((baseCtor) => {

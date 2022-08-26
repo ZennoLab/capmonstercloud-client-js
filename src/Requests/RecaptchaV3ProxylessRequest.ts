@@ -1,5 +1,14 @@
 import { TaskType } from '../TaskType';
-import { CaptchaRequestBase } from './CaptchaRequestBase';
+import { CaptchaRequestBase, CaptchaRequestBaseIn } from './CaptchaRequestBase';
+
+type RecaptchaV3RequestIn = {
+  websiteURL: string;
+  websiteKey: string;
+  minScore?: number;
+  pageAction?: string;
+} & CaptchaRequestBaseIn;
+
+export type RecaptchaV3ProxylessRequestIn = Pick<RecaptchaV3RequestIn, Exclude<keyof RecaptchaV3RequestIn, 'type'>>;
 
 /**
  * Recaptcha V3 recognition request (without proxy).
@@ -38,5 +47,13 @@ export class RecaptchaV3ProxylessRequest extends CaptchaRequestBase {
    * <![CDATA[
    * grecaptcha.execute('site_key', {action:'login_test'})]]>
    */
-  public pageAction = 'verify';
+  public pageAction: string;
+
+  constructor({ nocache, websiteURL, websiteKey, minScore, pageAction = 'verify' }: RecaptchaV3ProxylessRequestIn) {
+    super({ type: TaskType.ImageToText, nocache });
+    this.websiteURL = websiteURL;
+    this.websiteKey = websiteKey;
+    this.minScore = minScore;
+    this.pageAction = pageAction;
+  }
 }
