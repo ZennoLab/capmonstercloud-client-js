@@ -1,11 +1,11 @@
 import { ErrorType } from './ErrorType';
-import { AnyObject } from './Utils';
+import { TaskCompletedSolution } from './GetTaskResult';
 
 /**
  * General captcha recognition result
  * @template TSolution Concrete captcha result type
  */
-export class CaptchaResult<TSolution extends AnyObject> {
+export class CaptchaResult<S extends TaskCompletedSolution> {
   /**
    * Error code
    */
@@ -13,8 +13,8 @@ export class CaptchaResult<TSolution extends AnyObject> {
   /**
    * Task result. Different for each type of task.
    */
-  public solution?: TSolution;
-  constructor({ error, solution }: { error?: ErrorType; solution?: TSolution }) {
+  public solution?: S;
+  constructor({ error, solution }: { error?: ErrorType; solution?: S }) {
     this.error = error;
     this.solution = solution;
   }

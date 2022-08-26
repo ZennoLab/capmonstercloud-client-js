@@ -1,5 +1,11 @@
 import { ErrorType } from './ErrorType';
-import { AnyObject } from './Utils';
+import { FunCaptchaResponse } from './Responses/FunCaptchaResponse';
+import { GeeTestResponse } from './Responses/GeeTestResponse';
+import { HCaptchaResponse } from './Responses/HCaptchaResponse';
+import { ImageToTextResponse } from './Responses/ImageToTextResponse';
+import { RecaptchaV2EnterpriseResponse } from './Responses/RecaptchaV2EnterpriseResponse';
+import { RecaptchaV2Response } from './Responses/RecaptchaV2Response';
+import { RecaptchaV3Response } from './Responses/RecaptchaV3Response';
 
 export enum TaskResultType {
   Failed = 'Failed',
@@ -16,30 +22,34 @@ export type TaskFailed = {
   error: ErrorType;
 };
 
-export type TaskCompleted = {
+export type TaskCompletedSolution =
+  | FunCaptchaResponse
+  | GeeTestResponse
+  | HCaptchaResponse
+  | ImageToTextResponse
+  | RecaptchaV2EnterpriseResponse
+  | RecaptchaV2Response
+  | RecaptchaV3Response;
+
+export type TaskCompleted<S extends TaskCompletedSolution> = {
   type: TaskResultType.Completed;
-  solution: AnyObject;
+  solution: S;
 };
 
-export type TaskResult = TaskInProgress | TaskFailed | TaskCompleted;
+export type TaskResult<S extends TaskCompletedSolution> = TaskInProgress | TaskFailed | TaskCompleted<S>;
 
 export enum TaskResultStatus {
   processing = 'processing',
   ready = 'ready',
 }
 
-export type GetTaskResultResponseSuccess = {
-  errorId: 0;
-  status: TaskResultStatus;
-  solution: AnyObject;
-};
-
-export type GetTaskResultResponseError = {
+export type GetTaskResultResponse<S extends TaskCompletedSolution> = {
   errorId: number;
   errorCode: string;
+  errorDescription: string | null;
+  status: TaskResultStatus;
+  solution: S | null;
 };
-
-export type GetTaskResultResponse = GetTaskResultResponseSuccess | GetTaskResultResponseError;
 
 export class GetTaskResultError extends Error {
   constructor(public errorType: ErrorType) {

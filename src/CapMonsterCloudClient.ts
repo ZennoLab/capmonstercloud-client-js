@@ -9,22 +9,39 @@ import {
   GeeTestTimeouts,
   GetResultTimeouts,
   GetTaskResultResponse,
-  GetTaskResultResponseError,
-  GetTaskResultResponseSuccess,
   HCaptchaTimeouts,
   ImageToTextTimeouts,
   RecaptchaV2EnterpriseTimeouts,
   RecaptchaV2Timeouts,
   RecaptchaV3Timeouts,
+  TaskCompletedSolution,
   TaskResult,
   TaskResultStatus,
   TaskResultType,
 } from './GetTaskResult';
 import { HttpClient, HttpStatusCode, HttpStatusError, JSONParseError } from './HttpClient';
-import { AnyObject } from './Utils';
 import { Task } from './Requests/Task';
 import { debugTask } from './Logger';
 import { TaskType } from './TaskType';
+import { FunCaptchaProxylessRequest } from './Requests/FunCaptchaProxylessRequest';
+import { FunCaptchaResponse } from './Responses/FunCaptchaResponse';
+import { FunCaptchaRequest } from './Requests/FunCaptchaRequest';
+import { GeeTestProxylessRequest } from './Requests/GeeTestProxylessRequest';
+import { GeeTestResponse } from './Responses/GeeTestResponse';
+import { GeeTestRequest } from './Requests/GeeTestRequest';
+import { HCaptchaProxylessRequest } from './Requests/HCaptchaProxylessRequest';
+import { HCaptchaResponse } from './Responses/HCaptchaResponse';
+import { HCaptchaRequest } from './Requests/HCaptchaRequest';
+import { ImageToTextRequest } from './Requests/ImageToTextRequest';
+import { ImageToTextResponse } from './Responses/ImageToTextResponse';
+import { RecaptchaV2EnterpriseProxylessRequest } from './Requests/RecaptchaV2EnterpriseProxylessRequest';
+import { RecaptchaV2EnterpriseResponse } from './Responses/RecaptchaV2EnterpriseResponse';
+import { RecaptchaV2EnterpriseRequest } from './Requests/RecaptchaV2EnterpriseRequest';
+import { RecaptchaV2ProxylessRequest } from './Requests/RecaptchaV2ProxylessRequest';
+import { RecaptchaV2Response } from './Responses/RecaptchaV2Response';
+import { RecaptchaV2Request } from './Requests/RecaptchaV2Request';
+import { RecaptchaV3ProxylessRequest } from './Requests/RecaptchaV3ProxylessRequest';
+import { RecaptchaV3Response } from './Responses/RecaptchaV3Response';
 
 export class CapmonsterCloudClientError extends Error {}
 
@@ -77,9 +94,12 @@ export class CapMonsterCloudClient {
     }
   }
 
-  private async GetTaskResult(taskId: number, cancellationController: AbortController = new AbortController()): Promise<TaskResult> {
+  private async GetTaskResult<S extends TaskCompletedSolution>(
+    taskId: number,
+    cancellationController: AbortController = new AbortController(),
+  ): Promise<TaskResult<S>> {
     try {
-      const response = await this._httpClient.post<GetTaskResultResponse>(
+      const response = await this._httpClient.post<GetTaskResultResponse<S>>(
         'getTaskResult',
         JSON.stringify(this.calcJSONData({ taskId })),
         cancellationController,
@@ -87,15 +107,15 @@ export class CapMonsterCloudClient {
       debugTask('GetTaskResult() response', response);
 
       if (response.errorId !== 0) {
-        if ((response as GetTaskResultResponseError).errorCode.includes('CAPTCHA_NOT_READY')) {
+        if (response.errorCode.includes('CAPTCHA_NOT_READY')) {
           return { type: TaskResultType.InProgress };
         } else {
-          return { type: TaskResultType.Failed, error: ErrorCodeConverter.convert((response as CreateTaskResponseError).errorCode) };
+          return { type: TaskResultType.Failed, error: ErrorCodeConverter.convert(response.errorCode) };
         }
       }
 
-      if ((response as GetTaskResultResponseSuccess).status === TaskResultStatus.ready) {
-        return { type: TaskResultType.Completed, solution: (response as GetTaskResultResponseSuccess).solution };
+      if (response.status === TaskResultStatus.ready) {
+        return { type: TaskResultType.Completed, solution: response.solution as S };
       }
 
       return { type: TaskResultType.InProgress };
@@ -138,11 +158,71 @@ export class CapMonsterCloudClient {
     }
   }
 
-  public async Solve<TSolution extends AnyObject>(
+  public async Solve(
+    task: FunCaptchaProxylessRequest,
+    resultTimeouts?: GetResultTimeouts,
+    cancellationController?: AbortController,
+  ): Promise<CaptchaResult<FunCaptchaResponse>>;
+  public async Solve(
+    task: FunCaptchaRequest,
+    resultTimeouts?: GetResultTimeouts,
+    cancellationController?: AbortController,
+  ): Promise<CaptchaResult<FunCaptchaResponse>>;
+  public async Solve(
+    task: GeeTestProxylessRequest,
+    resultTimeouts?: GetResultTimeouts,
+    cancellationController?: AbortController,
+  ): Promise<CaptchaResult<GeeTestResponse>>;
+  public async Solve(
+    task: GeeTestRequest,
+    resultTimeouts?: GetResultTimeouts,
+    cancellationController?: AbortController,
+  ): Promise<CaptchaResult<GeeTestResponse>>;
+  public async Solve(
+    task: HCaptchaProxylessRequest,
+    resultTimeouts?: GetResultTimeouts,
+    cancellationController?: AbortController,
+  ): Promise<CaptchaResult<HCaptchaResponse>>;
+  public async Solve(
+    task: HCaptchaRequest,
+    resultTimeouts?: GetResultTimeouts,
+    cancellationController?: AbortController,
+  ): Promise<CaptchaResult<HCaptchaResponse>>;
+  public async Solve(
+    task: ImageToTextRequest,
+    resultTimeouts?: GetResultTimeouts,
+    cancellationController?: AbortController,
+  ): Promise<CaptchaResult<ImageToTextResponse>>;
+  public async Solve(
+    task: RecaptchaV2EnterpriseProxylessRequest,
+    resultTimeouts?: GetResultTimeouts,
+    cancellationController?: AbortController,
+  ): Promise<CaptchaResult<RecaptchaV2EnterpriseResponse>>;
+  public async Solve(
+    task: RecaptchaV2EnterpriseRequest,
+    resultTimeouts?: GetResultTimeouts,
+    cancellationController?: AbortController,
+  ): Promise<CaptchaResult<RecaptchaV2EnterpriseResponse>>;
+  public async Solve(
+    task: RecaptchaV2ProxylessRequest,
+    resultTimeouts?: GetResultTimeouts,
+    cancellationController?: AbortController,
+  ): Promise<CaptchaResult<RecaptchaV2Response>>;
+  public async Solve(
+    task: RecaptchaV2Request,
+    resultTimeouts?: GetResultTimeouts,
+    cancellationController?: AbortController,
+  ): Promise<CaptchaResult<RecaptchaV2Response>>;
+  public async Solve(
+    task: RecaptchaV3ProxylessRequest,
+    resultTimeouts?: GetResultTimeouts,
+    cancellationController?: AbortController,
+  ): Promise<CaptchaResult<RecaptchaV3Response>>;
+  public async Solve(
     task: Task,
     resultTimeouts: GetResultTimeouts = this.detectResultTimeouts(task),
     cancellationController: AbortController = new AbortController(),
-  ): Promise<CaptchaResult<TSolution>> {
+  ): Promise<CaptchaResult<TaskCompletedSolution>> {
     debugTask('task in', task);
     debugTask('resultTimeouts in', resultTimeouts);
     const createdTask = await this.CreateTask(task, cancellationController);
@@ -164,9 +244,9 @@ export class CapMonsterCloudClient {
         const result = await this.GetTaskResult(createdTask.taskId, cancellationController);
         switch (result.type) {
           case TaskResultType.Failed:
-            return new CaptchaResult<TSolution>({ error: result.error });
+            return new CaptchaResult<TaskCompletedSolution>({ error: result.error });
           case TaskResultType.Completed:
-            return new CaptchaResult<TSolution>({ solution: result.solution as TSolution });
+            return new CaptchaResult<TaskCompletedSolution>({ solution: result.solution as TaskCompletedSolution });
           case TaskResultType.InProgress:
           default:
             break;
@@ -186,6 +266,6 @@ export class CapMonsterCloudClient {
       await new Promise((resolve) => setTimeout(resolve, resultTimeouts.requestsInterval));
     }
 
-    return new CaptchaResult<TSolution>({ error: ErrorType.Timeout });
+    return new CaptchaResult<TaskCompletedSolution>({ error: ErrorType.Timeout });
   }
 }
