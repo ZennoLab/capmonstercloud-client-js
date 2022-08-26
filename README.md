@@ -4,7 +4,7 @@ Official JS client library for [capmonster.cloud](https://capmonster.cloud/) cap
 
 ## Installation
 
-Via [NPM](https://www.npmjs.com/):
+Via [NPM](https://www.npmjs.com/package/@zennolab_com/capmonstercloud-client):
 
     npm i @zennolab_com/capmonstercloud-client
 
@@ -39,7 +39,7 @@ run()
 
 ## Debug
 
-For debugging set `DEBUG` environmental variable (see [debug module](https://www.npmjs.com/package/debug))
+For debugging set `DEBUG` environmental variable to one of [possible values](/src/Logger.ts) (see [debug module](https://www.npmjs.com/package/debug))
 
 ```bash
 DEBUG=cmc-* node app.js

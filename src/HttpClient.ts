@@ -149,6 +149,11 @@ export class HttpClient {
 
   private requestHandler(method: MethodT, data: string, cancellationController: AbortController): Promise<IncomingMessage> {
     return new Promise((resolve, reject) => {
+      const headers = {
+        'user-agent': this.defaultRequestHeaders.UserAgent,
+        'content-type': this.defaultRequestHeaders.ContentType,
+      };
+      debugHttps('Request headers', headers);
       debugHttps('Request body', data);
       https
         .request(
@@ -156,10 +161,7 @@ export class HttpClient {
             host: this.url.host,
             port: this.url.port,
             path: `/${method}`,
-            headers: {
-              'user-agent': this.defaultRequestHeaders.UserAgent,
-              'content-type': this.defaultRequestHeaders.ContentType,
-            },
+            headers,
             agent: this._agent,
             method: 'POST',
             signal: cancellationController.signal,

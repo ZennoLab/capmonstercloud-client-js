@@ -18,6 +18,7 @@ import { RecaptchaV3ProxylessRequest, RecaptchaV3ProxylessRequestIn } from './Re
 import { CapMonsterModules } from './CapMonsterModules';
 import { ErrorType } from './ErrorType';
 import { ProxyType } from './Requests/ProxyType';
+import { TaskType } from './TaskType';
 
 export default {
   CapMonsterCloudClientFactory,
@@ -37,6 +38,7 @@ export default {
 };
 
 export {
+  TaskType,
   ErrorType,
   ProxyType,
   CapMonsterModules,
