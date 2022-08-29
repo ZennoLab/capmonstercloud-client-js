@@ -1,7 +1,8 @@
 import { IncomingMessage } from 'http';
-import https from 'https';
-import net, { Socket } from 'net';
+import { Agent } from 'https';
+import { Socket } from 'net';
 
+import { isNode } from './Utils';
 import { debugHttps, debugNet } from './Logger';
 import { ClientURL } from './ClientURL';
 
@@ -19,19 +20,23 @@ export class HttpClientError extends Error {}
 export class HttpSocketError extends HttpClientError {}
 
 export class HttpStatusError extends HttpClientError {
-  constructor(public statusMessage?: string, public statusCode?: number) {
+  public statusMessage?: string;
+  public statusCode?: number;
+  constructor({ statusMessage, statusCode }: { statusMessage?: string; statusCode?: number }) {
     super(statusMessage);
+    this.statusMessage = statusMessage;
+    this.statusCode = statusCode;
   }
 }
 
 export class HttpContentTypeError extends HttpClientError {
-  constructor(public statusMessage?: string, public contentType?: string) {
+  constructor(public statusMessage?: string, public contentType?: string | null) {
     super(statusMessage);
   }
 }
 
 export class JSONParseError extends Error {
-  constructor(public message: string, public responseBody: string) {
+  constructor(public message: string, public responseBody?: string) {
     super(message);
   }
 }
@@ -40,9 +45,11 @@ export enum HttpStatusCode {
   ServiceUnavailable = 503,
 }
 
+export type IsomorphicResponse = IncomingMessage | Response;
+
 export class HttpClient {
   private _socket: Socket | undefined;
-  private _agent: https.Agent | undefined;
+  private _agent: Agent | undefined;
   public timeout: number | undefined;
   public defaultRequestHeaders = {
     UserAgent: '',
@@ -51,26 +58,32 @@ export class HttpClient {
   constructor(public url: ClientURL) {}
 
   async post<T extends JSONResponseT>(method: MethodT, data: string, cancellationController: AbortController): Promise<T> {
-    await this.netConnectOrUse();
+    if (isNode) {
+      await this.netConnectOrUse();
+    }
     return await this.postJSON<T>(method, data, cancellationController);
   }
 
   private netConnect(): Promise<void> {
     return new Promise((resolve, reject) => {
+      // require('https') hide require call from browser bundler, e.g. webpack
+      const https = module[`require`].call(module, 'https');
+      // require('net') hide require call from browser bundler, e.g. webpack
+      const net = module[`require`].call(module, 'net');
       this._socket = net.connect(this.url.clientPort, this.url.hostname);
-      this._socket.on('error', (err) => {
+      (this._socket as Socket).on('error', (err) => {
         debugNet('Got Socket error', err);
         this._socket = undefined;
         this._agent = undefined;
         reject(err);
       });
-      this._socket.on('close', (err) => {
+      (this._socket as Socket).on('close', (err) => {
         debugNet('Socket closed', err);
         this._socket = undefined;
         this._agent = undefined;
         reject(err);
       });
-      this._socket.on('connect', () => {
+      (this._socket as Socket).on('connect', () => {
         debugNet('Socket connected');
         if (this._socket) {
           this._agent = new https.Agent({ socket: this._socket, keepAlive: true, timeout: this.timeout });
@@ -90,26 +103,40 @@ export class HttpClient {
     return this.netConnect();
   }
 
-  private responseStatusHandler(res: IncomingMessage, expectedStatus: number): Promise<IncomingMessage> {
+  private responseStatusHandler(res: IsomorphicResponse, expectedStatus: number): Promise<IsomorphicResponse> {
     return new Promise((resolve, reject) => {
-      if (res.statusCode === expectedStatus) {
+      let statusCode;
+      let statusMessage;
+      if (isNode) {
+        statusCode = (res as IncomingMessage).statusCode;
+        statusMessage = (res as IncomingMessage).statusMessage;
+      } else {
+        statusCode = (res as Response).status;
+        statusMessage = (res as Response).statusText;
+      }
+      if (statusCode === expectedStatus) {
         resolve(res);
       } else {
-        reject(new HttpStatusError(res.statusMessage, res.statusCode));
+        reject(new HttpStatusError({ statusCode, statusMessage }));
       }
     });
   }
 
   private responseContentTypeHandler(
-    res: IncomingMessage,
+    res: IsomorphicResponse,
     expectedContentTypes: Array<ResponseContentType> | ResponseContentType,
-  ): Promise<IncomingMessage> {
+  ): Promise<IsomorphicResponse> {
     return new Promise((resolve, reject) => {
-      const contentType = res.headers['content-type'];
+      let contentType: string | undefined | null;
+      if (isNode) {
+        contentType = (res as IncomingMessage).headers['content-type'];
+      } else {
+        contentType = (res as Response).headers.get('Content-Type');
+      }
       if (contentType) {
         if (
           Array.isArray(expectedContentTypes)
-            ? expectedContentTypes.some((expectedContentType) => contentType.includes(expectedContentType))
+            ? expectedContentTypes.some((expectedContentType) => (contentType as string).includes(expectedContentType))
             : contentType.includes(expectedContentTypes)
         ) {
           resolve(res);
@@ -135,10 +162,15 @@ export class HttpClient {
     });
   }
 
-  private async responseJSONHandler<T extends JSONResponseT>(res: IncomingMessage): Promise<T> {
-    const responseBody = await this.responseBodyHandler(res);
+  private async responseJSONHandler<T extends JSONResponseT>(res: IsomorphicResponse): Promise<T> {
+    let responseBody;
     try {
-      return JSON.parse(responseBody);
+      if (isNode) {
+        responseBody = await this.responseBodyHandler(res as IncomingMessage);
+        return JSON.parse(responseBody);
+      } else {
+        return (res as Response).json();
+      }
     } catch (err) {
       if (err instanceof SyntaxError) {
         throw new JSONParseError(err.message, responseBody);
@@ -147,35 +179,50 @@ export class HttpClient {
     }
   }
 
-  private requestHandler(method: MethodT, data: string, cancellationController: AbortController): Promise<IncomingMessage> {
+  private requestHandler(method: MethodT, data: string, cancellationController: AbortController): Promise<IsomorphicResponse> {
     return new Promise((resolve, reject) => {
       const headers = {
         'user-agent': this.defaultRequestHeaders.UserAgent,
         'content-type': this.defaultRequestHeaders.ContentType,
       };
-      debugHttps('Request headers', headers);
+      const options = {
+        headers,
+        method: 'POST',
+        signal: cancellationController.signal,
+      };
+      if (isNode) {
+        Object.assign(options, {
+          host: this.url.host,
+          port: this.url.port,
+          path: `/${method}`,
+          agent: this._agent,
+        });
+      } else {
+        Object.assign(options, {
+          mode: 'cors',
+          body: data,
+        });
+      }
+      debugHttps('Request options', options);
       debugHttps('Request body', data);
-      https
-        .request(
-          {
-            host: this.url.host,
-            port: this.url.port,
-            path: `/${method}`,
-            headers,
-            agent: this._agent,
-            method: 'POST',
-            signal: cancellationController.signal,
-          },
-          (res) => {
+      if (isNode) {
+        // require('https') hide require call from browser bundler, e.g. webpack
+        const https = module[`require`].call(module, 'https');
+        https
+          .request(options, (res: IncomingMessage) => {
             debugHttps('Response headers received', res.statusCode, res.statusMessage);
             resolve(res);
-          },
-        )
-        .on('error', (err) => {
-          debugHttps('Response error', err);
-          reject(err);
-        })
-        .end(data);
+          })
+          .on('error', (err: Error) => {
+            debugHttps('Response error', err);
+            reject(err);
+          })
+          .end(data);
+      } else {
+        fetch(`${this.url.href}${method}`, options)
+          .then((res) => resolve(res))
+          .catch(reject);
+      }
     });
   }
 

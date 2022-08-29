@@ -4,21 +4,17 @@ import { CreateTaskResponse, CreateTaskResponseError } from './CreateTask';
 import { ErrorCodeConverter } from './ErrorCodeConverter';
 import { ErrorType } from './ErrorType';
 import { GetBalanceError, GetBalanceResponse, GetBalanceResponseError, GetBalanceResponseSuccess } from './GetBalance';
+import { GetTaskResultResponse, TaskCompletedSolution, TaskResult, TaskResultStatus, TaskResultType } from './GetTaskResult';
 import {
   FunCaptchaTimeouts,
   GeeTestTimeouts,
   GetResultTimeouts,
-  GetTaskResultResponse,
   HCaptchaTimeouts,
   ImageToTextTimeouts,
   RecaptchaV2EnterpriseTimeouts,
   RecaptchaV2Timeouts,
   RecaptchaV3Timeouts,
-  TaskCompletedSolution,
-  TaskResult,
-  TaskResultStatus,
-  TaskResultType,
-} from './GetTaskResult';
+} from './GetResultTimeouts';
 import { HttpClient, HttpStatusCode, HttpStatusError, JSONParseError } from './HttpClient';
 import { Task } from './Requests/Task';
 import { debugTask } from './Logger';

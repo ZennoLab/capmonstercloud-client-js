@@ -28,3 +28,13 @@ export function applyMixins(derivedCtor: any, constructors: any[]) {
   });
 }
 /* eslint-enable @typescript-eslint/no-explicit-any */
+
+let isNode = false;
+if (typeof process === 'object') {
+  if (typeof process.versions === 'object') {
+    if (typeof process.versions.node !== 'undefined') {
+      isNode = true;
+    }
+  }
+}
+export { isNode };
