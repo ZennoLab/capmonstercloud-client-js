@@ -5,7 +5,7 @@ import { RecaptchaV2ProxylessRequest } from './Requests/RecaptchaV2ProxylessRequ
 
 describe('Check integration tests for CapMonsterCloudClientFactory()', () => {
   it('should call getBalance method with specified object', async () => {
-    expect.assertions(2);
+    expect.assertions(3);
 
     const srv = await createServerMock({ responses: [{ responseBody: '{"errorId":0,"balance":345.678}' }] });
 
@@ -15,13 +15,14 @@ describe('Check integration tests for CapMonsterCloudClientFactory()', () => {
 
     await cmcClient.getBalance();
 
+    expect(srv.caughtRequests[0]).toHaveProperty('userAgent', CapMonsterCloudClientFactory.CreateUserAgentString());
     expect(srv.caughtRequests[0]).toHaveProperty('body', '{"clientKey":"<your capmonster.cloud API key>"}');
 
     expect(await srv.destroy()).toBeUndefined();
   });
 
   it('should call createTask and getTaskResult methods with specified objects', async () => {
-    expect.assertions(5);
+    expect.assertions(6);
 
     const srv = await createServerMock({
       responses: [
@@ -41,6 +42,7 @@ describe('Check integration tests for CapMonsterCloudClientFactory()', () => {
 
     const task = await cmcClient.Solve(recaptchaV2ProxylessRequest);
 
+    expect(srv.caughtRequests[0]).toHaveProperty('userAgent', CapMonsterCloudClientFactory.CreateUserAgentString());
     expect(srv.caughtRequests[0]).toHaveProperty(
       'body',
       '{"clientKey":"<your capmonster.cloud API key>","task":{"type":"NoCaptchaTaskProxyless","websiteURL":"https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=high","websiteKey":"6Lcg7CMUAAAAANphynKgn9YAgA4tQ2KI_iqRyTwd"},"softId":53}',

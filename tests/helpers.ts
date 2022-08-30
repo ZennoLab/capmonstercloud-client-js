@@ -5,6 +5,7 @@ export type ResponseListener = () => void;
 
 type CaughtRequest = {
   contentType?: string;
+  userAgent?: string;
   body?: string;
 };
 
@@ -62,20 +63,20 @@ export function createServerMock(params: { responses?: Array<MockResponse> }): P
       socketMap: {},
     };
     srv.server = http.createServer((req, res) => {
-      const caughtRequest: CaughtRequest = { contentType: req.headers['content-type'] };
+      const caughtRequest: CaughtRequest = { contentType: req.headers['content-type'], userAgent: req.headers['user-agent'] };
       srv.caughtRequests.push(caughtRequest);
       const chunks: Array<Uint8Array> = [];
       req.on('data', (chunk) => chunks.push(chunk));
       req.on('end', () => {
         const requestBody = Buffer.concat(chunks).toString('utf8');
         caughtRequest.body = requestBody;
-      });
 
-      const response = responses.shift();
-      res.writeHead((response && response.statusCode) || DEFAULT_responseStatusCode, {
-        'Content-Type': (response && response.contentType) || DEFAULT_responseContentType,
+        const response = responses.shift();
+        res.writeHead((response && response.statusCode) || DEFAULT_responseStatusCode, {
+          'Content-Type': (response && response.contentType) || DEFAULT_responseContentType,
+        });
+        res.end((response && response.responseBody) || DEFAULT_responseBody);
       });
-      res.end((response && response.responseBody) || DEFAULT_responseBody);
     });
     srv.server.on('listening', () => {
       if (srv.server) {
