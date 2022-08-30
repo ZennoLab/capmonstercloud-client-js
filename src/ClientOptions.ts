@@ -1,7 +1,7 @@
 import { ClientURL } from './ClientURL';
 
 export type ClientOptionsIn = {
-  serviceUrl?: URL;
+  serviceUrl?: URL | string;
   clientKey: string;
   softId?: number;
 };
@@ -12,7 +12,8 @@ export class ClientOptions {
   public clientKey: string;
   public softId?: number;
   constructor(clientOptions: ClientOptionsIn) {
-    this.serviceUrl = new ClientURL(clientOptions.serviceUrl || 'https://api.capmonster.cloud');
+    const { serviceUrl = 'https://api.capmonster.cloud' } = clientOptions;
+    this.serviceUrl = new ClientURL(serviceUrl);
     this.clientKey = clientOptions.clientKey;
     this.softId = clientOptions.softId;
   }

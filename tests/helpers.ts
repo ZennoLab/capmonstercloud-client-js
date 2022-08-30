@@ -3,10 +3,13 @@ import { AddressInfo, Socket } from 'net';
 
 export type ResponseListener = () => void;
 
+type CaughtRequest = {
+  contentType?: string;
+  body?: string;
+};
+
 export type ServerMock = {
-  pushResponseListener: (responseListener: ResponseListener) => void;
-  requestsCount: number;
-  responseListeners: Array<ResponseListener>;
+  caughtRequests: Array<CaughtRequest>;
   address: AddressInfo;
   destroy: () => Promise<void>;
   server?: Server;
@@ -14,18 +17,22 @@ export type ServerMock = {
   socketMap: Record<string, Socket>;
 };
 
-export function createServerMock(params: {
-  responseStatusCode?: number;
-  responseContentType?: string;
+type MockResponse = {
+  statusCode?: number;
+  contentType?: string;
   responseBody?: string;
-}): Promise<ServerMock> {
+};
+
+const DEFAULT_responseStatusCode = 200;
+const DEFAULT_responseContentType = 'text/plain';
+const DEFAULT_responseBody = '{}';
+
+export function createServerMock(params: { responses?: Array<MockResponse> }): Promise<ServerMock> {
   // Set defaults input object
-  const { responseStatusCode = 200, responseContentType = 'text/plain', responseBody = '{}' } = params;
+  const { responses = [] } = params;
   return new Promise((resolve, reject) => {
     const srv: ServerMock = {
-      pushResponseListener,
-      requestsCount: 0,
-      responseListeners: [],
+      caughtRequests: [],
       address: {
         port: 0,
         family: 'IPv4',
@@ -54,19 +61,21 @@ export function createServerMock(params: {
       lastSocketKey: 0,
       socketMap: {},
     };
-    function pushResponseListener(responseListener: ResponseListener) {
-      srv.responseListeners.push(responseListener);
-    }
     srv.server = http.createServer((req, res) => {
-      srv.requestsCount++;
-      res.writeHead(responseStatusCode, {
-        'Content-Type': responseContentType,
+      const caughtRequest: CaughtRequest = { contentType: req.headers['content-type'] };
+      srv.caughtRequests.push(caughtRequest);
+      const chunks: Array<Uint8Array> = [];
+      req.on('data', (chunk) => chunks.push(chunk));
+      req.on('end', () => {
+        const requestBody = Buffer.concat(chunks).toString('utf8');
+        caughtRequest.body = requestBody;
       });
-      res.end(responseBody);
-      const responseListener = srv.responseListeners.shift();
-      if (responseListener) {
-        responseListener();
-      }
+
+      const response = responses.shift();
+      res.writeHead((response && response.statusCode) || DEFAULT_responseStatusCode, {
+        'Content-Type': (response && response.contentType) || DEFAULT_responseContentType,
+      });
+      res.end((response && response.responseBody) || DEFAULT_responseBody);
     });
     srv.server.on('listening', () => {
       if (srv.server) {

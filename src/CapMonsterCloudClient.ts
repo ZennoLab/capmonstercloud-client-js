@@ -231,7 +231,7 @@ export class CapMonsterCloudClient {
     await new Promise((resolve) => setTimeout(resolve, firstRequestDelay));
 
     let signalAborted = false;
-    setTimeout(() => {
+    const wholeTimeoutId = setTimeout(() => {
       signalAborted = true;
       cancellationController && cancellationController.abort();
       debugTask('cancellationController abort()');
@@ -242,8 +242,10 @@ export class CapMonsterCloudClient {
         const result = await this.GetTaskResult(createdTask.taskId, cancellationController);
         switch (result.type) {
           case TaskResultType.Failed:
+            clearTimeout(wholeTimeoutId);
             return new CaptchaResult<TaskCompletedSolution>({ error: result.error });
           case TaskResultType.Completed:
+            clearTimeout(wholeTimeoutId);
             return new CaptchaResult<TaskCompletedSolution>({ solution: result.solution as TaskCompletedSolution });
           case TaskResultType.InProgress:
           default:
@@ -254,6 +256,7 @@ export class CapMonsterCloudClient {
           break;
         }
 
+        clearTimeout(wholeTimeoutId);
         throw err;
       }
 
@@ -264,6 +267,7 @@ export class CapMonsterCloudClient {
       await new Promise((resolve) => setTimeout(resolve, resultTimeouts.requestsInterval));
     }
 
+    clearTimeout(wholeTimeoutId);
     return new CaptchaResult<TaskCompletedSolution>({ error: ErrorType.Timeout });
   }
 }

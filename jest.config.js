@@ -2,7 +2,7 @@ module.exports = {
   transform: {
     '^.+\\.ts$': 'ts-jest',
   },
-  testRegex: '__tests__',
+  testRegex: '\\.spec\\.ts$',
   testPathIgnorePatterns: ['node_modules/', 'dist/'],
   moduleFileExtensions: ['ts', 'js'],
   globals: {

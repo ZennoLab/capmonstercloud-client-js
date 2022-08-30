@@ -11,7 +11,6 @@ export class CapMonsterCloudClientFactory {
   static Create(options: ClientOptions) {
     return new CapMonsterCloudClient(
       options,
-      //   HttpClients.GetOrAdd(options.ServiceUri, (uri) => CreateHttpClient(uri, httpMessageHandlerFactory, configureClient)),
       CapMonsterCloudClientFactory.httpClients.GetOrAdd(
         options.serviceUrl.href,
         CapMonsterCloudClientFactory.CreateHttpClient(options.serviceUrl),

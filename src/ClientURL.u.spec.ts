@@ -1,6 +1,6 @@
 import { ClientURL } from './ClientURL';
 
-describe('Check ClientURL()', () => {
+describe('Check unit tests for ClientURL()', () => {
   it('should assign default 80 port for http protocol', () => {
     const clientURL = new ClientURL('http://localhost');
 
