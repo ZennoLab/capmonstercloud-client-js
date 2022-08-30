@@ -1,5 +1,5 @@
 import { TaskType } from '../TaskType';
-import { applyMixins } from '../Utils';
+import { Mixin } from 'ts-mixer';
 import { ProxyInfo, ProxyInfoIn } from './ProxyInfo';
 import { RecaptchaV2EnterpriseRequestBase, RecaptchaV2EnterpriseRequestBaseIn } from './RecaptchaV2EnterpriseRequestBase';
 
@@ -12,10 +12,8 @@ export type RecaptchaV2EnterpriseRequestIn = Pick<
 /**
  * Recaptcha V2 Enterprise recognition request (with proxy).
  */
-export class RecaptchaV2EnterpriseRequest extends RecaptchaV2EnterpriseRequestBase {
+export class RecaptchaV2EnterpriseRequest extends Mixin(RecaptchaV2EnterpriseRequestBase, ProxyInfo) {
   constructor(argsObj: RecaptchaV2EnterpriseRequestIn) {
     super({ type: TaskType.RecaptchaV2EnterpriseTask, ...argsObj });
   }
 }
-
-applyMixins(RecaptchaV2EnterpriseRequest, [ProxyInfo]);

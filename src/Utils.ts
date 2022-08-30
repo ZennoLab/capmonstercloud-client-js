@@ -16,19 +16,6 @@ export class CsMap<T, V> extends Map {
 
 export type AnyObject = Record<string, unknown>;
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/**
- * Apply multiple class inheritance in JS runtime
- */
-export function applyMixins(derivedCtor: any, constructors: any[]) {
-  constructors.forEach((baseCtor) => {
-    Object.getOwnPropertyNames(baseCtor.prototype).forEach((name) => {
-      Object.defineProperty(derivedCtor.prototype, name, Object.getOwnPropertyDescriptor(baseCtor.prototype, name) || Object.create(null));
-    });
-  });
-}
-/* eslint-enable @typescript-eslint/no-explicit-any */
-
 let isNode = false;
 if (typeof process === 'object') {
   if (typeof process.versions === 'object') {

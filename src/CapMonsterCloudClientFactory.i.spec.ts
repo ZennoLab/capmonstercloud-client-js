@@ -55,8 +55,8 @@ describe('Check integration tests for CapMonsterCloudClientFactory()', () => {
     expect(await srv.destroy()).toBeUndefined();
   });
 
-  it.only('should terminate task', async () => {
-    expect.assertions(3);
+  it('should call createTask with proxy parameters', async () => {
+    expect.assertions(6);
 
     const srv = await createServerMock({
       responses: [
@@ -79,15 +79,17 @@ describe('Check integration tests for CapMonsterCloudClientFactory()', () => {
       proxyPassword: 'proxyPasswordHere',
       userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.132 Safari/537.36',
     });
-    console.log('recaptchaV2Request', recaptchaV2Request);
 
     const task = await cmcClient.Solve(recaptchaV2Request);
 
     expect(srv.caughtRequests[0]).toHaveProperty('userAgent', CapMonsterCloudClientFactory.CreateUserAgentString());
     expect(srv.caughtRequests[0]).toHaveProperty(
       'body',
-      '{"clientKey":"<your capmonster.cloud API key>","task":{"type":"NoCaptchaTask","websiteURL":"https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=high","websiteKey":"6Lcg7CMUAAAAANphynKgn9YAgA4tQ2KI_iqRyTwd","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.132 Safari/537.36"},"softId":53}}',
+      '{"clientKey":"<your capmonster.cloud API key>","task":{"type":"NoCaptchaTask","websiteURL":"https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=high","websiteKey":"6Lcg7CMUAAAAANphynKgn9YAgA4tQ2KI_iqRyTwd","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.132 Safari/537.36","proxyType":"http","proxyAddress":"8.8.8.8","proxyPort":8080,"proxyLogin":"proxyLoginHere","proxyPassword":"proxyPasswordHere"},"softId":53}',
     );
+    expect(srv.caughtRequests[1]).toHaveProperty('body', '{"clientKey":"<your capmonster.cloud API key>","taskId":1234567}');
+    expect(task).toHaveProperty('solution');
+    expect(task).toHaveProperty('solution.gRecaptchaResponse', 'answer');
 
     expect(await srv.destroy()).toBeUndefined();
   });

@@ -11,7 +11,7 @@ export type ProxyInfoIn = {
 /**
  * Interface for captcha recognition with proxy requests
  */
-export abstract class ProxyInfo {
+export class ProxyInfo {
   /**
    * Type of the proxy
    */
@@ -39,4 +39,12 @@ export abstract class ProxyInfo {
    * Proxy password
    */
   public proxyPassword?: string;
+
+  constructor({ proxyType, proxyAddress, proxyPort, proxyLogin, proxyPassword }: ProxyInfoIn) {
+    this.proxyType = proxyType;
+    this.proxyAddress = proxyAddress;
+    this.proxyPort = proxyPort;
+    this.proxyLogin = proxyLogin;
+    this.proxyPassword = proxyPassword;
+  }
 }
