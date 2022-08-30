@@ -21,7 +21,7 @@
     "ZennoPoster"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "node js-rimraf.js && npx tsc",
     "test": "jest",
     "test-unit": "jest -c jest.config.unit.js",
     "test-integr": "jest -c jest.config.integration.js"

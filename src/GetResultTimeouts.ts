@@ -6,7 +6,7 @@ export type GetResultTimeouts = {
 };
 
 export const RecaptchaV2Timeouts = {
-  firstRequestDelay: 1000,
+  firstRequestDelay: 1000 * 1,
   firstRequestNoCacheDelay: 1000 * 10,
   requestsInterval: 1000 * 3,
   timeout: 1000 * 180,
