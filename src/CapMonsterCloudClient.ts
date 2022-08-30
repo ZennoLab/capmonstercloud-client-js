@@ -48,7 +48,7 @@ export class CapMonsterCloudClient {
     return { clientKey: this._options.clientKey, ...options };
   }
 
-  public async getBalance(cancellationController: AbortController = new AbortController()): Promise<GetBalanceResponseSuccess> {
+  public async getBalance(cancellationController?: AbortController): Promise<GetBalanceResponseSuccess> {
     try {
       const response = await this._httpClient.post<GetBalanceResponse>(
         'getBalance',
@@ -70,7 +70,7 @@ export class CapMonsterCloudClient {
     }
   }
 
-  private async CreateTask(task: Task, cancellationController: AbortController = new AbortController()): Promise<CreateTaskResponse> {
+  private async CreateTask(task: Task, cancellationController?: AbortController): Promise<CreateTaskResponse> {
     try {
       const response = await this._httpClient.post<CreateTaskResponse>(
         'createTask',
@@ -92,7 +92,7 @@ export class CapMonsterCloudClient {
 
   private async GetTaskResult<S extends TaskCompletedSolution>(
     taskId: number,
-    cancellationController: AbortController = new AbortController(),
+    cancellationController?: AbortController,
   ): Promise<TaskResult<S>> {
     try {
       const response = await this._httpClient.post<GetTaskResultResponse<S>>(
@@ -217,7 +217,7 @@ export class CapMonsterCloudClient {
   public async Solve(
     task: Task,
     resultTimeouts: GetResultTimeouts = this.detectResultTimeouts(task),
-    cancellationController: AbortController = new AbortController(),
+    cancellationController?: AbortController,
   ): Promise<CaptchaResult<TaskCompletedSolution>> {
     debugTask('task in', task);
     debugTask('resultTimeouts in', resultTimeouts);
@@ -230,12 +230,14 @@ export class CapMonsterCloudClient {
     debugTask('firstRequestDelay', firstRequestDelay);
     await new Promise((resolve) => setTimeout(resolve, firstRequestDelay));
 
+    let signalAborted = false;
     setTimeout(() => {
-      cancellationController.abort();
+      signalAborted = true;
+      cancellationController && cancellationController.abort();
       debugTask('cancellationController abort()');
     }, resultTimeouts.timeout);
 
-    while (!cancellationController.signal.aborted) {
+    while (signalAborted === false) {
       try {
         const result = await this.GetTaskResult(createdTask.taskId, cancellationController);
         switch (result.type) {
@@ -248,14 +250,14 @@ export class CapMonsterCloudClient {
             break;
         }
       } catch (err) {
-        if (cancellationController.signal.aborted) {
+        if (signalAborted) {
           break;
         }
 
         throw err;
       }
 
-      if (cancellationController.signal.aborted) {
+      if (signalAborted) {
         break;
       }
       debugTask('requestsInterval', resultTimeouts.requestsInterval);

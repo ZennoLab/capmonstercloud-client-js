@@ -21,19 +21,25 @@
     "ZennoPoster"
   ],
   "scripts": {
-    "build": "tsc"
+    "build": "tsc",
+    "test": "jest",
+    "test-unit": "jest -c jest.config.unit.js",
+    "test-integr": "jest -c jest.config.integration.js"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@types/debug": "^4.1.7",
+    "@types/jest": "^29.0.0",
     "@types/node": "^18.7.9",
     "@typescript-eslint/eslint-plugin": "^5.33.1",
     "@typescript-eslint/parser": "^5.33.1",
     "eslint": "^8.22.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
+    "jest": "^29.0.1",
     "prettier": "^2.7.1",
+    "ts-jest": "^28.0.8",
     "typescript": "^4.7.4"
   },
   "dependencies": {

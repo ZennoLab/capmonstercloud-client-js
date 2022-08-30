@@ -1,12 +1,11 @@
 import { IncomingMessage } from 'http';
 import { Agent } from 'https';
-import { Socket } from 'net';
 
 import { isNode } from './Utils';
-import { debugHttps, debugNet } from './Logger';
+import { debugHttp, debugNet } from './Logger';
 import { ClientURL } from './ClientURL';
 
-export type MethodT = 'getBalance' | 'createTask' | 'getTaskResult';
+type APIMethod = 'getBalance' | 'createTask' | 'getTaskResult';
 
 export type JSONResponseT = Record<string, unknown>;
 
@@ -16,8 +15,6 @@ export enum ResponseContentType {
 }
 
 export class HttpClientError extends Error {}
-
-export class HttpSocketError extends HttpClientError {}
 
 export class HttpStatusError extends HttpClientError {
   public statusMessage?: string;
@@ -48,59 +45,57 @@ export enum HttpStatusCode {
 export type IsomorphicResponse = IncomingMessage | Response;
 
 export class HttpClient {
-  private _socket: Socket | undefined;
-  private _agent: Agent | undefined;
-  public timeout: number | undefined;
-  public defaultRequestHeaders = {
-    UserAgent: '',
-    ContentType: 'application/json',
+  private _agent?: Agent;
+  public url: ClientURL;
+  public timeout?: number;
+  public requestHeaders!: {
+    userAgent: string;
+    contentType: string;
   };
-  constructor(public url: ClientURL) {}
+  constructor({
+    url,
+    timeout,
+    requestHeaders,
+  }: {
+    url: ClientURL;
+    timeout?: number;
+    requestHeaders?: {
+      userAgent?: string;
+      contentType?: string;
+    };
+  }) {
+    const { userAgent = '', contentType = 'application/json' } = requestHeaders || {};
+    this.url = url;
+    this.timeout = timeout;
+    this.requestHeaders = {
+      userAgent,
+      contentType,
+    };
+  }
 
-  async post<T extends JSONResponseT>(method: MethodT, data: string, cancellationController: AbortController): Promise<T> {
+  async post<T extends JSONResponseT>(method: APIMethod, data: string, cancellationController?: AbortController): Promise<T> {
     if (isNode) {
-      await this.netConnectOrUse();
+      await this.netAgentUse();
     }
     return await this.postJSON<T>(method, data, cancellationController);
   }
 
-  private netConnect(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      // require('https') hide require call from browser bundler, e.g. webpack
-      const https = module[`require`].call(module, 'https');
-      // require('net') hide require call from browser bundler, e.g. webpack
-      const net = module[`require`].call(module, 'net');
-      this._socket = net.connect(this.url.clientPort, this.url.hostname);
-      (this._socket as Socket).on('error', (err) => {
-        debugNet('Got Socket error', err);
-        this._socket = undefined;
-        this._agent = undefined;
-        reject(err);
-      });
-      (this._socket as Socket).on('close', (err) => {
-        debugNet('Socket closed', err);
-        this._socket = undefined;
-        this._agent = undefined;
-        reject(err);
-      });
-      (this._socket as Socket).on('connect', () => {
-        debugNet('Socket connected');
-        if (this._socket) {
-          this._agent = new https.Agent({ socket: this._socket, keepAlive: true, timeout: this.timeout });
-          resolve();
-        } else {
-          reject();
-        }
-      });
+  private createAgent(): Promise<void> {
+    return new Promise((resolve) => {
+      debugNet('Try create agent instance');
+      // require('http') or require('https') hide require call from browser bundler, e.g. webpack
+      const requester = module[`require`].call(module, this.url.protocol === 'https:' ? 'https' : 'http');
+      this._agent = new requester.Agent({ keepAlive: true, timeout: this.timeout });
+      resolve();
     });
   }
 
-  private netConnectOrUse(): Promise<void> {
-    if (this._socket) {
-      debugNet('Reuse socket instance');
+  private netAgentUse(): Promise<void> {
+    if (this._agent) {
+      debugNet('Reuse agent instance');
       return Promise.resolve();
     }
-    return this.netConnect();
+    return this.createAgent();
   }
 
   private responseStatusHandler(res: IsomorphicResponse, expectedStatus: number): Promise<IsomorphicResponse> {
@@ -155,7 +150,7 @@ export class HttpClient {
       res.on('data', (chunk) => chunks.push(chunk));
       res.on('end', () => {
         const responseBody = Buffer.concat(chunks).toString('utf8');
-        debugHttps('Response body received', responseBody);
+        debugHttp('Response body received', responseBody);
         resolve(responseBody);
       });
       res.on('error', reject);
@@ -179,20 +174,20 @@ export class HttpClient {
     }
   }
 
-  private requestHandler(method: MethodT, data: string, cancellationController: AbortController): Promise<IsomorphicResponse> {
+  private requestHandler(method: APIMethod, data: string, cancellationController?: AbortController): Promise<IsomorphicResponse> {
     return new Promise((resolve, reject) => {
       const headers = {
-        'user-agent': this.defaultRequestHeaders.UserAgent,
-        'content-type': this.defaultRequestHeaders.ContentType,
+        'user-agent': this.requestHeaders.userAgent,
+        'content-type': this.requestHeaders.contentType,
       };
       const options = {
         headers,
         method: 'POST',
-        signal: cancellationController.signal,
+        signal: cancellationController && cancellationController.signal,
       };
       if (isNode) {
         Object.assign(options, {
-          host: this.url.host,
+          host: this.url.hostname,
           port: this.url.port,
           path: `/${method}`,
           agent: this._agent,
@@ -203,18 +198,18 @@ export class HttpClient {
           body: data,
         });
       }
-      debugHttps('Request options', options);
-      debugHttps('Request body', data);
+      debugHttp('Request options', options);
+      debugHttp('Request body', data);
       if (isNode) {
-        // require('https') hide require call from browser bundler, e.g. webpack
-        const https = module[`require`].call(module, 'https');
-        https
+        // require('http') or require('https') hide require call from browser bundler, e.g. webpack
+        const requester = module[`require`].call(module, this.url.protocol === 'https:' ? 'https' : 'http');
+        requester
           .request(options, (res: IncomingMessage) => {
-            debugHttps('Response headers received', res.statusCode, res.statusMessage);
+            debugHttp('Response headers received', res.statusCode, res.statusMessage);
             resolve(res);
           })
           .on('error', (err: Error) => {
-            debugHttps('Response error', err);
+            debugHttp('Response error', err);
             reject(err);
           })
           .end(data);
@@ -226,7 +221,7 @@ export class HttpClient {
     });
   }
 
-  private async postJSON<T extends JSONResponseT>(method: MethodT, data: string, cancellationController: AbortController): Promise<T> {
+  private async postJSON<T extends JSONResponseT>(method: APIMethod, data: string, cancellationController?: AbortController): Promise<T> {
     const res = await this.requestHandler(method, data, cancellationController);
     await this.responseStatusHandler(res, 200);
     await this.responseContentTypeHandler(res, [ResponseContentType.json, ResponseContentType.text]);

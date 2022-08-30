@@ -20,11 +20,11 @@ export class CapMonsterCloudClientFactory {
   }
 
   static CreateHttpClient(url: ClientURL) {
-    const httpClient = new HttpClient(url);
-
-    httpClient.timeout = CapMonsterCloudClientFactory.httpTimeout;
-
-    httpClient.defaultRequestHeaders.UserAgent = CapMonsterCloudClientFactory.CreateUserAgentString();
+    const httpClient = new HttpClient({
+      url,
+      timeout: CapMonsterCloudClientFactory.httpTimeout,
+      requestHeaders: { userAgent: CapMonsterCloudClientFactory.CreateUserAgentString() },
+    });
 
     return httpClient;
   }
