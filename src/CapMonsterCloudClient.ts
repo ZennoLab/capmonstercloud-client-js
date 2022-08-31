@@ -223,14 +223,16 @@ export class CapMonsterCloudClient {
     debugTask('resultTimeouts in', resultTimeouts);
     const createdTask = await this.CreateTask(task, cancellationController);
     if (createdTask.errorId !== 0) {
-      return { error: ErrorCodeConverter.convert((createdTask as CreateTaskResponseError).errorCode) };
+      return new CaptchaResult<TaskCompletedSolution>({
+        error: ErrorCodeConverter.convert((createdTask as CreateTaskResponseError).errorCode),
+      });
     }
 
     const firstRequestDelay = task.nocache ? resultTimeouts.firstRequestNoCacheDelay : resultTimeouts.firstRequestDelay;
     debugTask('firstRequestDelay', firstRequestDelay);
     await new Promise((resolve) => setTimeout(resolve, firstRequestDelay));
 
-    let signalAborted = false;
+    let signalAborted = (cancellationController && cancellationController.signal.aborted) || false;
     const wholeTimeoutId = setTimeout(() => {
       signalAborted = true;
       cancellationController && cancellationController.abort();

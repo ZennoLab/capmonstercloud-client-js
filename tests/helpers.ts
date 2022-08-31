@@ -22,11 +22,13 @@ type MockResponse = {
   statusCode?: number;
   contentType?: string;
   responseBody?: string;
+  responseDelay?: number;
 };
 
 const DEFAULT_responseStatusCode = 200;
 const DEFAULT_responseContentType = 'text/plain';
 const DEFAULT_responseBody = '{}';
+const DEFAULT_responseDelay = 0;
 
 export function createServerMock(params: { responses?: Array<MockResponse> }): Promise<ServerMock> {
   // Set defaults input object
@@ -75,7 +77,9 @@ export function createServerMock(params: { responses?: Array<MockResponse> }): P
         res.writeHead((response && response.statusCode) || DEFAULT_responseStatusCode, {
           'Content-Type': (response && response.contentType) || DEFAULT_responseContentType,
         });
-        res.end((response && response.responseBody) || DEFAULT_responseBody);
+        setTimeout(() => {
+          res.end((response && response.responseBody) || DEFAULT_responseBody);
+        }, (response && response.responseDelay) || DEFAULT_responseDelay);
       });
     });
     srv.server.on('listening', () => {

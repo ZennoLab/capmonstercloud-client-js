@@ -1,6 +1,8 @@
 import { createServerMock } from '../tests/helpers';
 import { CapMonsterCloudClientFactory } from './CapMonsterCloudClientFactory';
+import { CaptchaResult } from './CaptchaResult';
 import { ClientOptions } from './ClientOptions';
+import { ErrorType } from './ErrorType';
 import { RecaptchaV2ProxylessRequest } from './Requests/RecaptchaV2ProxylessRequest';
 import { RecaptchaV2Request } from './Requests/RecaptchaV2Request';
 
@@ -55,7 +57,7 @@ describe('Check integration tests for CapMonsterCloudClientFactory()', () => {
     expect(await srv.destroy()).toBeUndefined();
   });
 
-  it('should call createTask with proxy parameters', async () => {
+  it('should call createTask with proxy parameters and getTaskResult methods with specified objects', async () => {
     expect.assertions(6);
 
     const srv = await createServerMock({
@@ -90,6 +92,271 @@ describe('Check integration tests for CapMonsterCloudClientFactory()', () => {
     expect(srv.caughtRequests[1]).toHaveProperty('body', '{"clientKey":"<your capmonster.cloud API key>","taskId":1234567}');
     expect(task).toHaveProperty('solution');
     expect(task).toHaveProperty('solution.gRecaptchaResponse', 'answer');
+
+    expect(await srv.destroy()).toBeUndefined();
+  });
+
+  it('should call terminate createTask by AbortController', async () => {
+    expect.assertions(3);
+
+    const srv = await createServerMock({
+      responses: [{ responseBody: '{"errorId":0,"taskId":1234567}' }],
+    });
+
+    const cmcClient = CapMonsterCloudClientFactory.Create(
+      new ClientOptions({ clientKey: '<your capmonster.cloud API key>', serviceUrl: `http://localhost:${srv.address.port}` }),
+    );
+
+    const recaptchaV2Request = new RecaptchaV2ProxylessRequest({
+      websiteURL: 'websiteURL',
+      websiteKey: 'websiteKey',
+      userAgent: 'userAgent',
+    });
+
+    const abortController = new AbortController();
+    setTimeout(() => abortController.abort(), 0);
+
+    try {
+      await cmcClient.Solve(recaptchaV2Request, undefined, abortController);
+    } catch (err) {
+      expect(err).toBeDefined();
+      expect(err).toHaveProperty('name', 'AbortError');
+    }
+
+    expect(await srv.destroy()).toBeUndefined();
+  });
+
+  it('should return failed task by createTask from server', async () => {
+    expect.assertions(4);
+
+    const srv = await createServerMock({
+      responses: [
+        {
+          responseBody:
+            '{"errorId":1,"errorCode":"ERROR_KEY_DOES_NOT_EXIST","errorDescription":"Account authorization key not found in the system or has incorrect format","taskId":0}',
+        },
+      ],
+    });
+
+    const cmcClient = CapMonsterCloudClientFactory.Create(
+      new ClientOptions({ clientKey: '<your capmonster.cloud API key>', serviceUrl: `http://localhost:${srv.address.port}` }),
+    );
+
+    const recaptchaV2Request = new RecaptchaV2ProxylessRequest({
+      websiteURL: 'websiteURL',
+      websiteKey: 'websiteKey',
+      userAgent: 'userAgent',
+    });
+
+    const task = await cmcClient.Solve(recaptchaV2Request);
+
+    expect(task).toBeInstanceOf(CaptchaResult);
+    expect(task.solution).toBeUndefined();
+    expect(task).toHaveProperty('error', 'KEY_DOES_NOT_EXIST');
+
+    expect(await srv.destroy()).toBeUndefined();
+  });
+
+  it('should terminate task while waiting for first request delay', async () => {
+    expect.assertions(5);
+
+    const srv = await createServerMock({
+      responses: [
+        { responseBody: '{"errorId":0,"taskId":1234567}' },
+        { responseBody: '{"errorId":0,"status":"ready","solution":{"gRecaptchaResponse":"answer"}}' },
+      ],
+    });
+
+    const cmcClient = CapMonsterCloudClientFactory.Create(
+      new ClientOptions({ clientKey: '<your capmonster.cloud API key>', serviceUrl: `http://localhost:${srv.address.port}` }),
+    );
+
+    const recaptchaV2Request = new RecaptchaV2ProxylessRequest({
+      websiteURL: 'websiteURL',
+      websiteKey: 'websiteKey',
+      userAgent: 'userAgent',
+    });
+
+    const abortController = new AbortController();
+    // abort after 2sec while Solve should wait for 3sec firstRequestDelay
+    setTimeout(() => abortController.abort(), 1000 * 2);
+
+    const task = await cmcClient.Solve(
+      recaptchaV2Request,
+      {
+        firstRequestDelay: 1000 * 3,
+        firstRequestNoCacheDelay: 0,
+        requestsInterval: 1000 * 100,
+        timeout: 1000 * 180,
+      },
+      abortController,
+    );
+
+    expect(srv.caughtRequests[0]).toHaveProperty(
+      'body',
+      '{"clientKey":"<your capmonster.cloud API key>","task":{"type":"NoCaptchaTaskProxyless","websiteURL":"websiteURL","websiteKey":"websiteKey","userAgent":"userAgent"},"softId":53}',
+    );
+    expect(task).toBeInstanceOf(CaptchaResult);
+    expect(task.solution).toBeUndefined();
+    expect(task).toHaveProperty('error', ErrorType.Timeout);
+
+    expect(await srv.destroy()).toBeUndefined();
+  });
+
+  it('should terminate task while waiting for first request delay by nocache', async () => {
+    expect.assertions(5);
+
+    const srv = await createServerMock({
+      responses: [
+        { responseBody: '{"errorId":0,"taskId":1234567}' },
+        { responseBody: '{"errorId":0,"status":"ready","solution":{"gRecaptchaResponse":"answer"}}' },
+      ],
+    });
+
+    const cmcClient = CapMonsterCloudClientFactory.Create(
+      new ClientOptions({ clientKey: '<your capmonster.cloud API key>', serviceUrl: `http://localhost:${srv.address.port}` }),
+    );
+
+    const recaptchaV2Request = new RecaptchaV2ProxylessRequest({
+      websiteURL: 'websiteURL',
+      websiteKey: 'websiteKey',
+      userAgent: 'userAgent',
+      nocache: true,
+    });
+
+    const abortController = new AbortController();
+    // abort after 1sec while Solve should wait for 2sec firstRequestNoCacheDelay
+    setTimeout(() => abortController.abort(), 1000 * 1);
+
+    const task = await cmcClient.Solve(
+      recaptchaV2Request,
+      {
+        firstRequestDelay: 1000 * 100,
+        firstRequestNoCacheDelay: 1000 * 2,
+        requestsInterval: 1000 * 100,
+        timeout: 1000 * 180,
+      },
+      abortController,
+    );
+
+    expect(srv.caughtRequests[0]).toHaveProperty(
+      'body',
+      '{"clientKey":"<your capmonster.cloud API key>","task":{"type":"NoCaptchaTaskProxyless","nocache":true,"websiteURL":"websiteURL","websiteKey":"websiteKey","userAgent":"userAgent"},"softId":53}',
+    );
+    expect(task).toBeInstanceOf(CaptchaResult);
+    expect(task.solution).toBeUndefined();
+    expect(task).toHaveProperty('error', ErrorType.Timeout);
+
+    expect(await srv.destroy()).toBeUndefined();
+  });
+
+  it('should return failed task by whole timeout', async () => {
+    expect.assertions(5);
+
+    const srv = await createServerMock({
+      responses: [
+        { responseBody: '{"errorId":0,"taskId":1234567}' },
+        { responseBody: '{"errorId":0,"status":"processing"}', responseDelay: 2000 },
+      ],
+    });
+
+    const cmcClient = CapMonsterCloudClientFactory.Create(
+      new ClientOptions({ clientKey: '<your capmonster.cloud API key>', serviceUrl: `http://localhost:${srv.address.port}` }),
+    );
+
+    const recaptchaV2Request = new RecaptchaV2ProxylessRequest({
+      websiteURL: 'websiteURL',
+      websiteKey: 'websiteKey',
+    });
+
+    const task = await cmcClient.Solve(recaptchaV2Request, {
+      firstRequestDelay: 0,
+      firstRequestNoCacheDelay: 0,
+      requestsInterval: 1000 * 100,
+      timeout: 1000,
+    });
+
+    expect(srv.caughtRequests[0]).toHaveProperty(
+      'body',
+      '{"clientKey":"<your capmonster.cloud API key>","task":{"type":"NoCaptchaTaskProxyless","websiteURL":"websiteURL","websiteKey":"websiteKey"},"softId":53}',
+    );
+    expect(task).toBeInstanceOf(CaptchaResult);
+    expect(task.solution).toBeUndefined();
+    expect(task).toHaveProperty('error', ErrorType.Timeout);
+
+    expect(await srv.destroy()).toBeUndefined();
+  });
+
+  it('should return failed task by GetTaskResult from server', async () => {
+    expect.assertions(4);
+
+    const srv = await createServerMock({
+      responses: [
+        { responseBody: '{"errorId":0,"taskId":1234567}' },
+        {
+          responseBody:
+            '{"errorId":1,"errorCode":"ERROR_TOO_BIG_CAPTCHA_FILESIZE","errorDescription":"The size of the captcha you are uploading is more than 500,000 bytes.","taskId":1234567}',
+        },
+      ],
+    });
+
+    const cmcClient = CapMonsterCloudClientFactory.Create(
+      new ClientOptions({ clientKey: '<your capmonster.cloud API key>', serviceUrl: `http://localhost:${srv.address.port}` }),
+    );
+
+    const recaptchaV2Request = new RecaptchaV2ProxylessRequest({
+      websiteURL: 'websiteURL',
+      websiteKey: 'websiteKey',
+    });
+
+    const task = await cmcClient.Solve(recaptchaV2Request);
+
+    expect(task).toBeInstanceOf(CaptchaResult);
+    expect(task.solution).toBeUndefined();
+    expect(task).toHaveProperty('error', 'TOO_BIG_CAPTCHA_FILESIZE');
+
+    expect(await srv.destroy()).toBeUndefined();
+  });
+
+  it('should terminate task while waiting for requestsInterval', async () => {
+    expect.assertions(3);
+
+    const srv = await createServerMock({
+      responses: [
+        { responseBody: '{"errorId":0,"taskId":1234567}' },
+        { responseBody: '{"errorId":0,"status":"processing"}' },
+        { responseBody: '{"errorId":0,"status":"processing"}' },
+      ],
+    });
+
+    const cmcClient = CapMonsterCloudClientFactory.Create(
+      new ClientOptions({ clientKey: '<your capmonster.cloud API key>', serviceUrl: `http://localhost:${srv.address.port}` }),
+    );
+
+    const recaptchaV2Request = new RecaptchaV2ProxylessRequest({
+      websiteURL: 'websiteURL',
+      websiteKey: 'websiteKey',
+    });
+
+    const abortController = new AbortController();
+    // abort after 2sec while Solve should wait for 2sec requestsInterval
+    setTimeout(() => abortController.abort(), 1000 * 1);
+
+    try {
+      await cmcClient.Solve(
+        recaptchaV2Request,
+        {
+          firstRequestDelay: 0,
+          firstRequestNoCacheDelay: 0,
+          requestsInterval: 1000 * 2,
+          timeout: 1000 * 180,
+        },
+        abortController,
+      );
+    } catch (err) {
+      expect(err).toBeDefined();
+      expect(srv.caughtRequests.length).toBe(2);
+    }
 
     expect(await srv.destroy()).toBeUndefined();
   });
