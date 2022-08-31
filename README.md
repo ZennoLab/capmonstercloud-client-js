@@ -8,7 +8,7 @@ Via [NPM](https://www.npmjs.com/package/@zennolab_com/capmonstercloud-client):
 
     npm i @zennolab_com/capmonstercloud-client
 
-## Usage with Node
+## Usage with Node (with or withoout Typescript)
 
 ```javascript
 const { CapMonsterCloudClientFactory, ClientOptions, RecaptchaV2ProxylessRequest } = require('@zennolab_com/capmonstercloud-client');
@@ -34,6 +34,34 @@ run()
     console.error(err);
     process.exit(1);
   });
+
+```
+
+## Usage with Browser (with or withoout Typescript)
+
+Browser implementation use [fetch](https://caniuse.com/fetch) instead of [http(s)](https://nodejs.org/api/http.html).
+For browser usage you need some Module Bundler (e.g. [Webpack](https://webpack.js.org/)).
+
+```javascript
+import { CapMonsterCloudClientFactory, ClientOptions, RecaptchaV2Request } from '@zennolab_com/capmonstercloud-client';
+
+document.addEventListener('DOMContentLoaded', async () => {
+  const cmcClient = CapMonsterCloudClientFactory.Create(new ClientOptions({ clientKey: '<your capmonster.cloud API key>' }));
+  console.log(await cmcClient.getBalance());
+
+  const recaptchaV2Request = new RecaptchaV2Request({
+    websiteURL: 'https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=high',
+    websiteKey: '6Lcg7CMUAAAAANphynKgn9YAgA4tQ2KI_iqRyTwd',
+    proxyType: 'http',
+    proxyAddress: '8.8.8.8',
+    proxyPort: 8080,
+    proxyLogin: 'proxyLoginHere',
+    proxyPassword: 'proxyPasswordHere',
+    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.132 Safari/537.36',
+  });
+
+  console.log(await cmcClient.Solve(recaptchaV2Request));
+});
 
 ```
 
