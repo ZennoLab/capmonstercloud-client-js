@@ -5,20 +5,10 @@ import { ErrorCodeConverter } from './ErrorCodeConverter';
 import { ErrorType } from './ErrorType';
 import { GetBalanceError, GetBalanceResponse, GetBalanceResponseError, GetBalanceResponseSuccess } from './GetBalance';
 import { GetTaskResultResponse, TaskCompletedSolution, TaskResult, TaskResultStatus, TaskResultType } from './GetTaskResult';
-import {
-  FunCaptchaTimeouts,
-  GeeTestTimeouts,
-  GetResultTimeouts,
-  HCaptchaTimeouts,
-  ImageToTextTimeouts,
-  RecaptchaV2EnterpriseTimeouts,
-  RecaptchaV2Timeouts,
-  RecaptchaV3Timeouts,
-} from './GetResultTimeouts';
+import { detectResultTimeouts, GetResultTimeouts } from './GetResultTimeouts';
 import { HttpClient, HttpStatusCode, HttpStatusError, JSONParseError } from './HttpClient';
 import { Task } from './Requests/Task';
 import { debugTask } from './Logger';
-import { TaskType } from './TaskType';
 import { FunCaptchaProxylessRequest } from './Requests/FunCaptchaProxylessRequest';
 import { FunCaptchaResponse } from './Responses/FunCaptchaResponse';
 import { FunCaptchaRequest } from './Requests/FunCaptchaRequest';
@@ -128,32 +118,6 @@ export class CapMonsterCloudClient {
     }
   }
 
-  private detectResultTimeouts(task: Task) {
-    switch (task.type) {
-      case TaskType.FunCaptchaTaskProxyless:
-      case TaskType.FunCaptchaTask:
-        return FunCaptchaTimeouts;
-      case TaskType.GeeTestTaskProxyless:
-      case TaskType.GeeTestTask:
-        return GeeTestTimeouts;
-      case TaskType.HCaptchaTaskProxyless:
-      case TaskType.HCaptchaTask:
-        return HCaptchaTimeouts;
-      case TaskType.ImageToText:
-        return ImageToTextTimeouts;
-      case TaskType.RecaptchaV2EnterpriseTaskProxyless:
-      case TaskType.RecaptchaV2EnterpriseTask:
-        return RecaptchaV2EnterpriseTimeouts;
-      case TaskType.NoCaptchaTaskProxyless:
-      case TaskType.NoCaptchaTask:
-        return RecaptchaV2Timeouts;
-      case TaskType.RecaptchaV3TaskProxyless:
-        return RecaptchaV3Timeouts;
-      default:
-        throw new CaptchaResult({ error: ErrorType.UnknownTask });
-    }
-  }
-
   public async Solve(
     task: FunCaptchaProxylessRequest,
     resultTimeouts?: GetResultTimeouts,
@@ -216,7 +180,7 @@ export class CapMonsterCloudClient {
   ): Promise<CaptchaResult<RecaptchaV3Response>>;
   public async Solve(
     task: Task,
-    resultTimeouts: GetResultTimeouts = this.detectResultTimeouts(task),
+    resultTimeouts: GetResultTimeouts = detectResultTimeouts(task),
     cancellationController?: AbortController,
   ): Promise<CaptchaResult<TaskCompletedSolution>> {
     debugTask('task in', task);

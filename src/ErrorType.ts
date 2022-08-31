@@ -3,10 +3,6 @@
  */
 export enum ErrorType {
   /**
-   * Unknown task
-   */
-  UnknownTask = 'UnknownTask',
-  /**
    * Captcha recognition timeout is expired
    */
   Timeout = 'Timeout',
