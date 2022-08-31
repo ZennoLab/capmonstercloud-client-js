@@ -11,6 +11,6 @@ export type FunCaptchaRequestIn = Pick<FunCaptchaRequestBaseIn, Exclude<keyof Fu
  */
 export class FunCaptchaRequest extends Mixin(FunCaptchaRequestBase, ProxyInfo) {
   constructor(argsObj: FunCaptchaRequestIn) {
-    super({ type: TaskType.NoCaptchaTask, ...argsObj });
+    super({ type: TaskType.FunCaptchaTask, ...argsObj });
   }
 }

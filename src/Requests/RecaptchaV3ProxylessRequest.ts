@@ -16,11 +16,6 @@ export type RecaptchaV3ProxylessRequestIn = Pick<RecaptchaV3RequestIn, Exclude<k
  */
 export class RecaptchaV3ProxylessRequest extends CaptchaRequestBase {
   /**
-   * Recognition task type
-   */
-  public type = TaskType.RecaptchaV3TaskProxyless;
-
-  /**
    * Address of a webpage with Google ReCaptcha
    */
   public websiteURL!: string;
@@ -50,7 +45,7 @@ export class RecaptchaV3ProxylessRequest extends CaptchaRequestBase {
   public pageAction: string;
 
   constructor({ nocache, websiteURL, websiteKey, minScore, pageAction = 'verify' }: RecaptchaV3ProxylessRequestIn) {
-    super({ type: TaskType.ImageToText, nocache });
+    super({ type: TaskType.RecaptchaV3TaskProxyless, nocache });
     this.websiteURL = websiteURL;
     this.websiteKey = websiteKey;
     this.minScore = minScore;

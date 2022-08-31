@@ -28,21 +28,18 @@ import { RecaptchaV2Response } from './Responses/RecaptchaV2Response';
 import { RecaptchaV2Request } from './Requests/RecaptchaV2Request';
 import { RecaptchaV3ProxylessRequest } from './Requests/RecaptchaV3ProxylessRequest';
 import { RecaptchaV3Response } from './Responses/RecaptchaV3Response';
+import { SerializeObject } from './Requests/RequestsSerialization';
 
 export class CapmonsterCloudClientError extends Error {}
 
 export class CapMonsterCloudClient {
   constructor(private _options: ClientOptions, private _httpClient: HttpClient) {}
 
-  private calcJSONData(options: { task?: Task; softId?: number; taskId?: number } = {}) {
-    return { clientKey: this._options.clientKey, ...options };
-  }
-
   public async getBalance(cancellationController?: AbortController): Promise<GetBalanceResponseSuccess> {
     try {
       const response = await this._httpClient.post<GetBalanceResponse>(
         'getBalance',
-        JSON.stringify(this.calcJSONData()),
+        JSON.stringify(SerializeObject({ clientKey: this._options.clientKey })),
         cancellationController,
       );
 
@@ -64,7 +61,9 @@ export class CapMonsterCloudClient {
     try {
       const response = await this._httpClient.post<CreateTaskResponse>(
         'createTask',
-        JSON.stringify(this.calcJSONData({ task, softId: this._options.softId || ClientOptions.defaultSoftId })),
+        JSON.stringify(
+          SerializeObject({ clientKey: this._options.clientKey, task, softId: this._options.softId || ClientOptions.defaultSoftId }),
+        ),
         cancellationController,
       );
       debugTask('create task response', response);
@@ -87,7 +86,7 @@ export class CapMonsterCloudClient {
     try {
       const response = await this._httpClient.post<GetTaskResultResponse<S>>(
         'getTaskResult',
-        JSON.stringify(this.calcJSONData({ taskId })),
+        JSON.stringify(SerializeObject({ clientKey: this._options.clientKey, taskId })),
         cancellationController,
       );
       debugTask('GetTaskResult() response', response);
