@@ -6,10 +6,23 @@ export type ClientOptionsIn = {
   softId?: number;
 };
 
+/**
+ * Client options
+ */
 export class ClientOptions {
   static defaultSoftId = 53;
+  /**
+   * capmonster.cloud API URI.
+   * By default https://api.capmonster.cloud
+   */
   public serviceUrl: ClientURL;
+  /**
+   * capmonster.cloud API key
+   */
   public clientKey: string;
+  /**
+   * SoftId
+   */
   public softId?: number;
   constructor(clientOptions: ClientOptionsIn) {
     const { serviceUrl = 'https://api.capmonster.cloud' } = clientOptions;

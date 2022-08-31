@@ -12,7 +12,13 @@ export type GetBalanceResponseError = {
 
 export type GetBalanceResponse = GetBalanceResponseSuccess | GetBalanceResponseError;
 
+/**
+ * Exception on getting balance
+ */
 export class GetBalanceError extends Error {
+  /**
+   * @param errorType Gets occured error
+   */
   constructor(public errorType: ErrorType) {
     super(`Cannot get balance. Error was ${errorType}`);
   }

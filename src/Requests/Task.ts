@@ -11,6 +11,9 @@ import { RecaptchaV2ProxylessRequest } from './RecaptchaV2ProxylessRequest';
 import { RecaptchaV2Request } from './RecaptchaV2Request';
 import { RecaptchaV3ProxylessRequest } from './RecaptchaV3ProxylessRequest';
 
+/**
+ * Universal type for recognition request
+ */
 export type Task =
   | FunCaptchaProxylessRequest
   | FunCaptchaRequest

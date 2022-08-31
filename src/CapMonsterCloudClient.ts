@@ -30,11 +30,21 @@ import { RecaptchaV3ProxylessRequest } from './Requests/RecaptchaV3ProxylessRequ
 import { RecaptchaV3Response } from './Responses/RecaptchaV3Response';
 import { SerializeObject } from './Requests/RequestsSerialization';
 
+/**
+ * Base type for capmonster.cloud Client exceptions
+ */
 export class CapmonsterCloudClientError extends Error {}
 
+/**
+ * CapMonsterCloud client
+ */
 export class CapMonsterCloudClient {
   constructor(private _options: ClientOptions, private _httpClient: HttpClient) {}
 
+  /**
+   * Gets current amount of money on balance
+   * {@link https://zennolab.atlassian.net/wiki/spaces/APIS/pages/655432/getBalance+retrieve+account+balance}
+   */
   public async getBalance(cancellationController?: AbortController): Promise<GetBalanceResponseSuccess> {
     try {
       const response = await this._httpClient.post<GetBalanceResponse>(
@@ -57,6 +67,10 @@ export class CapMonsterCloudClient {
     }
   }
 
+  /**
+   * captcha task creating
+   * {@link https://zennolab.atlassian.net/wiki/spaces/APIS/pages/393308/createTask+captcha+task+creating}
+   */
   private async CreateTask(task: Task, cancellationController?: AbortController): Promise<CreateTaskResponse> {
     try {
       const response = await this._httpClient.post<CreateTaskResponse>(
@@ -79,6 +93,10 @@ export class CapMonsterCloudClient {
     }
   }
 
+  /**
+   * request task result
+   * {@link https://zennolab.atlassian.net/wiki/spaces/APIS/pages/688194/getTaskResult+request+task+result}
+   */
   private async GetTaskResult<S extends TaskCompletedSolution>(
     taskId: number,
     cancellationController?: AbortController,
@@ -117,66 +135,117 @@ export class CapMonsterCloudClient {
     }
   }
 
+  /**
+   * Solve FunCaptchaTaskProxyless task
+   * You will get response within 10 - 80 secs period depending on service workload.
+   */
   public async Solve(
     task: FunCaptchaProxylessRequest,
     resultTimeouts?: GetResultTimeouts,
     cancellationController?: AbortController,
   ): Promise<CaptchaResult<FunCaptchaResponse>>;
+  /**
+   * Solve FunCaptchaTask task
+   * You will get response within 10 - 80 secs period depending on service workload.
+   */
   public async Solve(
     task: FunCaptchaRequest,
     resultTimeouts?: GetResultTimeouts,
     cancellationController?: AbortController,
   ): Promise<CaptchaResult<FunCaptchaResponse>>;
+  /**
+   * Solve GeeTestTaskProxyless task
+   * You will get response within 10 - 80 secs period depending on service workload.
+   */
   public async Solve(
     task: GeeTestProxylessRequest,
     resultTimeouts?: GetResultTimeouts,
     cancellationController?: AbortController,
   ): Promise<CaptchaResult<GeeTestResponse>>;
+  /**
+   * Solve GeeTestTask task
+   * You will get response within 10 - 80 secs period depending on service workload.
+   */
   public async Solve(
     task: GeeTestRequest,
     resultTimeouts?: GetResultTimeouts,
     cancellationController?: AbortController,
   ): Promise<CaptchaResult<GeeTestResponse>>;
+  /**
+   * Solve HCaptchaTaskProxyless task
+   * You will get response within 10 - 180 secs period depending on service workload.
+   */
   public async Solve(
     task: HCaptchaProxylessRequest,
     resultTimeouts?: GetResultTimeouts,
     cancellationController?: AbortController,
   ): Promise<CaptchaResult<HCaptchaResponse>>;
+  /**
+   * Solve HCaptchaTask task
+   * You will get response within 10 - 180 secs period depending on service workload.
+   */
   public async Solve(
     task: HCaptchaRequest,
     resultTimeouts?: GetResultTimeouts,
     cancellationController?: AbortController,
   ): Promise<CaptchaResult<HCaptchaResponse>>;
+  /**
+   * Solve ImageToText task
+   * You will get response within 300ms to 6s period depending on service workload.
+   */
   public async Solve(
     task: ImageToTextRequest,
     resultTimeouts?: GetResultTimeouts,
     cancellationController?: AbortController,
   ): Promise<CaptchaResult<ImageToTextResponse>>;
+  /**
+   * Solve RecaptchaV2EnterpriseTaskProxyless task
+   * You will get response within 10 - 180 secs period depending on service workload.
+   */
   public async Solve(
     task: RecaptchaV2EnterpriseProxylessRequest,
     resultTimeouts?: GetResultTimeouts,
     cancellationController?: AbortController,
   ): Promise<CaptchaResult<RecaptchaV2EnterpriseResponse>>;
+  /**
+   * Solve RecaptchaV2EnterpriseTask task
+   * You will get response within 10 - 180 secs period depending on service workload.
+   */
   public async Solve(
     task: RecaptchaV2EnterpriseRequest,
     resultTimeouts?: GetResultTimeouts,
     cancellationController?: AbortController,
   ): Promise<CaptchaResult<RecaptchaV2EnterpriseResponse>>;
+  /**
+   * Solve NoCaptchaTaskProxyless task
+   * You will get response within 10 - 180 secs period depending on service workload.
+   */
   public async Solve(
     task: RecaptchaV2ProxylessRequest,
     resultTimeouts?: GetResultTimeouts,
     cancellationController?: AbortController,
   ): Promise<CaptchaResult<RecaptchaV2Response>>;
+  /**
+   * Solve NoCaptchaTask task
+   * You will get response within 10 - 180 secs period depending on service workload.
+   */
   public async Solve(
     task: RecaptchaV2Request,
     resultTimeouts?: GetResultTimeouts,
     cancellationController?: AbortController,
   ): Promise<CaptchaResult<RecaptchaV2Response>>;
+  /**
+   * Solve RecaptchaV3TaskProxyless task
+   * You will get response within 10 - 180 secs period depending on service workload.
+   */
   public async Solve(
     task: RecaptchaV3ProxylessRequest,
     resultTimeouts?: GetResultTimeouts,
     cancellationController?: AbortController,
   ): Promise<CaptchaResult<RecaptchaV3Response>>;
+  /**
+   * Solve {Task} task
+   */
   public async Solve(
     task: Task,
     resultTimeouts: GetResultTimeouts = detectResultTimeouts(task),
