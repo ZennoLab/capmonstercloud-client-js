@@ -48,7 +48,7 @@ describe('Check integration tests for CapMonsterCloudClientFactory()', () => {
     expect(srv.caughtRequests[0]).toHaveProperty('userAgent', CapMonsterCloudClientFactory.CreateUserAgentString());
     expect(srv.caughtRequests[0]).toHaveProperty(
       'body',
-      '{"clientKey":"<your capmonster.cloud API key>","task":{"type":"NoCaptchaTaskProxyless","websiteURL":"https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=high","websiteKey":"6Lcg7CMUAAAAANphynKgn9YAgA4tQ2KI_iqRyTwd"},"softId":53}',
+      '{"clientKey":"<your capmonster.cloud API key>","task":{"type":"NoCaptchaTaskProxyless","websiteURL":"https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=high","websiteKey":"6Lcg7CMUAAAAANphynKgn9YAgA4tQ2KI_iqRyTwd"},"softId":54}',
     );
     expect(srv.caughtRequests[1]).toHaveProperty('body', '{"clientKey":"<your capmonster.cloud API key>","taskId":7654321}');
     expect(task).toHaveProperty('solution');
@@ -87,7 +87,7 @@ describe('Check integration tests for CapMonsterCloudClientFactory()', () => {
     expect(srv.caughtRequests[0]).toHaveProperty('userAgent', CapMonsterCloudClientFactory.CreateUserAgentString());
     expect(srv.caughtRequests[0]).toHaveProperty(
       'body',
-      '{"clientKey":"<your capmonster.cloud API key>","task":{"type":"NoCaptchaTask","websiteURL":"https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=high","websiteKey":"6Lcg7CMUAAAAANphynKgn9YAgA4tQ2KI_iqRyTwd","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.132 Safari/537.36","proxyType":"http","proxyAddress":"8.8.8.8","proxyPort":8080,"proxyLogin":"proxyLoginHere","proxyPassword":"proxyPasswordHere"},"softId":53}',
+      '{"clientKey":"<your capmonster.cloud API key>","task":{"type":"NoCaptchaTask","websiteURL":"https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=high","websiteKey":"6Lcg7CMUAAAAANphynKgn9YAgA4tQ2KI_iqRyTwd","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.132 Safari/537.36","proxyType":"http","proxyAddress":"8.8.8.8","proxyPort":8080,"proxyLogin":"proxyLoginHere","proxyPassword":"proxyPasswordHere"},"softId":54}',
     );
     expect(srv.caughtRequests[1]).toHaveProperty('body', '{"clientKey":"<your capmonster.cloud API key>","taskId":1234567}');
     expect(task).toHaveProperty('solution');
@@ -194,7 +194,7 @@ describe('Check integration tests for CapMonsterCloudClientFactory()', () => {
 
     expect(srv.caughtRequests[0]).toHaveProperty(
       'body',
-      '{"clientKey":"<your capmonster.cloud API key>","task":{"type":"NoCaptchaTaskProxyless","websiteURL":"websiteURL","websiteKey":"websiteKey","userAgent":"userAgent"},"softId":53}',
+      '{"clientKey":"<your capmonster.cloud API key>","task":{"type":"NoCaptchaTaskProxyless","websiteURL":"websiteURL","websiteKey":"websiteKey","userAgent":"userAgent"},"softId":54}',
     );
     expect(task).toBeInstanceOf(CaptchaResult);
     expect(task.solution).toBeUndefined();
@@ -241,7 +241,7 @@ describe('Check integration tests for CapMonsterCloudClientFactory()', () => {
 
     expect(srv.caughtRequests[0]).toHaveProperty(
       'body',
-      '{"clientKey":"<your capmonster.cloud API key>","task":{"type":"NoCaptchaTaskProxyless","nocache":true,"websiteURL":"websiteURL","websiteKey":"websiteKey","userAgent":"userAgent"},"softId":53}',
+      '{"clientKey":"<your capmonster.cloud API key>","task":{"type":"NoCaptchaTaskProxyless","nocache":true,"websiteURL":"websiteURL","websiteKey":"websiteKey","userAgent":"userAgent"},"softId":54}',
     );
     expect(task).toBeInstanceOf(CaptchaResult);
     expect(task.solution).toBeUndefined();
@@ -278,7 +278,7 @@ describe('Check integration tests for CapMonsterCloudClientFactory()', () => {
 
     expect(srv.caughtRequests[0]).toHaveProperty(
       'body',
-      '{"clientKey":"<your capmonster.cloud API key>","task":{"type":"NoCaptchaTaskProxyless","websiteURL":"websiteURL","websiteKey":"websiteKey"},"softId":53}',
+      '{"clientKey":"<your capmonster.cloud API key>","task":{"type":"NoCaptchaTaskProxyless","websiteURL":"websiteURL","websiteKey":"websiteKey"},"softId":54}',
     );
     expect(task).toBeInstanceOf(CaptchaResult);
     expect(task.solution).toBeUndefined();

@@ -10,7 +10,7 @@ export type ClientOptionsIn = {
  * Client options
  */
 export class ClientOptions {
-  static defaultSoftId = 53;
+  static defaultSoftId = 54;
   /**
    * capmonster.cloud API URI.
    * By default https://api.capmonster.cloud
