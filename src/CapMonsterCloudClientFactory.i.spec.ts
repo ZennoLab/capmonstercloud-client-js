@@ -5,10 +5,11 @@ import { ClientOptions } from './ClientOptions';
 import { ErrorType } from './ErrorType';
 import { RecaptchaV2ProxylessRequest } from './Requests/RecaptchaV2ProxylessRequest';
 import { RecaptchaV2Request } from './Requests/RecaptchaV2Request';
+const { version } = require('../package.json'); // eslint-disable-line @typescript-eslint/no-var-requires
 
 describe('Check integration tests for CapMonsterCloudClientFactory()', () => {
-  it('should call getBalance method with specified object', async () => {
-    expect.assertions(3);
+  it(`should send user-agent header from node with version ${version}`, async () => {
+    expect.assertions(2);
 
     const srv = await createServerMock({ responses: [{ responseBody: '{"errorId":0,"balance":345.678}' }] });
 
@@ -18,14 +19,29 @@ describe('Check integration tests for CapMonsterCloudClientFactory()', () => {
 
     await cmcClient.getBalance();
 
-    expect(srv.caughtRequests[0]).toHaveProperty('userAgent', CapMonsterCloudClientFactory.CreateUserAgentString());
+    expect(srv.caughtRequests[0]).toHaveProperty('userAgent', `${CapMonsterCloudClientFactory.productName}/${version}`);
+
+    expect(await srv.destroy()).toBeUndefined();
+  });
+
+  it('should call getBalance method with specified object', async () => {
+    expect.assertions(2);
+
+    const srv = await createServerMock({ responses: [{ responseBody: '{"errorId":0,"balance":345.678}' }] });
+
+    const cmcClient = CapMonsterCloudClientFactory.Create(
+      new ClientOptions({ clientKey: '<your capmonster.cloud API key>', serviceUrl: `http://localhost:${srv.address.port}` }),
+    );
+
+    await cmcClient.getBalance();
+
     expect(srv.caughtRequests[0]).toHaveProperty('body', '{"clientKey":"<your capmonster.cloud API key>"}');
 
     expect(await srv.destroy()).toBeUndefined();
   });
 
   it('should call createTask and getTaskResult methods with specified objects', async () => {
-    expect.assertions(6);
+    expect.assertions(5);
 
     const srv = await createServerMock({
       responses: [
@@ -45,7 +61,6 @@ describe('Check integration tests for CapMonsterCloudClientFactory()', () => {
 
     const task = await cmcClient.Solve(recaptchaV2ProxylessRequest);
 
-    expect(srv.caughtRequests[0]).toHaveProperty('userAgent', CapMonsterCloudClientFactory.CreateUserAgentString());
     expect(srv.caughtRequests[0]).toHaveProperty(
       'body',
       '{"clientKey":"<your capmonster.cloud API key>","task":{"type":"NoCaptchaTaskProxyless","websiteURL":"https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=high","websiteKey":"6Lcg7CMUAAAAANphynKgn9YAgA4tQ2KI_iqRyTwd"},"softId":54}',
@@ -58,7 +73,7 @@ describe('Check integration tests for CapMonsterCloudClientFactory()', () => {
   });
 
   it('should call createTask with proxy parameters and getTaskResult methods with specified objects', async () => {
-    expect.assertions(6);
+    expect.assertions(5);
 
     const srv = await createServerMock({
       responses: [
@@ -84,7 +99,6 @@ describe('Check integration tests for CapMonsterCloudClientFactory()', () => {
 
     const task = await cmcClient.Solve(recaptchaV2Request);
 
-    expect(srv.caughtRequests[0]).toHaveProperty('userAgent', CapMonsterCloudClientFactory.CreateUserAgentString());
     expect(srv.caughtRequests[0]).toHaveProperty(
       'body',
       '{"clientKey":"<your capmonster.cloud API key>","task":{"type":"NoCaptchaTask","websiteURL":"https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=high","websiteKey":"6Lcg7CMUAAAAANphynKgn9YAgA4tQ2KI_iqRyTwd","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.132 Safari/537.36","proxyType":"http","proxyAddress":"8.8.8.8","proxyPort":8080,"proxyLogin":"proxyLoginHere","proxyPassword":"proxyPasswordHere"},"softId":54}',
