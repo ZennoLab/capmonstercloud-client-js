@@ -52,7 +52,7 @@ export class ImageToTextRequest extends CaptchaRequestBase {
   public math?: boolean;
 
   constructor({ nocache, body, CapMonsterModule, recognizingThreshold, Case, numeric, math }: ImageToTextRequestIn) {
-    super({ type: TaskType.ImageToText, nocache });
+    super({ type: TaskType.ImageToTextTask, nocache });
     this.body = body;
     this.CapMonsterModule = CapMonsterModule;
     this.recognizingThreshold = recognizingThreshold;

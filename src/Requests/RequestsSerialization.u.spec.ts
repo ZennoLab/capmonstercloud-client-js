@@ -90,7 +90,7 @@ describe('Check unit tests for SerializeObject()', () => {
     expect(serialized).toMatchObject({
       clientKey: '<your capmonster.cloud API key>',
       task: {
-        type: 'ImageToText',
+        type: 'ImageToTextTask',
         body: 'some base64 body',
         CapMonsterModule: 'yandexwave',
         Case: true,

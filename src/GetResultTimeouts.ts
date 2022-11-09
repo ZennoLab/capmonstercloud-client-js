@@ -66,7 +66,7 @@ export function detectResultTimeouts(task: Task): GetResultTimeouts {
     case TaskType.HCaptchaTaskProxyless:
     case TaskType.HCaptchaTask:
       return HCaptchaTimeouts;
-    case TaskType.ImageToText:
+    case TaskType.ImageToTextTask:
       return ImageToTextTimeouts;
     case TaskType.RecaptchaV2EnterpriseTaskProxyless:
     case TaskType.RecaptchaV2EnterpriseTask:
