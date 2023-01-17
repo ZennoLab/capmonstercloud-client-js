@@ -15,6 +15,8 @@ import { RecaptchaV2EnterpriseRequest, RecaptchaV2EnterpriseRequestIn } from './
 import { RecaptchaV2ProxylessRequest, RecaptchaV2ProxylessRequestIn } from './Requests/RecaptchaV2ProxylessRequest';
 import { RecaptchaV2Request, RecaptchaV2RequestIn } from './Requests/RecaptchaV2Request';
 import { RecaptchaV3ProxylessRequest, RecaptchaV3ProxylessRequestIn } from './Requests/RecaptchaV3ProxylessRequest';
+import { TurnstileRequest, TurnstileRequestIn } from './Requests/TurnstileRequest'
+import { TurnstileProxylessRequest, TurnstileProxylessRequestIn } from './Requests/TurnstileRequestProxyless'
 import { CapMonsterModules } from './CapMonsterModules';
 import { ErrorType } from './ErrorType';
 import { ProxyType } from './Requests/ProxyType';
@@ -35,6 +37,8 @@ export default {
   RecaptchaV2ProxylessRequest,
   RecaptchaV2Request,
   RecaptchaV3ProxylessRequest,
+  TurnstileRequest, 
+  TurnstileProxylessRequest
 };
 
 export {
@@ -68,4 +72,8 @@ export {
   RecaptchaV2RequestIn,
   RecaptchaV3ProxylessRequest,
   RecaptchaV3ProxylessRequestIn,
+  TurnstileRequest, 
+  TurnstileRequestIn,
+  TurnstileProxylessRequest,
+  TurnstileProxylessRequestIn
 };

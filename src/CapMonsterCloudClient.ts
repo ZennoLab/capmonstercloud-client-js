@@ -18,6 +18,8 @@ import { GeeTestRequest } from './Requests/GeeTestRequest';
 import { HCaptchaProxylessRequest } from './Requests/HCaptchaProxylessRequest';
 import { HCaptchaResponse } from './Responses/HCaptchaResponse';
 import { HCaptchaRequest } from './Requests/HCaptchaRequest';
+import { TurnstileRequest } from './Requests/TurnstileRequest';
+import { TurnstileProxylessRequest } from './Requests/TurnstileRequestProxyless';
 import { ImageToTextRequest } from './Requests/ImageToTextRequest';
 import { ImageToTextResponse } from './Responses/ImageToTextResponse';
 import { RecaptchaV2EnterpriseProxylessRequest } from './Requests/RecaptchaV2EnterpriseProxylessRequest';
@@ -28,6 +30,7 @@ import { RecaptchaV2Response } from './Responses/RecaptchaV2Response';
 import { RecaptchaV2Request } from './Requests/RecaptchaV2Request';
 import { RecaptchaV3ProxylessRequest } from './Requests/RecaptchaV3ProxylessRequest';
 import { RecaptchaV3Response } from './Responses/RecaptchaV3Response';
+import { TurnstileResponse } from './Responses/TurnstileResponse';
 import { SerializeObject } from './Requests/RequestsSerialization';
 
 /**
@@ -243,6 +246,24 @@ export class CapMonsterCloudClient {
     resultTimeouts?: GetResultTimeouts,
     cancellationController?: AbortController,
   ): Promise<CaptchaResult<RecaptchaV3Response>>;
+  /**
+   * Solve TurnstileProxyless task
+   * You will get response within 10 - 180 secs period depending on service workload.
+   */
+  public async Solve(
+    task: TurnstileProxylessRequest,
+    resultTimeouts?: GetResultTimeouts,
+    cancellationController?: AbortController,
+  ): Promise<CaptchaResult<TurnstileResponse>>;
+  /**
+   * Solve Turnstile task
+   * You will get response within 10 - 180 secs period depending on service workload.
+   */
+  public async Solve(
+    task: TurnstileRequest,
+    resultTimeouts?: GetResultTimeouts,
+    cancellationController?: AbortController,
+  ): Promise<CaptchaResult<TurnstileResponse>>;
   /**
    * Solve {Task} task
    */

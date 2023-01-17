@@ -11,4 +11,6 @@ export enum TaskType {
   NoCaptchaTaskProxyless = 'NoCaptchaTaskProxyless',
   NoCaptchaTask = 'NoCaptchaTask',
   RecaptchaV3TaskProxyless = 'RecaptchaV3TaskProxyless',
+  TurnstileTask = 'TurnstileTask',
+  TurnstileTaskProxyless = 'TurnstileTaskProxyless'
 }
