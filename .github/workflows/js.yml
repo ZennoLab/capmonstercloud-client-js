@@ -23,4 +23,4 @@ jobs:
       - name: tsc
         uses: icrawl/action-tsc@v1
       - run: npm run build
-      - run: npm test-integr
+      - run: npm run test-integr
