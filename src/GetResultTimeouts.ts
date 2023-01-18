@@ -55,6 +55,13 @@ export const GeeTestTimeouts = {
   timeout: 1000 * 80,
 } as GetResultTimeouts;
 
+export const TurnstileTimeouts = {
+  firstRequestDelay: 1000 * 1,
+  firstRequestNoCacheDelay: 1000 * 10,
+  requestsInterval: 1000 * 1,
+  timeout: 1000 * 80,
+} as GetResultTimeouts;
+
 export function detectResultTimeouts(task: Task): GetResultTimeouts {
   switch (task.type) {
     case TaskType.FunCaptchaTaskProxyless:
@@ -76,6 +83,9 @@ export function detectResultTimeouts(task: Task): GetResultTimeouts {
       return RecaptchaV2Timeouts;
     case TaskType.RecaptchaV3TaskProxyless:
       return RecaptchaV3Timeouts;
+    case TaskType.TurnstileTaskProxyless:
+    case TaskType.TurnstileTask:
+      return TurnstileTimeouts;
     default:
       throw new Error(`Could not detect result timeouts for provided task type = ${task.type}`);
   }
