@@ -88,4 +88,4 @@ DEBUG=cmc-* node app.js
 - [RecaptchaV2EnterpriseProxylessRequest](https://zennolab.atlassian.net/wiki/spaces/APIS/pages/2178383893/RecaptchaV2EnterpriseTaskProxyless+solving+Google+reCAPTCHA+Enterprise+without+proxy)
 - [RecaptchaV2EnterpriseRequest](https://zennolab.atlassian.net/wiki/spaces/APIS/pages/2179104769/RecaptchaV2EnterpriseTask+solving+Google+reCAPTCHA+Enterprise)
 - [TurnstileRequest](https://zennolab.atlassian.net/wiki/spaces/APIS/pages/2256797706/TurnstileTask+Turnstile)
-- [TurnstileReuqestProxyless](https://zennolab.atlassian.net/wiki/spaces/APIS/pages/2256764929/TurnstileTaskProxyless+Turnstile)
+- [TurnstileRequestProxyless](https://zennolab.atlassian.net/wiki/spaces/APIS/pages/2256764929/TurnstileTaskProxyless+Turnstile)
