@@ -1,4 +1,4 @@
-name: Push
+name: PullRequest
 
 on:
   pull_request:
