@@ -1,9 +1,7 @@
-name: Tests
+name: Push
 
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
     branches: [ "main" ]
   workflow_dispatch:
 
@@ -18,9 +16,13 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 16.x
+          registry-url: 'https://registry.npmjs.org'
       - name: yarn install
         run: yarn install
       - name: tsc
         uses: icrawl/action-tsc@v1
       - run: npm run build
       - run: npm run test-integr
+      - run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
