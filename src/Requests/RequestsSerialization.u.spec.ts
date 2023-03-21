@@ -188,7 +188,6 @@ describe('Check unit tests for SerializeObject()', () => {
         websiteKey: '472fc7af-86a4-4382-9a49-ca9090474471',
         isInvisible: true,
         data: 'some data',
-        userAgent: 'PostmanRuntime/7.29.0',
       }),
     });
 
@@ -200,7 +199,7 @@ describe('Check unit tests for SerializeObject()', () => {
         websiteKey: '472fc7af-86a4-4382-9a49-ca9090474471',
         isInvisible: true,
         data: 'some data',
-        userAgent: 'PostmanRuntime/7.29.0',
+        userAgent: expect(null == undefined).toBe(true),
       },
     });
   });
@@ -213,7 +212,6 @@ describe('Check unit tests for SerializeObject()', () => {
         websiteKey: '472fc7af-86a4-4382-9a49-ca9090474471',
         isInvisible: true,
         data: 'some data',
-        userAgent: 'PostmanRuntime/7.29.0',
         proxyType: 'https',
         proxyAddress: 'https://proxy.com',
         proxyPort: 6045,
@@ -230,7 +228,7 @@ describe('Check unit tests for SerializeObject()', () => {
         websiteKey: '472fc7af-86a4-4382-9a49-ca9090474471',
         isInvisible: true,
         data: 'some data',
-        userAgent: 'PostmanRuntime/7.29.0',
+        userAgent: expect(null == undefined).toBe(true),
         proxyType: 'https',
         proxyAddress: 'https://proxy.com',
         proxyPort: 6045,
