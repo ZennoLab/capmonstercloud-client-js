@@ -5,6 +5,8 @@ import { ClientOptions } from './ClientOptions';
 import { ErrorType } from './ErrorType';
 import { RecaptchaV2ProxylessRequest } from './Requests/RecaptchaV2ProxylessRequest';
 import { RecaptchaV2Request } from './Requests/RecaptchaV2Request';
+import { ComplexImageRecaptchaRequest } from './Requests/ComplexImageRecaptchaRequest';
+import { ComplexImageHCaptchaRequest } from './Requests/ComplexImageHCaptchaRequest';
 const { version } = require('../package.json'); // eslint-disable-line @typescript-eslint/no-var-requires
 
 describe('Check integration tests for CapMonsterCloudClientFactory()', () => {
@@ -371,6 +373,78 @@ describe('Check integration tests for CapMonsterCloudClientFactory()', () => {
       expect(err).toBeDefined();
       expect(srv.caughtRequests.length).toBe(2);
     }
+
+    expect(await srv.destroy()).toBeUndefined();
+  });
+
+  it('should solve Complex Image Recaptcha Task', async () => {
+    expect.assertions(5);
+
+    const srv = await createServerMock({
+      responses: [
+        { responseBody: '{"errorId":0,"taskId":1234567}' },
+        { responseBody: '{"errorId":0,"status":"ready","solution":{"answer":[true, false]}}' },
+      ],
+    });
+
+    const cmcClient = CapMonsterCloudClientFactory.Create(
+      new ClientOptions({ clientKey: '<your capmonster.cloud API key>', serviceUrl: `http://localhost:${srv.address.port}` }),
+    );
+
+    const complexImageRecaptchaRequest = new ComplexImageRecaptchaRequest({
+      imageUrls: ['https://i.postimg.cc/yYjg75Kv/payloadtraffic.jpg'],
+      metaData: {
+        Grid: '3x3',
+        Task: 'Please click each image containing a mountain',
+        TaskDefinition: '/m/015qff',
+      },
+      websiteURL: 'https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=middle',
+    });
+
+    const task = await cmcClient.Solve(complexImageRecaptchaRequest);
+
+    expect(srv.caughtRequests[0]).toHaveProperty(
+      'body',
+      '{"clientKey":"<your capmonster.cloud API key>","task":{"type":"ComplexImageTask","class":"recaptcha","imageUrls":["https://i.postimg.cc/yYjg75Kv/payloadtraffic.jpg"],"metaData":{"Grid":"3x3","Task":"Please click each image containing a mountain","TaskDefinition":"/m/015qff"},"websiteURL":"https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=middle"},"softId":54}',
+    );
+    expect(srv.caughtRequests[1]).toHaveProperty('body', '{"clientKey":"<your capmonster.cloud API key>","taskId":1234567}');
+    expect(task).toHaveProperty('solution');
+    expect(task).toHaveProperty('solution.answer', [true, false]);
+
+    expect(await srv.destroy()).toBeUndefined();
+  });
+
+  it('should solve Complex Image HCaptcha Task', async () => {
+    expect.assertions(5);
+
+    const srv = await createServerMock({
+      responses: [
+        { responseBody: '{"errorId":0,"taskId":1234567}' },
+        { responseBody: '{"errorId":0,"status":"ready","solution":{"answer":[true, false]}}' },
+      ],
+    });
+
+    const cmcClient = CapMonsterCloudClientFactory.Create(
+      new ClientOptions({ clientKey: '<your capmonster.cloud API key>', serviceUrl: `http://localhost:${srv.address.port}` }),
+    );
+
+    const complexImageHCaptchaRequest = new ComplexImageHCaptchaRequest({
+      imageUrls: ['https://i.postimg.cc/yYjg75Kv/payloadtraffic.jpg'],
+      metaData: {
+        Task: 'Please click each image containing a mountain',
+      },
+      websiteURL: 'https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=middle',
+    });
+
+    const task = await cmcClient.Solve(complexImageHCaptchaRequest);
+
+    expect(srv.caughtRequests[0]).toHaveProperty(
+      'body',
+      '{"clientKey":"<your capmonster.cloud API key>","task":{"type":"ComplexImageTask","class":"hcaptcha","imageUrls":["https://i.postimg.cc/yYjg75Kv/payloadtraffic.jpg"],"metaData":{"Task":"Please click each image containing a mountain"},"websiteURL":"https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=middle"},"softId":54}',
+    );
+    expect(srv.caughtRequests[1]).toHaveProperty('body', '{"clientKey":"<your capmonster.cloud API key>","taskId":1234567}');
+    expect(task).toHaveProperty('solution');
+    expect(task).toHaveProperty('solution.answer', [true, false]);
 
     expect(await srv.destroy()).toBeUndefined();
   });

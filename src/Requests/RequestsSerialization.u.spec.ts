@@ -12,6 +12,8 @@ import { GeeTestProxylessRequest } from './GeeTestProxylessRequest';
 import { GeeTestRequest } from './GeeTestRequest';
 import { RecaptchaV2EnterpriseProxylessRequest } from './RecaptchaV2EnterpriseProxylessRequest';
 import { RecaptchaV2EnterpriseRequest } from './RecaptchaV2EnterpriseRequest';
+import { ComplexImageHCaptchaRequest } from './ComplexImageHCaptchaRequest';
+import { ComplexImageRecaptchaRequest } from './ComplexImageRecaptchaRequest';
 
 describe('Check unit tests for SerializeObject()', () => {
   it(`should serialize RecaptchaV2ProxylessRequest`, () => {
@@ -352,6 +354,62 @@ describe('Check unit tests for SerializeObject()', () => {
         proxyLogin: 'proxyLoginHere',
         proxyPassword: 'proxyPasswordHere',
         userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.132 Safari/537.36',
+      },
+    });
+  });
+
+  it(`should serialize ComplexImageHCaptchaRequest`, () => {
+    const serialized = SerializeObject({
+      clientKey: '<your capmonster.cloud API key>',
+      task: new ComplexImageHCaptchaRequest({
+        imageUrls: ['https://i.postimg.cc/kg71cbRt/image-1.jpg', 'https://i.postimg.cc/6381Zx2j/image.jpg'],
+        metaData: {
+          Task: 'Please click each image containing a mountain',
+        },
+        websiteURL: 'https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=middle',
+      }),
+    });
+
+    expect(serialized).toMatchObject({
+      clientKey: '<your capmonster.cloud API key>',
+      task: {
+        type: 'ComplexImageTask',
+        class: 'hcaptcha',
+        imageUrls: ['https://i.postimg.cc/kg71cbRt/image-1.jpg', 'https://i.postimg.cc/6381Zx2j/image.jpg'],
+        metaData: {
+          Task: 'Please click each image containing a mountain',
+        },
+        websiteURL: 'https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=middle',
+      },
+    });
+  });
+
+  it(`should serialize ComplexImageRecaptchaRequest`, () => {
+    const serialized = SerializeObject({
+      clientKey: '<your capmonster.cloud API key>',
+      task: new ComplexImageRecaptchaRequest({
+        imageUrls: ['https://i.postimg.cc/yYjg75Kv/payloadtraffic.jpg'],
+        metaData: {
+          Grid: '3x3',
+          Task: 'Please click each image containing a mountain',
+          TaskDefinition: '/m/015qff',
+        },
+        websiteURL: 'https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=middle',
+      }),
+    });
+
+    expect(serialized).toMatchObject({
+      clientKey: '<your capmonster.cloud API key>',
+      task: {
+        type: 'ComplexImageTask',
+        class: 'recaptcha',
+        imageUrls: ['https://i.postimg.cc/yYjg75Kv/payloadtraffic.jpg'],
+        metaData: {
+          Grid: '3x3',
+          Task: 'Please click each image containing a mountain',
+          TaskDefinition: '/m/015qff',
+        },
+        websiteURL: 'https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=middle',
       },
     });
   });
