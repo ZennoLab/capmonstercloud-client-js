@@ -89,3 +89,5 @@ DEBUG=cmc-* node app.js
 - [RecaptchaV2EnterpriseRequest](https://zennolab.atlassian.net/wiki/spaces/APIS/pages/2179104769/RecaptchaV2EnterpriseTask+solving+Google+reCAPTCHA+Enterprise)
 - [TurnstileRequest](https://zennolab.atlassian.net/wiki/spaces/APIS/pages/2256797706/TurnstileTask+Turnstile)
 - [TurnstileRequestProxyless](https://zennolab.atlassian.net/wiki/spaces/APIS/pages/2256764929/TurnstileTaskProxyless+Turnstile)
+- [ComplexImageHCaptchaRequest](https://zennolab.atlassian.net/wiki/spaces/APIS/pages/2279538722/ComplexImageTask+HCaptcha+hCaptcha)
+- [ComplexImageRecaptchaRequest](https://zennolab.atlassian.net/wiki/spaces/APIS/pages/2279604225/ComplexImageTask+Recaptcha+Google)
