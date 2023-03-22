@@ -34,7 +34,7 @@ export class ComplexImageRequestBase extends CaptchaRequestBase {
    * Browser's User-Agent which is used in emulation.
    * It is required that you use a signature of a modern browser.
    */
-  public metaData: metaData;
+  public metadata: metaData;
   public userAgent?: string;
   /**
    * Address of a webpage with Captcha.
@@ -46,7 +46,7 @@ export class ComplexImageRequestBase extends CaptchaRequestBase {
     this.class = _class;
     this.imageUrls = imageUrls;
     this.imagesBase64 = imagesBase64;
-    this.metaData = metaData;
+    this.metadata = metaData;
     this.userAgent = userAgent;
     this.websiteURL = websiteURL;
   }
