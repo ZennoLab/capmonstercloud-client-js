@@ -5,6 +5,7 @@ import { ClientOptions } from './ClientOptions';
 import { ErrorType } from './ErrorType';
 import { RecaptchaV2ProxylessRequest } from './Requests/RecaptchaV2ProxylessRequest';
 import { RecaptchaV2Request } from './Requests/RecaptchaV2Request';
+import { HCaptchaProxylessRequest } from './Requests/HCaptchaProxylessRequest';
 import { ComplexImageRecaptchaRequest } from './Requests/ComplexImageRecaptchaRequest';
 import { ComplexImageHCaptchaRequest } from './Requests/ComplexImageHCaptchaRequest';
 const { version } = require('../package.json'); // eslint-disable-line @typescript-eslint/no-var-requires
@@ -70,6 +71,43 @@ describe('Check integration tests for CapMonsterCloudClientFactory()', () => {
     expect(srv.caughtRequests[1]).toHaveProperty('body', '{"clientKey":"<your capmonster.cloud API key>","taskId":7654321}');
     expect(task).toHaveProperty('solution');
     expect(task).toHaveProperty('solution.gRecaptchaResponse', 'answer');
+
+    expect(await srv.destroy()).toBeUndefined();
+  });
+
+  it('should call createTask and getTaskResult methods with specified objects for HCaptcha', async () => {
+    expect.assertions(7);
+
+    const srv = await createServerMock({
+      responses: [
+        { responseBody: '{"errorId":0,"taskId":7654321}' },
+        {
+          responseBody:
+            '{"errorId":0,"status":"ready","solution":{"gRecaptchaResponse":"answer", "userAgent": "userAgent", "respKey": "respKey"}}',
+        },
+      ],
+    });
+
+    const cmcClient = CapMonsterCloudClientFactory.Create(
+      new ClientOptions({ clientKey: '<your capmonster.cloud API key>', serviceUrl: `http://localhost:${srv.address.port}` }),
+    );
+
+    const HRecaptachRequest = new HCaptchaProxylessRequest({
+      websiteURL: 'https://lessons.zennolab.com/captchas/hcaptcha/?level=easy',
+      websiteKey: '6Lcg7CMUAAAAANphynKgn9YAgA4tQ2KI_iqRyTwd',
+    });
+
+    const task = await cmcClient.Solve(HRecaptachRequest);
+
+    expect(srv.caughtRequests[0]).toHaveProperty(
+      'body',
+      '{"clientKey":"<your capmonster.cloud API key>","task":{"type":"HCaptchaTaskProxyless","websiteURL":"https://lessons.zennolab.com/captchas/hcaptcha/?level=easy","websiteKey":"6Lcg7CMUAAAAANphynKgn9YAgA4tQ2KI_iqRyTwd"},"softId":54}',
+    );
+    expect(srv.caughtRequests[1]).toHaveProperty('body', '{"clientKey":"<your capmonster.cloud API key>","taskId":7654321}');
+    expect(task).toHaveProperty('solution');
+    expect(task).toHaveProperty('solution.gRecaptchaResponse', 'answer');
+    expect(task).toHaveProperty('solution.userAgent', 'userAgent');
+    expect(task).toHaveProperty('solution.respKey', 'respKey');
 
     expect(await srv.destroy()).toBeUndefined();
   });
