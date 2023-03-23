@@ -10,6 +10,8 @@ import { RecaptchaV2EnterpriseRequest } from './RecaptchaV2EnterpriseRequest';
 import { RecaptchaV2ProxylessRequest } from './RecaptchaV2ProxylessRequest';
 import { RecaptchaV2Request } from './RecaptchaV2Request';
 import { RecaptchaV3ProxylessRequest } from './RecaptchaV3ProxylessRequest';
+import { ComplexImageHCaptchaRequest } from './ComplexImageHCaptchaRequest';
+import { ComplexImageRecaptchaRequest } from './ComplexImageRecaptchaRequest';
 
 /**
  * Universal type for recognition request
@@ -26,4 +28,6 @@ export type Task =
   | RecaptchaV2EnterpriseRequest
   | RecaptchaV2ProxylessRequest
   | RecaptchaV2Request
-  | RecaptchaV3ProxylessRequest;
+  | RecaptchaV3ProxylessRequest
+  | ComplexImageHCaptchaRequest
+  | ComplexImageRecaptchaRequest;

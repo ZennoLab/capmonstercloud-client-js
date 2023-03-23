@@ -12,5 +12,6 @@ export enum TaskType {
   NoCaptchaTask = 'NoCaptchaTask',
   RecaptchaV3TaskProxyless = 'RecaptchaV3TaskProxyless',
   TurnstileTask = 'TurnstileTask',
-  TurnstileTaskProxyless = 'TurnstileTaskProxyless'
+  TurnstileTaskProxyless = 'TurnstileTaskProxyless',
+  ComplexImageTask = 'ComplexImageTask',
 }

@@ -6,6 +6,7 @@ import { ImageToTextResponse } from './Responses/ImageToTextResponse';
 import { RecaptchaV2EnterpriseResponse } from './Responses/RecaptchaV2EnterpriseResponse';
 import { RecaptchaV2Response } from './Responses/RecaptchaV2Response';
 import { RecaptchaV3Response } from './Responses/RecaptchaV3Response';
+import { ComplexImageResponse } from './Responses/ComplexImageResponse';
 
 export enum TaskResultType {
   Failed = 'Failed',
@@ -29,7 +30,8 @@ export type TaskCompletedSolution =
   | ImageToTextResponse
   | RecaptchaV2EnterpriseResponse
   | RecaptchaV2Response
-  | RecaptchaV3Response;
+  | RecaptchaV3Response
+  | ComplexImageResponse;
 
 export type TaskCompleted<S extends TaskCompletedSolution> = {
   type: TaskResultType.Completed;
