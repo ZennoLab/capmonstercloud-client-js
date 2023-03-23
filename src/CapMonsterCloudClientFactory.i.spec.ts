@@ -443,7 +443,7 @@ describe('Check integration tests for CapMonsterCloudClientFactory()', () => {
 
     expect(srv.caughtRequests[0]).toHaveProperty(
       'body',
-      '{"clientKey":"<your capmonster.cloud API key>","task":{"type":"ComplexImageTask","class":"recaptcha","imageUrls":["https://i.postimg.cc/yYjg75Kv/payloadtraffic.jpg"],"metaData":{"Grid":"3x3","Task":"Please click each image containing a mountain","TaskDefinition":"/m/015qff"},"websiteURL":"https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=middle"},"softId":54}',
+      '{"clientKey":"<your capmonster.cloud API key>","task":{"type":"ComplexImageTask","class":"recaptcha","imageUrls":["https://i.postimg.cc/yYjg75Kv/payloadtraffic.jpg"],"metadata":{"Grid":"3x3","Task":"Please click each image containing a mountain","TaskDefinition":"/m/015qff"},"websiteURL":"https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=middle"},"softId":54}',
     );
     expect(srv.caughtRequests[1]).toHaveProperty('body', '{"clientKey":"<your capmonster.cloud API key>","taskId":1234567}');
     expect(task).toHaveProperty('solution');
@@ -478,7 +478,7 @@ describe('Check integration tests for CapMonsterCloudClientFactory()', () => {
 
     expect(srv.caughtRequests[0]).toHaveProperty(
       'body',
-      '{"clientKey":"<your capmonster.cloud API key>","task":{"type":"ComplexImageTask","class":"hcaptcha","imageUrls":["https://i.postimg.cc/yYjg75Kv/payloadtraffic.jpg"],"metaData":{"Task":"Please click each image containing a mountain"},"websiteURL":"https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=middle"},"softId":54}',
+      '{"clientKey":"<your capmonster.cloud API key>","task":{"type":"ComplexImageTask","class":"hcaptcha","imageUrls":["https://i.postimg.cc/yYjg75Kv/payloadtraffic.jpg"],"metadata":{"Task":"Please click each image containing a mountain"},"websiteURL":"https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=middle"},"softId":54}',
     );
     expect(srv.caughtRequests[1]).toHaveProperty('body', '{"clientKey":"<your capmonster.cloud API key>","taskId":1234567}');
     expect(task).toHaveProperty('solution');
