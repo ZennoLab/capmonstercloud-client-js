@@ -8,7 +8,7 @@ Via [NPM](https://www.npmjs.com/package/@zennolab_com/capmonstercloud-client):
 
     npm i @zennolab_com/capmonstercloud-client
 
-## Usage with Node (with or withoout Typescript)
+## Usage with Node (with or without Typescript)
 
 ```javascript
 const { CapMonsterCloudClientFactory, ClientOptions, RecaptchaV2ProxylessRequest } = require('@zennolab_com/capmonstercloud-client');
