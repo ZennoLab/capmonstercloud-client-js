@@ -34,7 +34,8 @@ import { TurnstileResponse } from './Responses/TurnstileResponse';
 import { SerializeObject } from './Requests/RequestsSerialization';
 import { ComplexImageRecaptchaRequest } from './Requests/ComplexImageRecaptchaRequest';
 import { ComplexImageResponse } from './Responses/ComplexImageResponse';
-import {ComplexImageHCaptchaRequest} from "./Requests/ComplexImageHCaptchaRequest";
+import { ComplexImageHCaptchaRequest } from './Requests/ComplexImageHCaptchaRequest';
+import { ComplexImageFunCaptchaRequest } from './Requests/ComplexImageFunCaptchaRequest';
 
 /**
  * Base type for capmonster.cloud Client exceptions
@@ -282,6 +283,15 @@ export class CapMonsterCloudClient {
    */
   public async Solve(
     task: ComplexImageHCaptchaRequest,
+    resultTimeouts?: GetResultTimeouts,
+    cancellationController?: AbortController,
+  ): Promise<CaptchaResult<ComplexImageResponse>>;
+  /**
+   * Solve Complex Image FunCaptcha Task
+   * You will get response within 10 - 180 secs period depending on service workload.
+   */
+  public async Solve(
+    task: ComplexImageFunCaptchaRequest,
     resultTimeouts?: GetResultTimeouts,
     cancellationController?: AbortController,
   ): Promise<CaptchaResult<ComplexImageResponse>>;
