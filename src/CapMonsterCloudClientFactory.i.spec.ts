@@ -8,6 +8,7 @@ import { RecaptchaV2Request } from './Requests/RecaptchaV2Request';
 import { HCaptchaProxylessRequest } from './Requests/HCaptchaProxylessRequest';
 import { ComplexImageRecaptchaRequest } from './Requests/ComplexImageRecaptchaRequest';
 import { ComplexImageHCaptchaRequest } from './Requests/ComplexImageHCaptchaRequest';
+import { ComplexImageFunCaptchaRequest } from './Requests/ComplexImageFunCaptchaRequest';
 const { version } = require('../package.json'); // eslint-disable-line @typescript-eslint/no-var-requires
 
 describe('Check integration tests for CapMonsterCloudClientFactory()', () => {
@@ -483,6 +484,41 @@ describe('Check integration tests for CapMonsterCloudClientFactory()', () => {
     expect(srv.caughtRequests[1]).toHaveProperty('body', '{"clientKey":"<your capmonster.cloud API key>","taskId":1234567}');
     expect(task).toHaveProperty('solution');
     expect(task).toHaveProperty('solution.answer', [true, false]);
+
+    expect(await srv.destroy()).toBeUndefined();
+  });
+
+  it('should solve Complex Image FunCaptcha Task', async () => {
+    expect.assertions(5);
+
+    const srv = await createServerMock({
+      responses: [
+        { responseBody: '{"errorId":0,"taskId":1234567}' },
+        { responseBody: '{"errorId":0,"status":"ready","solution":{"answer":[false, false, false, true, false, false]}}' },
+      ],
+    });
+
+    const cmcClient = CapMonsterCloudClientFactory.Create(
+      new ClientOptions({ clientKey: '<your capmonster.cloud API key>', serviceUrl: `http://localhost:${srv.address.port}` }),
+    );
+
+    const complexImageFunCaptchaRequest = new ComplexImageFunCaptchaRequest({
+      imageUrls: ['https://i.postimg.cc/gkzX19Gr/funcaptcha.jpg'],
+      metaData: {
+        Task: 'Pick the elephant',
+      },
+      websiteURL: 'https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=middle',
+    });
+
+    const task = await cmcClient.Solve(complexImageFunCaptchaRequest);
+
+    expect(srv.caughtRequests[0]).toHaveProperty(
+      'body',
+      '{"clientKey":"<your capmonster.cloud API key>","task":{"type":"ComplexImageTask","class":"funcaptcha","imageUrls":["https://i.postimg.cc/gkzX19Gr/funcaptcha.jpg"],"metadata":{"Task":"Pick the elephant"},"websiteURL":"https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=middle"},"softId":54}',
+    );
+    expect(srv.caughtRequests[1]).toHaveProperty('body', '{"clientKey":"<your capmonster.cloud API key>","taskId":1234567}');
+    expect(task).toHaveProperty('solution');
+    expect(task).toHaveProperty('solution.answer', [false, false, false, true, false, false]);
 
     expect(await srv.destroy()).toBeUndefined();
   });

@@ -23,6 +23,7 @@ import { ProxyType } from './Requests/ProxyType';
 import { TaskType } from './TaskType';
 import { ComplexImageRecaptchaRequest, ComplexImageRecaptchaRequestIn } from './Requests/ComplexImageRecaptchaRequest';
 import { ComplexImageHCaptchaRequest, ComplexImageHCaptchaRequestIn } from './Requests/ComplexImageHCaptchaRequest';
+import { ComplexImageFunCaptchaRequest, ComplexImageFunCaptchaRequestIn } from './Requests/ComplexImageFunCaptchaRequest';
 
 export default {
   CapMonsterCloudClientFactory,
@@ -43,6 +44,7 @@ export default {
   TurnstileProxylessRequest,
   ComplexImageRecaptchaRequest,
   ComplexImageHCaptchaRequest,
+  ComplexImageFunCaptchaRequest,
 };
 
 export {
@@ -84,4 +86,6 @@ export {
   ComplexImageRecaptchaRequestIn,
   ComplexImageHCaptchaRequest,
   ComplexImageHCaptchaRequestIn,
+  ComplexImageFunCaptchaRequest,
+  ComplexImageFunCaptchaRequestIn,
 };

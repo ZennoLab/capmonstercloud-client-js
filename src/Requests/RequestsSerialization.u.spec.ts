@@ -14,6 +14,7 @@ import { RecaptchaV2EnterpriseProxylessRequest } from './RecaptchaV2EnterprisePr
 import { RecaptchaV2EnterpriseRequest } from './RecaptchaV2EnterpriseRequest';
 import { ComplexImageHCaptchaRequest } from './ComplexImageHCaptchaRequest';
 import { ComplexImageRecaptchaRequest } from './ComplexImageRecaptchaRequest';
+import { ComplexImageFunCaptchaRequest } from './ComplexImageFunCaptchaRequest';
 
 describe('Check unit tests for SerializeObject()', () => {
   it(`should serialize RecaptchaV2ProxylessRequest`, () => {
@@ -406,6 +407,32 @@ describe('Check unit tests for SerializeObject()', () => {
           Grid: '3x3',
           Task: 'Please click each image containing a mountain',
           TaskDefinition: '/m/015qff',
+        },
+        websiteURL: 'https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=middle',
+      },
+    });
+  });
+
+  it(`should serialize ComplexImageFunCaptchaRequest`, () => {
+    const serialized = SerializeObject({
+      clientKey: '<your capmonster.cloud API key>',
+      task: new ComplexImageFunCaptchaRequest({
+        imageUrls: ['https://i.postimg.cc/gkzX19Gr/funcaptcha.jpg'],
+        metaData: {
+          Task: 'Pick the elephant',
+        },
+        websiteURL: 'https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=middle',
+      }),
+    });
+
+    expect(serialized).toMatchObject({
+      clientKey: '<your capmonster.cloud API key>',
+      task: {
+        type: 'ComplexImageTask',
+        class: 'funcaptcha',
+        imageUrls: ['https://i.postimg.cc/gkzX19Gr/funcaptcha.jpg'],
+        metadata: {
+          Task: 'Pick the elephant',
         },
         websiteURL: 'https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=middle',
       },
