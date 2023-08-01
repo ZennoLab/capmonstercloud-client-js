@@ -23,15 +23,23 @@ describe('Check integration tests for TurnstileTask and TurnstileTaskProxyless',
     const request = new TurnstileRequest({
       websiteURL: 'https://tsinvisble.zlsupport.com',
       websiteKey: '0x4AAAAAAABUY0VLtOUMAHxE',
-      cloudflareTaskType: 'token',
-      userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
+      cloudflareTaskType: 'cf_clearance',
+      proxyType: 'http',
+      proxyAddress: '8.8.8.8',
+      proxyPort: 8080,
+      proxyLogin: 'proxyLoginHere',
+      proxyPassword: 'proxyPasswordHere',
+      pageData: 'pageDataHere',
+      data: 'dataHere',
+      htmlPageBase64: 'htmlPageBase64Here',
+      userAgent: 'userAgentHere',
     });
 
     const task = await cmcClient.Solve(request);
 
     expect(srv.caughtRequests[0]).toHaveProperty(
       'body',
-      '{"clientKey":"<your capmonster.cloud API key>","task":{"type":"TurnstileTask","websiteURL":"https://tsinvisble.zlsupport.com","websiteKey":"0x4AAAAAAABUY0VLtOUMAHxE","proxyType":"http","proxyAddress":"8.8.8.8","proxyPort":8080,"proxyLogin":"proxyLoginHere","proxyPassword":"proxyPasswordHere"},"softId":54}',
+      '{"clientKey":"<your capmonster.cloud API key>","task":{"type":"TurnstileTask","websiteURL":"https://tsinvisble.zlsupport.com","websiteKey":"0x4AAAAAAABUY0VLtOUMAHxE","proxyType":"http","proxyAddress":"8.8.8.8","proxyPort":8080,"proxyLogin":"proxyLoginHere","proxyPassword":"proxyPasswordHere","cloudflareTaskType":"cf_clearance","userAgent":"userAgentHere","htmlPageBase64":"htmlPageBase64Here","data":"dataHere","pageData":"pageDataHere"},"softId":54}',
     );
     expect(srv.caughtRequests[1]).toHaveProperty('body', '{"clientKey":"<your capmonster.cloud API key>","taskId":7654322}');
     expect(task).toHaveProperty('solution');
