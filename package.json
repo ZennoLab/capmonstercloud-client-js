@@ -1,6 +1,6 @@
 {
   "name": "@luluhoc/capmonstercloud-client-patched",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "Official JS client library for https://capmonster.cloud/ captcha recognition service",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
