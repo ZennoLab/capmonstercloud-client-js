@@ -5,7 +5,7 @@ import { TurnstileRequestBase, TurnstileRequestBaseIn } from './TurnstileRequest
 
 interface TurnstileTokenType extends Pick<TurnstileRequestBaseIn, Exclude<keyof TurnstileRequestBaseIn, 'type'>> {
   cloudflareTaskType?: 'token';
-  userAgent: string;
+  userAgent?: string;
   pageAction?: string;
 }
 
@@ -27,7 +27,7 @@ export type TurnstileRequestIn = TurnstileTokenType | TurnstileCfClearanceType;
  */
 export class TurnstileRequest extends Mixin(TurnstileRequestBase, ProxyInfo) {
   cloudflareTaskType?: 'token' | 'cf_clearance';
-  userAgent: string;
+  userAgent?: string;
   pageAction?: string;
   htmlPageBase64?: string;
   data?: string;
