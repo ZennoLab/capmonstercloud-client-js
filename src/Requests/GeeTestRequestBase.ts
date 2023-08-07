@@ -3,10 +3,12 @@ import { CaptchaRequestBase, CaptchaRequestBaseIn } from './CaptchaRequestBase';
 export type GeeTestRequestBaseIn = {
   websiteURL: string;
   gt: string;
-  challenge: string;
+  challenge?: string;
   geetestApiServerSubdomain?: string;
   geetestGetLib?: string;
   userAgent?: string;
+  version?: '3' | '4';
+  initParameters?: Record<string, string>;
 } & CaptchaRequestBaseIn;
 
 /**
@@ -39,7 +41,12 @@ export abstract class GeeTestRequestBase extends CaptchaRequestBase {
    * @example
    * d93591bdf7860e1e4ee2fca799911215
    */
-  public challenge!: string;
+  public challenge?: string;
+
+  /**
+   * Version of Geetest.
+   */
+  public version?: '3' | '4';
 
   /**
    * May be required for some sites.
@@ -59,7 +66,17 @@ export abstract class GeeTestRequestBase extends CaptchaRequestBase {
    */
   public userAgent?: string;
 
-  constructor({ type, nocache, websiteURL, gt, challenge, geetestApiServerSubdomain, geetestGetLib, userAgent }: GeeTestRequestBaseIn) {
+  constructor({
+    type,
+    nocache,
+    websiteURL,
+    gt,
+    challenge,
+    geetestApiServerSubdomain,
+    geetestGetLib,
+    userAgent,
+    version,
+  }: GeeTestRequestBaseIn) {
     super({ type, nocache });
     this.websiteURL = websiteURL;
     this.gt = gt;
@@ -67,5 +84,6 @@ export abstract class GeeTestRequestBase extends CaptchaRequestBase {
     this.geetestApiServerSubdomain = geetestApiServerSubdomain;
     this.geetestGetLib = geetestGetLib;
     this.userAgent = userAgent;
+    this.version = version;
   }
 }
