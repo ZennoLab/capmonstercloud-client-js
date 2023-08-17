@@ -5,8 +5,10 @@ import { TurnstileRequestBase, TurnstileRequestBaseIn } from './TurnstileRequest
 
 interface TurnstileTokenType extends Pick<TurnstileRequestBaseIn, Exclude<keyof TurnstileRequestBaseIn, 'type'>> {
   cloudflareTaskType?: 'token';
-  userAgent?: string;
-  pageAction?: string;
+  userAgent: string;
+  pageAction: string;
+  data: string;
+  pageData: string;
 }
 
 export type TurnstileCfClearanceType = Pick<TurnstileRequestBaseIn, Exclude<keyof TurnstileRequestBaseIn, 'type'>> &
@@ -39,6 +41,10 @@ export class TurnstileRequest extends Mixin(TurnstileRequestBase, ProxyInfo) {
     this.pageAction = argsObj.pageAction;
     if (argsObj.cloudflareTaskType === 'cf_clearance') {
       this.htmlPageBase64 = argsObj?.htmlPageBase64;
+      this.data = argsObj?.data;
+      this.pageData = argsObj?.pageData;
+    }
+    if (argsObj.cloudflareTaskType === 'token') {
       this.data = argsObj?.data;
       this.pageData = argsObj?.pageData;
     }
