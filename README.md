@@ -8,7 +8,7 @@ Via [NPM](https://www.npmjs.com/package/@zennolab_com/capmonstercloud-client):
 
     npm i @zennolab_com/capmonstercloud-client
 
-## Usage with Node (with or withoout Typescript)
+## Usage with Node (with or without Typescript)
 
 ```javascript
 const { CapMonsterCloudClientFactory, ClientOptions, RecaptchaV2ProxylessRequest } = require('@zennolab_com/capmonstercloud-client');
@@ -37,7 +37,7 @@ run()
 
 ```
 
-## Usage with Browser (with or withoout Typescript)
+## Usage with Browser (with or without Typescript)
 
 Browser implementation use [fetch](https://caniuse.com/fetch) instead of [http(s)](https://nodejs.org/api/http.html).
 For browser usage you need some Module Bundler (e.g. [Webpack](https://webpack.js.org/)).
