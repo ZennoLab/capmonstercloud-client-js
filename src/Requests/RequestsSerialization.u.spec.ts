@@ -366,6 +366,8 @@ describe('Check unit tests for SerializeObject()', () => {
           Task: 'Please click each image containing a mountain',
         },
         websiteURL: 'https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=middle',
+        exampleImagesBase64: ['image in base64'],
+        exampleImageUrls: ['https://i.postimg.cc/kg71cbRt/image-1.jpg'],
       }),
     });
 
@@ -375,6 +377,8 @@ describe('Check unit tests for SerializeObject()', () => {
         type: 'ComplexImageTask',
         class: 'hcaptcha',
         imageUrls: ['https://i.postimg.cc/kg71cbRt/image-1.jpg', 'https://i.postimg.cc/6381Zx2j/image.jpg'],
+        exampleImagesBase64: ['image in base64'],
+        exampleImageUrls: ['https://i.postimg.cc/kg71cbRt/image-1.jpg'],
         metadata: {
           Task: 'Please click each image containing a mountain',
         },
