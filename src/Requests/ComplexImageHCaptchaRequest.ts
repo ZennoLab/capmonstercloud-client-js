@@ -3,17 +3,23 @@ import { TaskType } from '../TaskType';
 
 export type ComplexImageHCaptchaRequestIn = Pick<ComplexImageRequestBaseIn, Exclude<keyof ComplexImageRequestBaseIn, 'type' | '_class'>> & {
   exampleImagesBase64?: Array<string>;
+  exampleImageUrls?: Array<string>;
 };
 
 export class ComplexImageHCaptchaRequest extends ComplexImageRequestBase {
   /**
-   * List of exampleImageUrls in base64
-   * It is required if hCaptcha is 3x3 grid
+   * List of exampleImagesBase64
    */
   public exampleImagesBase64?: Array<string>;
 
-  constructor({ exampleImagesBase64, ...argsObjs }: ComplexImageHCaptchaRequestIn) {
+  /**
+   * List of exampleImageUrls
+   */
+  public exampleImageUrls?: Array<string>;
+
+  constructor({ exampleImagesBase64, exampleImageUrls, ...argsObjs }: ComplexImageHCaptchaRequestIn) {
     super({ type: TaskType.ComplexImageTask, _class: 'hcaptcha', ...argsObjs });
     this.exampleImagesBase64 = exampleImagesBase64;
+    this.exampleImageUrls = exampleImageUrls;
   }
 }
