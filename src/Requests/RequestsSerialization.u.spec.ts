@@ -1,3 +1,4 @@
+import { DataDomeRequest } from './DataDomeRequest';
 import { SerializeObject } from './RequestsSerialization';
 import { CapMonsterModules } from '../CapMonsterModules';
 import { RecaptchaV2ProxylessRequest } from './RecaptchaV2ProxylessRequest';
@@ -439,6 +440,32 @@ describe('Check unit tests for SerializeObject()', () => {
           Task: 'Pick the elephant',
         },
         websiteURL: 'https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=middle',
+      },
+    });
+  });
+
+  it(`should serialize DataDomeRequest`, () => {
+    const serialized = SerializeObject({
+      clientKey: '<your capmonster.cloud API key>',
+      task: new DataDomeRequest({
+        websiteURL: 'site.com',
+        userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        metadata: {
+          captchaUrl: 'https://geo.captcha-delivery.com/captcha/?initialCid=12434324',
+        },
+      }),
+    });
+
+    expect(serialized).toMatchObject({
+      clientKey: '<your capmonster.cloud API key>',
+      task: {
+        type: 'CustomTask',
+        class: 'DataDome',
+        websiteURL: 'site.com',
+        userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        metadata: {
+          captchaUrl: 'https://geo.captcha-delivery.com/captcha/?initialCid=12434324',
+        },
       },
     });
   });

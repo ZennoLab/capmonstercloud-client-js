@@ -14,4 +14,5 @@ export enum TaskType {
   TurnstileTask = 'TurnstileTask',
   TurnstileTaskProxyless = 'TurnstileTaskProxyless',
   ComplexImageTask = 'ComplexImageTask',
+  CustomTask = 'CustomTask',
 }

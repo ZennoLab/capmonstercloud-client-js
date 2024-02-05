@@ -91,3 +91,4 @@ DEBUG=cmc-* node app.js
 - [TurnstileRequestProxyless](https://zennolab.atlassian.net/wiki/spaces/APIS/pages/2256764929/TurnstileTaskProxyless+Turnstile)
 - [ComplexImageHCaptchaRequest](https://zennolab.atlassian.net/wiki/spaces/APIS/pages/2279538722/ComplexImageTask+HCaptcha+hCaptcha)
 - [ComplexImageRecaptchaRequest](https://zennolab.atlassian.net/wiki/spaces/APIS/pages/2279604225/ComplexImageTask+Recaptcha+Google)
+- [DataDomeRequest](https://docs.capmonster.cloud/docs/captchas/datadome)
