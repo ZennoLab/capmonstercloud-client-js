@@ -1,3 +1,5 @@
+import { DataDomeResponse } from './Responses/DataDomeResponse';
+import { DataDomeRequest } from './Requests/DataDomeRequest';
 import { CaptchaResult } from './CaptchaResult';
 import { ClientOptions } from './ClientOptions';
 import { CreateTaskResponse, CreateTaskResponseError } from './CreateTask';
@@ -250,6 +252,15 @@ export class CapMonsterCloudClient {
     resultTimeouts?: GetResultTimeouts,
     cancellationController?: AbortController,
   ): Promise<CaptchaResult<RecaptchaV3Response>>;
+  /**
+   * Solve DataDomeRequest task
+   * You will get response within 10 - 180 secs period depending on service workload.
+   */
+  public async Solve(
+    task: DataDomeRequest,
+    resultTimeouts?: GetResultTimeouts,
+    cancellationController?: AbortController,
+  ): Promise<CaptchaResult<DataDomeResponse>>;
   /**
    * Solve TurnstileProxyless task
    * You will get response within 10 - 180 secs period depending on service workload.

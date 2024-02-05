@@ -1,3 +1,5 @@
+import { ComplexImageFunCaptchaRequest } from './ComplexImageFunCaptchaRequest';
+import { DataDomeRequest } from './DataDomeRequest';
 import { FunCaptchaProxylessRequest } from './FunCaptchaProxylessRequest';
 import { FunCaptchaRequest } from './FunCaptchaRequest';
 import { GeeTestProxylessRequest } from './GeeTestProxylessRequest';
@@ -30,4 +32,6 @@ export type Task =
   | RecaptchaV2Request
   | RecaptchaV3ProxylessRequest
   | ComplexImageHCaptchaRequest
-  | ComplexImageRecaptchaRequest;
+  | ComplexImageRecaptchaRequest
+  | ComplexImageFunCaptchaRequest
+  | DataDomeRequest;
