@@ -24,6 +24,7 @@ import { TaskType } from './TaskType';
 import { ComplexImageRecaptchaRequest, ComplexImageRecaptchaRequestIn } from './Requests/ComplexImageRecaptchaRequest';
 import { ComplexImageHCaptchaRequest, ComplexImageHCaptchaRequestIn } from './Requests/ComplexImageHCaptchaRequest';
 import { ComplexImageFunCaptchaRequest, ComplexImageFunCaptchaRequestIn } from './Requests/ComplexImageFunCaptchaRequest';
+import { DataDomeRequest, DataDomeRequestIn } from './Requests/DataDomeRequest';
 
 export default {
   CapMonsterCloudClientFactory,
@@ -45,6 +46,7 @@ export default {
   ComplexImageRecaptchaRequest,
   ComplexImageHCaptchaRequest,
   ComplexImageFunCaptchaRequest,
+  DataDomeRequest,
 };
 
 export {
@@ -88,4 +90,5 @@ export {
   ComplexImageHCaptchaRequestIn,
   ComplexImageFunCaptchaRequest,
   ComplexImageFunCaptchaRequestIn,
+  DataDomeRequestIn,
 };

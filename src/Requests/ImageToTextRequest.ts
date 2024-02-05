@@ -15,7 +15,7 @@ export type ImageToTextRequestIn = Pick<ImageToTextRequestBaseIn, Exclude<keyof 
 
 /**
  * ImageToText recognition request
- * {@link https://zennolab.atlassian.net/wiki/spaces/APIS/pages/655469/ImageToTextTask+solve+image+captcha}
+ * {@link https://docs.capmonster.cloud/docs/captchas/image-to-text}
  */
 export class ImageToTextRequest extends CaptchaRequestBase {
   /**

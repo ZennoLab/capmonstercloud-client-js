@@ -4,8 +4,8 @@ import { TurnstileRequestBase, TurnstileRequestBaseIn } from './TurnstileRequest
 export type TurnstileProxylessRequestIn = Pick<TurnstileRequestBaseIn, Exclude<keyof TurnstileRequestBaseIn, 'type'>>;
 
 /**
- * Recaptcha V2 recognition request (without proxy).
- * {@link https://zennolab.atlassian.net/wiki/spaces/APIS/pages/2256764929/TurnstileTaskProxyless+Turnstile}
+ * TurnstileTaskProxyless recognition request (without proxy).
+ * {@link https://docs.capmonster.cloud/docs/captchas/tunrstile-task#turnstiletaskproxyless-without-a-proxy}
  */
 export class TurnstileProxylessRequest extends TurnstileRequestBase {
   constructor(argsObj: TurnstileProxylessRequestIn) {

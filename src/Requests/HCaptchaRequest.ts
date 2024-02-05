@@ -7,7 +7,7 @@ export type HCaptchaRequestIn = Pick<HCaptchaRequestBaseIn, Exclude<keyof HCaptc
 
 /**
  * HCaptcha recognition request (with proxy).
- * {@link https://zennolab.atlassian.net/wiki/spaces/APIS/pages/1203240988/HCaptchaTask+hCaptcha+puzzle+solving}
+ * {@link https://docs.capmonster.cloud/docs/captchas/hcaptcha-task}
  */
 export class HCaptchaRequest extends Mixin(HCaptchaRequestBase, ProxyInfo) {
   constructor(argsObj: HCaptchaRequestIn) {

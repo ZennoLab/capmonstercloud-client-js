@@ -1,6 +1,6 @@
 /**
  * capmonster.cloud recognition modules
- * {@link https://zennolab.atlassian.net/wiki/spaces/APIS/pages/187269121/How+to+pass+module+name+to+CapMonster+Cloud+using+ApiKey+field+only}
+ * {@link https://docs.capmonster.cloud/docs/api/module-name}
  */
 export enum CapMonsterModules {
   Amazon = 'amazon',

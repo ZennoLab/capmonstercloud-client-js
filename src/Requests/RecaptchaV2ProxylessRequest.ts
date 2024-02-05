@@ -5,7 +5,7 @@ export type RecaptchaV2ProxylessRequestIn = Pick<RecaptchaV2RequestBaseIn, Exclu
 
 /**
  * Recaptcha V2 recognition request (without proxy).
- * {@link https://zennolab.atlassian.net/wiki/spaces/APIS/pages/680689685/NoCaptchaTask+solving+Google+recaptcha}
+ * {@link https://docs.capmonster.cloud/docs/captchas/no-captcha-task#recaptchav2taskproxyless}
  */
 export class RecaptchaV2ProxylessRequest extends RecaptchaV2RequestBase {
   constructor(argsObj: RecaptchaV2ProxylessRequestIn) {
