@@ -5,7 +5,7 @@ export type GeeTestProxylessRequestIn = Pick<GeeTestRequestBaseIn, Exclude<keyof
 
 /**
  * GeeTest recognition request (without proxy).
- * {@link https://zennolab.atlassian.net/wiki/spaces/APIS/pages/1940291626/GeeTestTaskProxyless+GeeTest+captcha+recognition+without+proxy}
+ * {@link https://docs.capmonster.cloud/docs/captchas/geetest-task#geetesttaskproxyless-without-proxy}
  */
 export class GeeTestProxylessRequest extends GeeTestRequestBase {
   constructor(argsObj: GeeTestProxylessRequestIn) {

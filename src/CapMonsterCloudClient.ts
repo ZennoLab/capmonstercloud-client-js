@@ -52,7 +52,7 @@ export class CapMonsterCloudClient {
 
   /**
    * Gets current amount of money on balance
-   * {@link https://zennolab.atlassian.net/wiki/spaces/APIS/pages/655432/getBalance+retrieve+account+balance}
+   * {@link https://docs.capmonster.cloud/docs/api/methods/get-balance}
    */
   public async getBalance(cancellationController?: AbortController): Promise<GetBalanceResponseSuccess> {
     try {
@@ -78,7 +78,7 @@ export class CapMonsterCloudClient {
 
   /**
    * captcha task creating
-   * {@link https://zennolab.atlassian.net/wiki/spaces/APIS/pages/393308/createTask+captcha+task+creating}
+   * {@link https://docs.capmonster.cloud/docs/api/methods/create-task}
    */
   private async CreateTask(task: Task, cancellationController?: AbortController): Promise<CreateTaskResponse> {
     try {
@@ -104,7 +104,7 @@ export class CapMonsterCloudClient {
 
   /**
    * request task result
-   * {@link https://zennolab.atlassian.net/wiki/spaces/APIS/pages/688194/getTaskResult+request+task+result}
+   * {@link https://docs.capmonster.cloud/docs/api/methods/get-task-result}
    */
   private async GetTaskResult<S extends TaskCompletedSolution>(
     taskId: number,
@@ -226,7 +226,7 @@ export class CapMonsterCloudClient {
     cancellationController?: AbortController,
   ): Promise<CaptchaResult<RecaptchaV2EnterpriseResponse>>;
   /**
-   * Solve NoCaptchaTaskProxyless task
+   * Solve RecaptchaV2TaskProxyless task
    * You will get response within 10 - 180 secs period depending on service workload.
    */
   public async Solve(
@@ -235,7 +235,7 @@ export class CapMonsterCloudClient {
     cancellationController?: AbortController,
   ): Promise<CaptchaResult<RecaptchaV2Response>>;
   /**
-   * Solve NoCaptchaTask task
+   * Solve RecaptchaV2Task task
    * You will get response within 10 - 180 secs period depending on service workload.
    */
   public async Solve(

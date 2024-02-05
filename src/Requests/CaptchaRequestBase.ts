@@ -13,7 +13,7 @@ export abstract class CaptchaRequestBase {
 
   /**
    * Set true if the site only accepts a portion of the tokens from CapMonster Cloud.
-   * {@link https://zennolab.atlassian.net/wiki/spaces/APIS/pages/1832714243/What+if+the+site+only+accepts+a+portion+of+the+tokens+from+CapMonster+Cloud}
+   * {@link https://docs.capmonster.cloud/docs/api/token-accept}
    */
   public nocache?: boolean;
 

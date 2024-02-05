@@ -7,7 +7,7 @@ export type GeeTestRequestIn = Pick<GeeTestRequestBaseIn, Exclude<keyof GeeTestR
 
 /**
  * GeeTest recognition request (with proxy).
- * {@link https://zennolab.atlassian.net/wiki/spaces/APIS/pages/1940357159/GeeTestTask+GeeTest+captcha+recognition}
+ * {@link https://docs.capmonster.cloud/docs/captchas/geetest-task}
  */
 export class GeeTestRequest extends Mixin(GeeTestRequestBase, ProxyInfo) {
   constructor(argsObj: GeeTestRequestIn) {

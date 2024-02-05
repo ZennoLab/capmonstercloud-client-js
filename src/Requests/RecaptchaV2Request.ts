@@ -7,7 +7,7 @@ export type RecaptchaV2RequestIn = Pick<RecaptchaV2RequestBaseIn, Exclude<keyof 
 
 /**
  * Recaptcha V2 recognition request (with proxy).
- * {@link https://zennolab.atlassian.net/wiki/spaces/APIS/pages/373161985/NoCaptchaTaskProxyless+solving+Google+recaptcha}
+ * {@link https://docs.capmonster.cloud/docs/captchas/no-captcha-task#recaptchav2task-1}
  */
 export class RecaptchaV2Request extends Mixin(RecaptchaV2RequestBase, ProxyInfo) {
   constructor(argsObj: RecaptchaV2RequestIn) {

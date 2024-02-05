@@ -5,7 +5,7 @@ export type HCaptchaProxylessRequestIn = Pick<HCaptchaRequestBaseIn, Exclude<key
 
 /**
  * HCaptcha recognition request (without proxy).
- * {@link https://zennolab.atlassian.net/wiki/spaces/APIS/pages/1203240977/HCaptchaTaskProxyless+hCaptcha+puzzle+solving}
+ * {@link https://docs.capmonster.cloud/docs/captchas/hcaptcha-task#hcaptchataskproxyless-without-a-proxy}
  */
 export class HCaptchaProxylessRequest extends HCaptchaRequestBase {
   constructor(argsObj: HCaptchaProxylessRequestIn) {

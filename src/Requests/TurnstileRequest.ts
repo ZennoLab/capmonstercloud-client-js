@@ -25,7 +25,7 @@ export type TurnstileRequestIn = TurnstileTokenType | TurnstileCfClearanceType;
 
 /**
  * TurnstileTask / Cloudflare Challenge (with proxy for cf-clearance).
- * {@link https://zennolab.atlassian.net/wiki/spaces/APIS/pages/2313814017/TurnstileTask+Cloudflare+Challenge}
+ * {@link https://docs.capmonster.cloud/docs/captchas/tunrstile-task}
  */
 export class TurnstileRequest extends Mixin(TurnstileRequestBase, ProxyInfo) {
   cloudflareTaskType?: 'token' | 'cf_clearance';
