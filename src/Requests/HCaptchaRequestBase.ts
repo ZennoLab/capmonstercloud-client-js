@@ -47,6 +47,14 @@ export abstract class HCaptchaRequestBase extends CaptchaRequestBase {
    */
   public cookies?: string;
 
+  /* true - when specifying this parameter, we ignore the irrelevant User Agent
+  that users send in the request, and return our own (relevant) one with
+  getTaskResult. This will improve the acceptance of tokens.
+  false - we insert the User Agent that is specified in the request. If the User
+  Agent is invalid, you will receive an error ERROR_WRONG_USERAGENT (USERAGENT IS EXPIRED in the log).
+  null - we insert the User Agent that is specified in the request, but we don’t validate it */
+  public fallbackToActualUA?: boolean;
+
   constructor({ type, nocache, websiteURL, websiteKey, isInvisible, data, userAgent, cookies }: HCaptchaRequestBaseIn) {
     super({ type, nocache });
     this.websiteURL = websiteURL;
