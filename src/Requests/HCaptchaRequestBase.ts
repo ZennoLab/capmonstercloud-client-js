@@ -56,7 +56,7 @@ export abstract class HCaptchaRequestBase extends CaptchaRequestBase {
   null - we insert the User Agent that is specified in the request, but we don’t validate it */
   public fallbackToActualUA?: boolean;
 
-  constructor({ type, nocache, websiteURL, websiteKey, isInvisible, data, userAgent, cookies }: HCaptchaRequestBaseIn) {
+  constructor({ type, nocache, websiteURL, websiteKey, isInvisible, data, userAgent, cookies, fallbackToActualUA }: HCaptchaRequestBaseIn) {
     super({ type, nocache });
     this.websiteURL = websiteURL;
     this.websiteKey = websiteKey;
@@ -64,5 +64,6 @@ export abstract class HCaptchaRequestBase extends CaptchaRequestBase {
     this.data = data;
     this.userAgent = userAgent;
     this.cookies = cookies;
+    this.fallbackToActualUA = fallbackToActualUA;
   }
 }
