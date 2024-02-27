@@ -96,6 +96,7 @@ describe('Check integration tests for CapMonsterCloudClientFactory()', () => {
     const HRecaptachRequest = new HCaptchaProxylessRequest({
       websiteURL: 'https://lessons.zennolab.com/captchas/hcaptcha/?level=easy',
       websiteKey: '6Lcg7CMUAAAAANphynKgn9YAgA4tQ2KI_iqRyTwd',
+      fallbackToActualUA: true,
     });
 
     const task = await cmcClient.Solve(HRecaptachRequest);

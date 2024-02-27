@@ -7,6 +7,7 @@ export type HCaptchaRequestBaseIn = {
   data?: string;
   userAgent?: string;
   cookies?: string;
+  fallbackToActualUA?: boolean;
 } & CaptchaRequestBaseIn;
 
 /**
