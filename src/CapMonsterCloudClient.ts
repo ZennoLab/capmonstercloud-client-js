@@ -36,7 +36,8 @@ import { ComplexImageRecaptchaRequest } from './Requests/ComplexImageRecaptchaRe
 import { ComplexImageResponse } from './Responses/ComplexImageResponse';
 import { ComplexImageHCaptchaRequest } from './Requests/ComplexImageHCaptchaRequest';
 import { ComplexImageFunCaptchaRequest } from './Requests/ComplexImageFunCaptchaRequest';
-
+import { DataDomeResponse } from './Responses/DataDomeResponse';
+import { DataDomeRequest } from './Requests/DataDomeRequest';
 /**
  * Base type for capmonster.cloud Client exceptions
  */
@@ -250,6 +251,15 @@ export class CapMonsterCloudClient {
     resultTimeouts?: GetResultTimeouts,
     cancellationController?: AbortController,
   ): Promise<CaptchaResult<RecaptchaV3Response>>;
+  /**
+   * Solve DataDomeRequest task
+   * You will get response within 10 - 180 secs period depending on service workload.
+   */
+  public async Solve(
+    task: DataDomeRequest,
+    resultTimeouts?: GetResultTimeouts,
+    cancellationController?: AbortController,
+  ): Promise<CaptchaResult<DataDomeResponse>>;
   /**
    * Solve TurnstileProxyless task
    * You will get response within 10 - 180 secs period depending on service workload.
