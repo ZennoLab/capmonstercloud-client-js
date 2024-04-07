@@ -242,7 +242,7 @@ describe('Check unit tests for SerializeObject()', () => {
     });
   });
 
-  it(`should serialize GeeTestProxylessRequest`, () => {
+  it(`should serialize GeeTestProxylessRequestV3`, () => {
     const serialized = SerializeObject({
       clientKey: '<your capmonster.cloud API key>',
       task: new GeeTestProxylessRequest({
@@ -263,7 +263,35 @@ describe('Check unit tests for SerializeObject()', () => {
     });
   });
 
-  it(`should serialize GeeTestRequest`, () => {
+  it(`should serialize GeeTestProxylessRequestV4`, () => {
+    const serialized = SerializeObject({
+      clientKey: '<your capmonster.cloud API key>',
+      task: new GeeTestProxylessRequest({
+        websiteURL: 'https://example.com/geetest.php',
+        gt: '81dc9bdb52d04dc20036dbd8313ed055',
+        challenge: 'd93591bdf7860e1e4ee2fca799911215',
+        version: '4',
+        initParameters: {
+          riskType: 'slide',
+        },
+      }),
+    });
+
+    expect(serialized).toMatchObject({
+      clientKey: '<your capmonster.cloud API key>',
+      task: {
+        type: 'GeeTestTaskProxyless',
+        websiteURL: 'https://example.com/geetest.php',
+        gt: '81dc9bdb52d04dc20036dbd8313ed055',
+        version: '4',
+        initParameters: {
+          riskType: 'slide',
+        },
+      },
+    });
+  });
+
+  it(`should serialize GeeTestRequestV3`, () => {
     const serialized = SerializeObject({
       clientKey: '<your capmonster.cloud API key>',
       task: new GeeTestRequest({
@@ -286,6 +314,45 @@ describe('Check unit tests for SerializeObject()', () => {
         websiteURL: 'https://example.com/geetest.php',
         gt: '81dc9bdb52d04dc20036dbd8313ed055',
         challenge: 'd93591bdf7860e1e4ee2fca799911215',
+        userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36',
+        proxyType: 'https',
+        proxyAddress: 'https://proxy.com',
+        proxyPort: 6045,
+        proxyLogin: 'login',
+        proxyPassword: 'p@ssword',
+      },
+    });
+  });
+
+  it(`should serialize GeeTestRequestV4`, () => {
+    const serialized = SerializeObject({
+      clientKey: '<your capmonster.cloud API key>',
+      task: new GeeTestRequest({
+        websiteURL: 'https://example.com/geetest.php',
+        gt: '81dc9bdb52d04dc20036dbd8313ed055',
+        version: '4',
+        initParameters: {
+          riskType: 'slide',
+        },
+        userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36',
+        proxyType: 'https',
+        proxyAddress: 'https://proxy.com',
+        proxyPort: 6045,
+        proxyLogin: 'login',
+        proxyPassword: 'p@ssword',
+      }),
+    });
+
+    expect(serialized).toMatchObject({
+      clientKey: '<your capmonster.cloud API key>',
+      task: {
+        type: 'GeeTestTask',
+        websiteURL: 'https://example.com/geetest.php',
+        version: '4',
+        gt: '81dc9bdb52d04dc20036dbd8313ed055',
+        initParameters: {
+          riskType: 'slide',
+        },
         userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36',
         proxyType: 'https',
         proxyAddress: 'https://proxy.com',
