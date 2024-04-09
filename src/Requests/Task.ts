@@ -12,6 +12,8 @@ import { RecaptchaV2Request } from './RecaptchaV2Request';
 import { RecaptchaV3ProxylessRequest } from './RecaptchaV3ProxylessRequest';
 import { ComplexImageHCaptchaRequest } from './ComplexImageHCaptchaRequest';
 import { ComplexImageRecaptchaRequest } from './ComplexImageRecaptchaRequest';
+import { ComplexImageFunCaptchaRequest } from './ComplexImageFunCaptchaRequest';
+import { DataDomeRequest } from './DataDomeRequest';
 
 /**
  * Universal type for recognition request
@@ -30,4 +32,6 @@ export type Task =
   | RecaptchaV2Request
   | RecaptchaV3ProxylessRequest
   | ComplexImageHCaptchaRequest
-  | ComplexImageRecaptchaRequest;
+  | ComplexImageRecaptchaRequest
+  | ComplexImageFunCaptchaRequest
+  | DataDomeRequest;

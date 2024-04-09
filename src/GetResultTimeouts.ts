@@ -1,5 +1,5 @@
-import {Task} from './Requests/Task';
-import {TaskType} from './TaskType';
+import { Task } from './Requests/Task';
+import { TaskType } from './TaskType';
 
 export type GetResultTimeouts = {
   firstRequestDelay: number;
@@ -68,6 +68,13 @@ export const ComplexImageTimeouts = {
   timeout: 1000 * 10,
 } as GetResultTimeouts;
 
+export const CustomTaskTimeouts = {
+  firstRequestDelay: 1000 * 1,
+  firstRequestNoCacheDelay: 1000 * 10,
+  requestsInterval: 1000 * 1,
+  timeout: 1000 * 80,
+} as GetResultTimeouts;
+
 export function detectResultTimeouts(task: Task): GetResultTimeouts {
   switch (task.type) {
     case TaskType.FunCaptchaTaskProxyless:
@@ -94,6 +101,8 @@ export function detectResultTimeouts(task: Task): GetResultTimeouts {
       return TurnstileTimeouts;
     case TaskType.ComplexImageTask:
       return ComplexImageTimeouts;
+    case TaskType.CustomTask:
+      return CustomTaskTimeouts;
     default:
       throw new Error(`Could not detect result timeouts for provided task type = ${task.type}`);
   }

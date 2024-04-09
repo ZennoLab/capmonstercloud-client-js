@@ -34,7 +34,6 @@ run()
     console.error(err);
     process.exit(1);
   });
-
 ```
 
 ## Usage with Browser (with or without Typescript)
@@ -62,7 +61,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   console.log(await cmcClient.Solve(recaptchaV2Request));
 });
-
 ```
 
 ## Debug
@@ -89,3 +87,4 @@ DEBUG=cmc-* node app.js
 - [TurnstileRequest](https://zenno.link/doc-turnstile-proxy-en)
 - [RecaptchaComplexImageTaskRequest](https://zenno.link/doc-complextask-rc-en)
 - [HcaptchaComplexImageTaskRequest](https://zenno.link/doc-complextask-hc-en)
+- [DataDome](https://zenno.link/doc-datadome)
