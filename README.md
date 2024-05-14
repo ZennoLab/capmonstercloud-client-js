@@ -88,3 +88,5 @@ DEBUG=cmc-* node app.js
 - [RecaptchaComplexImageTaskRequest](https://zenno.link/doc-complextask-rc-en)
 - [HcaptchaComplexImageTaskRequest](https://zenno.link/doc-complextask-hc-en)
 - [DataDome](https://zenno.link/doc-datadome)
+- [TenDI](https://zenno.link/doc-tendi)
+- [Amazon](https://zenno.link/doc-amazon)
