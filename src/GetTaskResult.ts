@@ -8,6 +8,8 @@ import { RecaptchaV2Response } from './Responses/RecaptchaV2Response';
 import { RecaptchaV3Response } from './Responses/RecaptchaV3Response';
 import { ComplexImageResponse } from './Responses/ComplexImageResponse';
 import { DataDomeResponse } from './Responses/DataDomeResponse';
+import { TenDIResponse } from './Responses/TenDIResponse';
+import { AmazonResponse } from './Responses/AmazonResponse';
 
 export enum TaskResultType {
   Failed = 'Failed',
@@ -33,7 +35,9 @@ export type TaskCompletedSolution =
   | RecaptchaV2Response
   | RecaptchaV3Response
   | ComplexImageResponse
-  | DataDomeResponse;
+  | DataDomeResponse
+  | TenDIResponse
+  | AmazonResponse;
 
 export type TaskCompleted<S extends TaskCompletedSolution> = {
   type: TaskResultType.Completed;

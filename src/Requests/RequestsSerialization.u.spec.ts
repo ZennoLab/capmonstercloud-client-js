@@ -11,11 +11,13 @@ import { HCaptchaProxylessRequest } from './HCaptchaProxylessRequest';
 import { HCaptchaRequest } from './HCaptchaRequest';
 import { GeeTestProxylessRequest } from './GeeTestProxylessRequest';
 import { GeeTestRequest } from './GeeTestRequest';
+import { TenDIRequest } from './TenDIRequest';
 import { RecaptchaV2EnterpriseProxylessRequest } from './RecaptchaV2EnterpriseProxylessRequest';
 import { RecaptchaV2EnterpriseRequest } from './RecaptchaV2EnterpriseRequest';
 import { ComplexImageHCaptchaRequest } from './ComplexImageHCaptchaRequest';
 import { ComplexImageRecaptchaRequest } from './ComplexImageRecaptchaRequest';
 import { ComplexImageFunCaptchaRequest } from './ComplexImageFunCaptchaRequest';
+import { AmazonProxylessRequest } from './AmazonProxylessRequest';
 
 describe('Check unit tests for SerializeObject()', () => {
   it(`should serialize RecaptchaV2ProxylessRequest`, () => {
@@ -535,6 +537,55 @@ describe('Check unit tests for SerializeObject()', () => {
           captchaUrl: 'https://geo.captcha-delivery.com/captcha/?initialCid=12434324',
           datadomeCookie: '',
         },
+      },
+    });
+  });
+
+  it(`should serialize TenDIRequest`, () => {
+    const serialized = SerializeObject({
+      clientKey: '<your capmonster.cloud API key>',
+      task: new TenDIRequest({
+        websiteURL: 'site.com',
+        userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        websiteKey: '6Lcg7CMUAAAAANphynKgn9YAgA4tQ2KI_iqRyTwd',
+      }),
+    });
+
+    expect(serialized).toMatchObject({
+      clientKey: '<your capmonster.cloud API key>',
+      task: {
+        type: 'CustomTask',
+        class: 'TenDI',
+        websiteURL: 'site.com',
+        userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        websiteKey: '6Lcg7CMUAAAAANphynKgn9YAgA4tQ2KI_iqRyTwd',
+      },
+    });
+  });
+
+  it(`should serialize AmazonRequest`, () => {
+    const serialized = SerializeObject({
+      clientKey: '<your capmonster.cloud API key>',
+      task: new AmazonProxylessRequest({
+        websiteURL: 'site.com',
+        websiteKey: '6Lcg7CMUAAAAANphynKgn9YAgA4tQ2KI_iqRyTwd',
+        challengeScript: 'https://41bcdd4fb3cb.610cd090.us-east-1.token.awswaf.com/41bcdd4fb3cb/0d21de737ccb/cd77baa6c832/challenge.js',
+        captchaScript: 'https://41bcdd4fb3cb.610cd090.us-east-1.captcha.awswaf.com/41bcdd4fb3cb/0d21de737ccb/cd77baa6c832/captcha.js',
+        context: 'qoJYgnKsc...aormh/dYYK+Y=',
+        iv: 'CgAAXFFFFSAAABVk',
+      }),
+    });
+
+    expect(serialized).toMatchObject({
+      clientKey: '<your capmonster.cloud API key>',
+      task: {
+        type: 'AmazonTaskProxyless',
+        websiteURL: 'site.com',
+        websiteKey: '6Lcg7CMUAAAAANphynKgn9YAgA4tQ2KI_iqRyTwd',
+        challengeScript: 'https://41bcdd4fb3cb.610cd090.us-east-1.token.awswaf.com/41bcdd4fb3cb/0d21de737ccb/cd77baa6c832/challenge.js',
+        captchaScript: 'https://41bcdd4fb3cb.610cd090.us-east-1.captcha.awswaf.com/41bcdd4fb3cb/0d21de737ccb/cd77baa6c832/captcha.js',
+        context: 'qoJYgnKsc...aormh/dYYK+Y=',
+        iv: 'CgAAXFFFFSAAABVk',
       },
     });
   });

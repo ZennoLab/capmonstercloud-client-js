@@ -9,6 +9,8 @@ import { HCaptchaProxylessRequest } from './Requests/HCaptchaProxylessRequest';
 import { ComplexImageRecaptchaRequest } from './Requests/ComplexImageRecaptchaRequest';
 import { ComplexImageHCaptchaRequest } from './Requests/ComplexImageHCaptchaRequest';
 import { ComplexImageFunCaptchaRequest } from './Requests/ComplexImageFunCaptchaRequest';
+import { TenDIRequest } from './Requests/TenDIRequest';
+import { AmazonProxylessRequest } from './Requests/AmazonProxylessRequest';
 const { version } = require('../package.json'); // eslint-disable-line @typescript-eslint/no-var-requires
 
 describe('Check integration tests for CapMonsterCloudClientFactory()', () => {
@@ -520,6 +522,83 @@ describe('Check integration tests for CapMonsterCloudClientFactory()', () => {
     expect(srv.caughtRequests[1]).toHaveProperty('body', '{"clientKey":"<your capmonster.cloud API key>","taskId":1234567}');
     expect(task).toHaveProperty('solution');
     expect(task).toHaveProperty('solution.answer', [false, false, false, true, false, false]);
+
+    expect(await srv.destroy()).toBeUndefined();
+  });
+
+  it('should solve TenDI Task', async () => {
+    expect.assertions(5);
+
+    const srv = await createServerMock({
+      responses: [
+        { responseBody: '{"errorId":0,"taskId":1234567}' },
+        {
+          responseBody:
+            '{"errorId":0,"status":"ready","solution":{"data": {"randstr": "@EcL", "ticket": "tr03lHUhdnuW3neJZu.....7LrIbs*"}, "headers": { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36" }}}',
+        },
+      ],
+    });
+
+    const cmcClient = CapMonsterCloudClientFactory.Create(
+      new ClientOptions({ clientKey: '<your capmonster.cloud API key>', serviceUrl: `http://localhost:${srv.address.port}` }),
+    );
+
+    const tenDIRequest = new TenDIRequest({
+      websiteURL: 'https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=middle',
+      websiteKey: 'websiteKey',
+    });
+
+    const task = await cmcClient.Solve(tenDIRequest);
+
+    expect(srv.caughtRequests[0]).toHaveProperty(
+      'body',
+      '{"clientKey":"<your capmonster.cloud API key>","task":{"type":"CustomTask","websiteURL":"https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=middle","websiteKey":"websiteKey","class":"TenDI"},"softId":54}',
+    );
+    expect(srv.caughtRequests[1]).toHaveProperty('body', '{"clientKey":"<your capmonster.cloud API key>","taskId":1234567}');
+    expect(task).toHaveProperty('solution');
+    expect(task).toHaveProperty('solution.data', { randstr: '@EcL', ticket: 'tr03lHUhdnuW3neJZu.....7LrIbs*' });
+
+    expect(await srv.destroy()).toBeUndefined();
+  });
+
+  it('should solve Amazon Task', async () => {
+    expect.assertions(5);
+
+    const srv = await createServerMock({
+      responses: [
+        { responseBody: '{"errorId":0,"taskId":1234567}' },
+        {
+          responseBody:
+            '{"errorId":0,"status":"ready","solution": { "cookies": { "aws-waf-token": "10115f5b-ebd8-45c7-851e-cfd4f6a82e3e:EAoAua1QezAhAAAA:dp7sp2rXIRcnJcmpWOC1vIu+yq/A3EbR6b6K7c67P49usNF1f1bt/Af5pNcZ7TKZlW+jIZ7QfNs8zjjqiu8C9XQq50Pmv2DxUlyFtfPZkGwk0d27Ocznk18/IOOa49Rydx+/XkGA7xoGLNaUelzNX34PlyXjoOtL0rzYBxMAQy0D1tn+Q5u97kJBjs5Mytqu9tXPIPCTSn4dfXv5llSkv9pxBEnnhwz6HEdmdJMdfur+YRW1MgCX7i3L2Y0/CNL8kd8CEhTMzwyoXekrzBM="}, "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36" }}',
+        },
+      ],
+    });
+
+    const cmcClient = CapMonsterCloudClientFactory.Create(
+      new ClientOptions({ clientKey: '<your capmonster.cloud API key>', serviceUrl: `http://localhost:${srv.address.port}` }),
+    );
+
+    const amazonRequest = new AmazonProxylessRequest({
+      websiteURL: 'https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=middle',
+      websiteKey: 'websiteKey',
+      challengeScript: 'https://41bcdd4fb3cb.610cd090.us-east-1.token.awswaf.com/41bcdd4fb3cb/0d21de737ccb/cd77baa6c832/challenge.js',
+      captchaScript: 'https://41bcdd4fb3cb.610cd090.us-east-1.captcha.awswaf.com/41bcdd4fb3cb/0d21de737ccb/cd77baa6c832/captcha.js',
+      context: 'qoJYgnKsc...aormh/dYYK+Y=',
+      iv: 'CgAAXFFFFSAAABVk',
+    });
+
+    const task = await cmcClient.Solve(amazonRequest);
+
+    expect(srv.caughtRequests[0]).toHaveProperty(
+      'body',
+      '{"clientKey":"<your capmonster.cloud API key>","task":{"type":"AmazonTaskProxyless","websiteURL":"https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=middle","challengeScript":"https://41bcdd4fb3cb.610cd090.us-east-1.token.awswaf.com/41bcdd4fb3cb/0d21de737ccb/cd77baa6c832/challenge.js","captchaScript":"https://41bcdd4fb3cb.610cd090.us-east-1.captcha.awswaf.com/41bcdd4fb3cb/0d21de737ccb/cd77baa6c832/captcha.js","websiteKey":"websiteKey","context":"qoJYgnKsc...aormh/dYYK+Y=","iv":"CgAAXFFFFSAAABVk"},"softId":54}',
+    );
+    expect(srv.caughtRequests[1]).toHaveProperty('body', '{"clientKey":"<your capmonster.cloud API key>","taskId":1234567}');
+    expect(task).toHaveProperty('solution');
+    expect(task).toHaveProperty('solution.cookies', {
+      'aws-waf-token':
+        '10115f5b-ebd8-45c7-851e-cfd4f6a82e3e:EAoAua1QezAhAAAA:dp7sp2rXIRcnJcmpWOC1vIu+yq/A3EbR6b6K7c67P49usNF1f1bt/Af5pNcZ7TKZlW+jIZ7QfNs8zjjqiu8C9XQq50Pmv2DxUlyFtfPZkGwk0d27Ocznk18/IOOa49Rydx+/XkGA7xoGLNaUelzNX34PlyXjoOtL0rzYBxMAQy0D1tn+Q5u97kJBjs5Mytqu9tXPIPCTSn4dfXv5llSkv9pxBEnnhwz6HEdmdJMdfur+YRW1MgCX7i3L2Y0/CNL8kd8CEhTMzwyoXekrzBM=',
+    });
 
     expect(await srv.destroy()).toBeUndefined();
   });

@@ -1,5 +1,7 @@
 import { CaptchaRequestBase, CaptchaRequestBaseIn } from './CaptchaRequestBase';
 
+type InitParamsType = Record<string, string>;
+
 export type GeeTestRequestBaseIn = {
   websiteURL: string;
   gt: string;
@@ -8,7 +10,7 @@ export type GeeTestRequestBaseIn = {
   geetestGetLib?: string;
   userAgent?: string;
   version?: '3' | '4';
-  initParameters?: Record<string, string>;
+  initParameters?: InitParamsType;
 } & CaptchaRequestBaseIn;
 
 /**
@@ -60,6 +62,11 @@ export abstract class GeeTestRequestBase extends CaptchaRequestBase {
   public geetestGetLib?: string;
 
   /**
+   * Additional parameters for version 4.
+   */
+  public initParameters?: InitParamsType;
+
+  /**
    * Browser's User-Agent which is used in emulation.
    * It is required that you use a signature of a modern browser,
    * otherwise Google will ask you to "update your browser".
@@ -76,6 +83,7 @@ export abstract class GeeTestRequestBase extends CaptchaRequestBase {
     geetestGetLib,
     userAgent,
     version,
+    initParameters,
   }: GeeTestRequestBaseIn) {
     super({ type, nocache });
     this.websiteURL = websiteURL;
@@ -85,5 +93,6 @@ export abstract class GeeTestRequestBase extends CaptchaRequestBase {
     this.geetestGetLib = geetestGetLib;
     this.userAgent = userAgent;
     this.version = version;
+    this.initParameters = initParameters;
   }
 }

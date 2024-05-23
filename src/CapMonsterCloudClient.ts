@@ -38,6 +38,11 @@ import { ComplexImageHCaptchaRequest } from './Requests/ComplexImageHCaptchaRequ
 import { ComplexImageFunCaptchaRequest } from './Requests/ComplexImageFunCaptchaRequest';
 import { DataDomeResponse } from './Responses/DataDomeResponse';
 import { DataDomeRequest } from './Requests/DataDomeRequest';
+import { TenDIRequest } from './Requests/TenDIRequest';
+import { TenDIResponse } from './Responses/TenDIResponse';
+import { AmazonProxylessRequest } from './Requests/AmazonProxylessRequest';
+import { AmazonResponse } from './Responses/AmazonResponse';
+import { AmazonRequest } from './Requests/AmazonRequest';
 /**
  * Base type for capmonster.cloud Client exceptions
  */
@@ -260,6 +265,33 @@ export class CapMonsterCloudClient {
     resultTimeouts?: GetResultTimeouts,
     cancellationController?: AbortController,
   ): Promise<CaptchaResult<DataDomeResponse>>;
+  /**
+   * Solve TenDI task
+   * You will get response within 10 - 180 secs period depending on service workload.
+   */
+  public async Solve(
+    task: TenDIRequest,
+    resultTimeouts?: GetResultTimeouts,
+    cancellationController?: AbortController,
+  ): Promise<CaptchaResult<TenDIResponse>>;
+  /**
+   * Solve AmazonProxyless task
+   * You will get response within 10 - 180 secs period depending on service workload.
+   */
+  public async Solve(
+    task: AmazonProxylessRequest,
+    resultTimeouts?: GetResultTimeouts,
+    cancellationController?: AbortController,
+  ): Promise<CaptchaResult<AmazonResponse>>;
+  /**
+   * Solve Amazon task
+   * You will get response within 10 - 180 secs period depending on service workload.
+   */
+  public async Solve(
+    task: AmazonRequest,
+    resultTimeouts?: GetResultTimeouts,
+    cancellationController?: AbortController,
+  ): Promise<CaptchaResult<AmazonResponse>>;
   /**
    * Solve TurnstileProxyless task
    * You will get response within 10 - 180 secs period depending on service workload.
