@@ -25,6 +25,8 @@ import { ComplexImageRecaptchaRequest, ComplexImageRecaptchaRequestIn } from './
 import { ComplexImageHCaptchaRequest, ComplexImageHCaptchaRequestIn } from './Requests/ComplexImageHCaptchaRequest';
 import { ComplexImageFunCaptchaRequest, ComplexImageFunCaptchaRequestIn } from './Requests/ComplexImageFunCaptchaRequest';
 import { DataDomeRequest, DataDomeRequestIn } from './Requests/DataDomeRequest';
+import { TenDIRequest, TenDIRequestIn } from './Requests/TenDIRequest';
+import { AmazonRequest, AmazonRequestIn } from './Requests/AmazonRequest';
 
 export default {
   CapMonsterCloudClientFactory,
@@ -47,6 +49,8 @@ export default {
   ComplexImageHCaptchaRequest,
   ComplexImageFunCaptchaRequest,
   DataDomeRequest,
+  TenDIRequest,
+  AmazonRequest,
 };
 
 export {
@@ -91,4 +95,6 @@ export {
   ComplexImageFunCaptchaRequest,
   ComplexImageFunCaptchaRequestIn,
   DataDomeRequestIn,
+  TenDIRequestIn,
+  AmazonRequestIn,
 };
