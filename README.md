@@ -75,8 +75,6 @@ DEBUG=cmc-* node app.js
 
 - [GeeTestProxylessRequest](https://zenno.link/doc-geetest-en)
 - [GeeTestRequest](https://zenno.link/doc-geetest-proxy-en)
-- [HCaptchaProxylessRequest](https://zenno.link/doc-hcaptcha-en)
-- [HCaptchaRequest](https://zenno.link/doc-hcaptcha-proxy-en)
 - [ImageToTextRequest](https://zenno.link/doc-ImageToTextTask-en)
 - [RecaptchaV2ProxylessRequest](https://zenno.link/doc-recaptcha2-en)
 - [RecaptchaV2Request](https://zenno.link/doc-recaptcha2-proxy-en)
@@ -87,6 +85,6 @@ DEBUG=cmc-* node app.js
 - [TurnstileRequest](https://zenno.link/doc-turnstile-proxy-en)
 - [RecaptchaComplexImageTaskRequest](https://zenno.link/doc-complextask-rc-en)
 - [HcaptchaComplexImageTaskRequest](https://zenno.link/doc-complextask-hc-en)
-- [DataDome](https://zenno.link/doc-datadome)
-- [TenDI](https://zenno.link/doc-tendi)
-- [Amazon](https://zenno.link/doc-amazon)
+- [DataDome](https://zenno.link/doc-datadome-en)
+- [TenDI](https://zenno.link/doc-tendi-en)
+- [Amazon](https://zenno.link/doc-amazon-en)
