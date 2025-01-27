@@ -15,6 +15,7 @@ import { BasiliskRequest } from './Requests/BasiliskRequest';
 import { ImpervaRequest } from './Requests/ImpervaRequest';
 import { BinanceRequest } from './Requests/BinanceRequest';
 import { ComplexImageTaskRecognitionRequest } from './Requests/ComplexImageTaskRecognitionRequest';
+import { BinanceProxylessRequest } from './Requests/BinanceProxylessRequest';
 const { version } = require('../package.json'); // eslint-disable-line @typescript-eslint/no-var-requires
 
 describe('Check integration tests for CapMonsterCloudClientFactory()', () => {
@@ -697,6 +698,49 @@ describe('Check integration tests for CapMonsterCloudClientFactory()', () => {
     );
 
     const binanceRequest = new BinanceRequest({
+      websiteURL: 'https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=middle',
+      websiteKey: 'websiteKey',
+      validateId: 'validateId',
+      proxyType: 'http',
+      proxyAddress: '8.8.8.8',
+      proxyPort: 8080,
+      proxyLogin: 'proxyLoginHere',
+      proxyPassword: 'proxyPasswordHere',
+    });
+
+    const task = await cmcClient.Solve(binanceRequest);
+
+    expect(srv.caughtRequests[0]).toHaveProperty(
+      'body',
+      '{"clientKey":"<your capmonster.cloud API key>","task":{"type":"BinanceTaskProxyless","websiteURL":"https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=middle","websiteKey":"websiteKey","validateId":"validateId","proxyType":"http","proxyAddress":"8.8.8.8","proxyPort":8080,"proxyLogin":"proxyLoginHere","proxyPassword":"proxyPasswordHere"},"softId":54}',
+    );
+    expect(srv.caughtRequests[1]).toHaveProperty('body', '{"clientKey":"<your capmonster.cloud API key>","taskId":1234567}');
+    expect(task).toHaveProperty('solution');
+    expect(task).toHaveProperty(
+      'solution.token',
+      'captcha#09ba4905a79f44f2a99e44f234439644-ioVA7neog7eRHCDAsC0MixpZvt5kc99maS943qIsquNP9D77',
+    );
+
+    expect(await srv.destroy()).toBeUndefined();
+  });
+  it('should solve Binance Task Proxyless', async () => {
+    expect.assertions(5);
+
+    const srv = await createServerMock({
+      responses: [
+        { responseBody: '{"errorId":0,"taskId":1234567}' },
+        {
+          responseBody:
+            '{"errorId":0,"status":"ready","solution":{"token":"captcha#09ba4905a79f44f2a99e44f234439644-ioVA7neog7eRHCDAsC0MixpZvt5kc99maS943qIsquNP9D77","userAgent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36"}}',
+        },
+      ],
+    });
+
+    const cmcClient = CapMonsterCloudClientFactory.Create(
+      new ClientOptions({ clientKey: '<your capmonster.cloud API key>', serviceUrl: `http://localhost:${srv.address.port}` }),
+    );
+
+    const binanceRequest = new BinanceProxylessRequest({
       websiteURL: 'https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=middle',
       websiteKey: 'websiteKey',
       validateId: 'validateId',

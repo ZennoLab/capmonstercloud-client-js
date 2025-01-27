@@ -51,6 +51,7 @@ import { BinanceRequest } from './Requests/BinanceRequest';
 import { BinanceResponse } from './Responses/BinanceResponse';
 import { ComplexImageTaskRecognitionRequest } from './Requests/ComplexImageTaskRecognitionRequest';
 import { ComplexImageRecognitionResponse } from './Responses/ComplexImageRecognitionResponse';
+import { BinanceProxylessRequest } from './Requests/BinanceProxylessRequest';
 /**
  * Base type for capmonster.cloud Client exceptions
  */
@@ -306,6 +307,15 @@ export class CapMonsterCloudClient {
    */
   public async Solve(
     task: BinanceRequest,
+    resultTimeouts?: GetResultTimeouts,
+    cancellationController?: AbortController,
+  ): Promise<CaptchaResult<BinanceResponse>>;
+  /**
+   * Solve BinanceProxyless task
+   * You will get response within 10 - 180 secs period depending on service workload.
+   */
+  public async Solve(
+    task: BinanceProxylessRequest,
     resultTimeouts?: GetResultTimeouts,
     cancellationController?: AbortController,
   ): Promise<CaptchaResult<BinanceResponse>>;

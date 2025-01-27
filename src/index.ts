@@ -30,6 +30,7 @@ import { AmazonRequest, AmazonRequestIn } from './Requests/AmazonRequest';
 import { BasiliskRequest, BasiliskRequestIn } from './Requests/BasiliskRequest';
 import { ImpervaRequest, ImpervaRequestIn } from './Requests/ImpervaRequest';
 import { BinanceRequest, BinanceRequestIn } from './Requests/BinanceRequest';
+import { BinanceProxylessRequest, BinanceProxylessRequestIn } from './Requests/BinanceProxylessRequest';
 import { ComplexImageRecognitionRequestIn, ComplexImageTaskRecognitionRequest } from './Requests/ComplexImageTaskRecognitionRequest';
 
 export default {
@@ -58,6 +59,7 @@ export default {
   BasiliskRequest,
   ImpervaRequest,
   BinanceRequest,
+  BinanceProxylessRequest,
   ComplexImageTaskRecognitionRequest,
 };
 
@@ -114,6 +116,8 @@ export {
   ImpervaRequestIn,
   BinanceRequest,
   BinanceRequestIn,
+  BinanceProxylessRequest,
+  BinanceProxylessRequestIn,
   ComplexImageTaskRecognitionRequest,
   ComplexImageRecognitionRequestIn,
 };

@@ -18,4 +18,5 @@ export enum TaskType {
   AmazonTask = 'AmazonTask',
   AmazonTaskProxyless = 'AmazonTaskProxyless',
   BinanceTaskProxyless = 'BinanceTaskProxyless',
+  BinanceTask = 'BinanceTask',
 }

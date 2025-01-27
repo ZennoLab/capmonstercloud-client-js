@@ -121,6 +121,7 @@ export function detectResultTimeouts(task: Task): GetResultTimeouts {
     case TaskType.AmazonTask:
       return AmazonTaskTimeouts;
     case TaskType.BinanceTaskProxyless:
+    case TaskType.BinanceTask:
       return BinanceTaskTimeouts;
     default:
       throw new Error(`Could not detect result timeouts for provided task type = ${task.type}`);
