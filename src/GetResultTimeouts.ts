@@ -82,6 +82,13 @@ export const AmazonTaskTimeouts = {
   timeout: 1000 * 80,
 } as GetResultTimeouts;
 
+export const BinanceTaskTimeouts = {
+  firstRequestDelay: 1000 * 1,
+  firstRequestNoCacheDelay: 1000 * 10,
+  requestsInterval: 1000 * 1,
+  timeout: 1000 * 80,
+} as GetResultTimeouts;
+
 export function detectResultTimeouts(task: Task): GetResultTimeouts {
   switch (task.type) {
     case TaskType.FunCaptchaTaskProxyless:
@@ -113,6 +120,8 @@ export function detectResultTimeouts(task: Task): GetResultTimeouts {
     case TaskType.AmazonTaskProxyless:
     case TaskType.AmazonTask:
       return AmazonTaskTimeouts;
+    case TaskType.BinanceTaskProxyless:
+      return BinanceTaskTimeouts;
     default:
       throw new Error(`Could not detect result timeouts for provided task type = ${task.type}`);
   }

@@ -10,6 +10,10 @@ import { ComplexImageResponse } from './Responses/ComplexImageResponse';
 import { DataDomeResponse } from './Responses/DataDomeResponse';
 import { TenDIResponse } from './Responses/TenDIResponse';
 import { AmazonResponse } from './Responses/AmazonResponse';
+import { BasiliskResponse } from './Responses/BasiliskResponse';
+import { ImpervaResponse } from './Responses/ImpervaResponse';
+import { BinanceResponse } from './Responses/BinanceResponse';
+import { ComplexImageRecognitionResponse } from './Responses/ComplexImageRecognitionResponse';
 
 export enum TaskResultType {
   Failed = 'Failed',
@@ -37,7 +41,11 @@ export type TaskCompletedSolution =
   | ComplexImageResponse
   | DataDomeResponse
   | TenDIResponse
-  | AmazonResponse;
+  | AmazonResponse
+  | BasiliskResponse
+  | ImpervaResponse
+  | BinanceResponse
+  | ComplexImageRecognitionResponse;
 
 export type TaskCompleted<S extends TaskCompletedSolution> = {
   type: TaskResultType.Completed;
