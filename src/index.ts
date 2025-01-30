@@ -27,6 +27,11 @@ import { ComplexImageFunCaptchaRequest, ComplexImageFunCaptchaRequestIn } from '
 import { DataDomeRequest, DataDomeRequestIn } from './Requests/DataDomeRequest';
 import { TenDIRequest, TenDIRequestIn } from './Requests/TenDIRequest';
 import { AmazonRequest, AmazonRequestIn } from './Requests/AmazonRequest';
+import { BasiliskRequest, BasiliskRequestIn } from './Requests/BasiliskRequest';
+import { ImpervaRequest, ImpervaRequestIn } from './Requests/ImpervaRequest';
+import { BinanceRequest, BinanceRequestIn } from './Requests/BinanceRequest';
+import { BinanceProxylessRequest, BinanceProxylessRequestIn } from './Requests/BinanceProxylessRequest';
+import { ComplexImageRecognitionRequestIn, ComplexImageTaskRecognitionRequest } from './Requests/ComplexImageTaskRecognitionRequest';
 
 export default {
   CapMonsterCloudClientFactory,
@@ -51,6 +56,11 @@ export default {
   DataDomeRequest,
   TenDIRequest,
   AmazonRequest,
+  BasiliskRequest,
+  ImpervaRequest,
+  BinanceRequest,
+  BinanceProxylessRequest,
+  ComplexImageTaskRecognitionRequest,
 };
 
 export {
@@ -94,7 +104,20 @@ export {
   ComplexImageHCaptchaRequestIn,
   ComplexImageFunCaptchaRequest,
   ComplexImageFunCaptchaRequestIn,
+  DataDomeRequest,
   DataDomeRequestIn,
+  TenDIRequest,
   TenDIRequestIn,
+  AmazonRequest,
   AmazonRequestIn,
+  BasiliskRequest,
+  BasiliskRequestIn,
+  ImpervaRequest,
+  ImpervaRequestIn,
+  BinanceRequest,
+  BinanceRequestIn,
+  BinanceProxylessRequest,
+  BinanceProxylessRequestIn,
+  ComplexImageTaskRecognitionRequest,
+  ComplexImageRecognitionRequestIn,
 };

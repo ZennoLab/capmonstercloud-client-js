@@ -14,6 +14,9 @@ import { ComplexImageHCaptchaRequest } from './ComplexImageHCaptchaRequest';
 import { ComplexImageRecaptchaRequest } from './ComplexImageRecaptchaRequest';
 import { ComplexImageFunCaptchaRequest } from './ComplexImageFunCaptchaRequest';
 import { DataDomeRequest } from './DataDomeRequest';
+import { BasiliskRequest } from './BasiliskRequest';
+import { ImpervaRequest } from './ImpervaRequest';
+import { BinanceRequest } from './BinanceRequest';
 
 /**
  * Universal type for recognition request
@@ -34,4 +37,7 @@ export type Task =
   | ComplexImageHCaptchaRequest
   | ComplexImageRecaptchaRequest
   | ComplexImageFunCaptchaRequest
-  | DataDomeRequest;
+  | DataDomeRequest
+  | BasiliskRequest
+  | ImpervaRequest
+  | BinanceRequest;

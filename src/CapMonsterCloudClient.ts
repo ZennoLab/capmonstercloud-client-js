@@ -43,6 +43,15 @@ import { TenDIResponse } from './Responses/TenDIResponse';
 import { AmazonProxylessRequest } from './Requests/AmazonProxylessRequest';
 import { AmazonResponse } from './Responses/AmazonResponse';
 import { AmazonRequest } from './Requests/AmazonRequest';
+import { BasiliskRequest } from './Requests/BasiliskRequest';
+import { BasiliskResponse } from './Responses/BasiliskResponse';
+import { ImpervaRequest } from './Requests/ImpervaRequest';
+import { ImpervaResponse } from './Responses/ImpervaResponse';
+import { BinanceRequest } from './Requests/BinanceRequest';
+import { BinanceResponse } from './Responses/BinanceResponse';
+import { ComplexImageTaskRecognitionRequest } from './Requests/ComplexImageTaskRecognitionRequest';
+import { ComplexImageRecognitionResponse } from './Responses/ComplexImageRecognitionResponse';
+import { BinanceProxylessRequest } from './Requests/BinanceProxylessRequest';
 /**
  * Base type for capmonster.cloud Client exceptions
  */
@@ -274,6 +283,51 @@ export class CapMonsterCloudClient {
     resultTimeouts?: GetResultTimeouts,
     cancellationController?: AbortController,
   ): Promise<CaptchaResult<TenDIResponse>>;
+  /**
+   * Solve Basilisk task
+   * You will get response within 10 - 180 secs period depending on service workload.
+   */
+  public async Solve(
+    task: BasiliskRequest,
+    resultTimeouts?: GetResultTimeouts,
+    cancellationController?: AbortController,
+  ): Promise<CaptchaResult<BasiliskResponse>>;
+  /**
+   * Solve Imperva task
+   * You will get response within 10 - 180 secs period depending on service workload.
+   */
+  public async Solve(
+    task: ImpervaRequest,
+    resultTimeouts?: GetResultTimeouts,
+    cancellationController?: AbortController,
+  ): Promise<CaptchaResult<ImpervaResponse>>;
+  /**
+   * Solve Binance task
+   * You will get response within 10 - 180 secs period depending on service workload.
+   */
+  public async Solve(
+    task: BinanceRequest,
+    resultTimeouts?: GetResultTimeouts,
+    cancellationController?: AbortController,
+  ): Promise<CaptchaResult<BinanceResponse>>;
+  /**
+   * Solve BinanceProxyless task
+   * You will get response within 10 - 180 secs period depending on service workload.
+   */
+  public async Solve(
+    task: BinanceProxylessRequest,
+    resultTimeouts?: GetResultTimeouts,
+    cancellationController?: AbortController,
+  ): Promise<CaptchaResult<BinanceResponse>>;
+  /**
+   * Solve ComplexImageRecognition task
+   * You will get response within 10 - 180 secs period depending on service workload.
+   */
+  public async Solve(
+    task: ComplexImageTaskRecognitionRequest,
+    resultTimeouts?: GetResultTimeouts,
+    cancellationController?: AbortController,
+  ): Promise<CaptchaResult<ComplexImageRecognitionResponse>>;
   /**
    * Solve AmazonProxyless task
    * You will get response within 10 - 180 secs period depending on service workload.
