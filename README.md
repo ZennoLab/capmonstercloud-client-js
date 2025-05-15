@@ -11,13 +11,13 @@ Via [NPM](https://www.npmjs.com/package/@zennolab_com/capmonstercloud-client):
 ## Usage with Node (with or without Typescript)
 
 ```javascript
-const { CapMonsterCloudClientFactory, ClientOptions, RecaptchaV2ProxylessRequest } = require('@zennolab_com/capmonstercloud-client');
+const { CapMonsterCloudClientFactory, ClientOptions, RecaptchaV2Request } = require('@zennolab_com/capmonstercloud-client');
 
 async function run() {
   const cmcClient = CapMonsterCloudClientFactory.Create(new ClientOptions({ clientKey: '<your capmonster.cloud API key>' }));
   console.log(await cmcClient.getBalance());
 
-  const recaptchaV2ProxylessRequest = new RecaptchaV2ProxylessRequest({
+  const recaptchaV2Request = new RecaptchaV2Request({
     websiteURL: 'https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=high',
     websiteKey: '6Lcg7CMUAAAAANphynKgn9YAgA4tQ2KI_iqRyTwd',
   });
@@ -51,11 +51,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   const recaptchaV2Request = new RecaptchaV2Request({
     websiteURL: 'https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=high',
     websiteKey: '6Lcg7CMUAAAAANphynKgn9YAgA4tQ2KI_iqRyTwd',
-    proxyType: 'http',
-    proxyAddress: '8.8.8.8',
-    proxyPort: 8080,
-    proxyLogin: 'proxyLoginHere',
-    proxyPassword: 'proxyPasswordHere',
+    proxy: {
+        proxyType: 'http',
+        proxyAddress: '8.8.8.8',
+        proxyPort: 8080,
+        proxyLogin: 'proxyLoginHere',
+        proxyPassword: 'proxyPasswordHere',
+    },
     userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.132 Safari/537.36',
   });
 
@@ -79,7 +81,6 @@ DEBUG=cmc-* node app.js
 - [RecaptchaV2ProxylessRequest](https://zenno.link/doc-recaptcha2-en)
 - [RecaptchaV2Request](https://zenno.link/doc-recaptcha2-proxy-en)
 - [RecaptchaV3ProxylessRequest](https://zenno.link/doc-recaptcha3-en)
-- [RecaptchaV2EnterpriseProxylessRequest](https://zenno.link/doc-recaptcha2e-en)
 - [RecaptchaV2EnterpriseRequest](https://zenno.link/doc-recaptcha2e-proxy-en)
 - [TurnstileProxylessRequest](https://zenno.link/doc-turnstile-en)
 - [TurnstileRequest](https://zenno.link/doc-turnstile-proxy-en)

@@ -12,7 +12,6 @@ import { HCaptchaRequest } from './HCaptchaRequest';
 import { GeeTestProxylessRequest } from './GeeTestProxylessRequest';
 import { GeeTestRequest } from './GeeTestRequest';
 import { TenDIRequest } from './TenDIRequest';
-import { RecaptchaV2EnterpriseProxylessRequest } from './RecaptchaV2EnterpriseProxylessRequest';
 import { RecaptchaV2EnterpriseRequest } from './RecaptchaV2EnterpriseRequest';
 import { ComplexImageHCaptchaRequest } from './ComplexImageHCaptchaRequest';
 import { ComplexImageRecaptchaRequest } from './ComplexImageRecaptchaRequest';
@@ -368,7 +367,7 @@ describe('Check unit tests for SerializeObject()', () => {
   it(`should serialize RecaptchaV2EnterpriseProxylessRequest`, () => {
     const serialized = SerializeObject({
       clientKey: '<your capmonster.cloud API key>',
-      task: new RecaptchaV2EnterpriseProxylessRequest({
+      task: new RecaptchaV2EnterpriseRequest({
         websiteURL: 'https://mydomain.com/page-with-recaptcha-enterprise',
         websiteKey: '6Lcg7CMUAAAAANphynKgn9YAgA4tQ2KI_iqRyTwd',
         enterprisePayload: {
@@ -380,7 +379,7 @@ describe('Check unit tests for SerializeObject()', () => {
     expect(serialized).toMatchObject({
       clientKey: '<your capmonster.cloud API key>',
       task: {
-        type: 'RecaptchaV2EnterpriseTaskProxyless',
+        type: 'RecaptchaV2EnterpriseTask',
         websiteURL: 'https://mydomain.com/page-with-recaptcha-enterprise',
         websiteKey: '6Lcg7CMUAAAAANphynKgn9YAgA4tQ2KI_iqRyTwd',
         enterprisePayload: {
@@ -396,15 +395,17 @@ describe('Check unit tests for SerializeObject()', () => {
       task: new RecaptchaV2EnterpriseRequest({
         websiteURL: 'https://mydomain.com/page-with-recaptcha-enterprise',
         websiteKey: '6Lcg7CMUAAAAANphynKgn9YAgA4tQ2KI_iqRyTwd',
+        userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.132 Safari/537.36',
         enterprisePayload: {
           s: 'SOME_ADDITIONAL_TOKEN',
         },
-        proxyType: 'http',
-        proxyAddress: '8.8.8.8',
-        proxyPort: 8080,
-        proxyLogin: 'proxyLoginHere',
-        proxyPassword: 'proxyPasswordHere',
-        userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.132 Safari/537.36',
+        proxy: {
+          proxyType: 'http',
+          proxyAddress: '8.8.8.8',
+          proxyPort: 8080,
+          proxyLogin: 'proxyLoginHere',
+          proxyPassword: 'proxyPasswordHere',
+        },
       }),
     });
 

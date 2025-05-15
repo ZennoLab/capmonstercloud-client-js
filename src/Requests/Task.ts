@@ -5,7 +5,6 @@ import { GeeTestRequest } from './GeeTestRequest';
 import { HCaptchaProxylessRequest } from './HCaptchaProxylessRequest';
 import { HCaptchaRequest } from './HCaptchaRequest';
 import { ImageToTextRequest } from './ImageToTextRequest';
-import { RecaptchaV2EnterpriseProxylessRequest } from './RecaptchaV2EnterpriseProxylessRequest';
 import { RecaptchaV2EnterpriseRequest } from './RecaptchaV2EnterpriseRequest';
 import { RecaptchaV2ProxylessRequest } from './RecaptchaV2ProxylessRequest';
 import { RecaptchaV2Request } from './RecaptchaV2Request';
@@ -29,7 +28,6 @@ export type Task =
   | HCaptchaProxylessRequest
   | HCaptchaRequest
   | ImageToTextRequest
-  | RecaptchaV2EnterpriseProxylessRequest
   | RecaptchaV2EnterpriseRequest
   | RecaptchaV2ProxylessRequest
   | RecaptchaV2Request

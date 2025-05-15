@@ -7,10 +7,6 @@ import { GeeTestRequest, GeeTestRequestIn } from './Requests/GeeTestRequest';
 import { HCaptchaProxylessRequest, HCaptchaProxylessRequestIn } from './Requests/HCaptchaProxylessRequest';
 import { HCaptchaRequest, HCaptchaRequestIn } from './Requests/HCaptchaRequest';
 import { ImageToTextRequest, ImageToTextRequestIn } from './Requests/ImageToTextRequest';
-import {
-  RecaptchaV2EnterpriseProxylessRequest,
-  RecaptchaV2EnterpriseProxylessRequestIn,
-} from './Requests/RecaptchaV2EnterpriseProxylessRequest';
 import { RecaptchaV2EnterpriseRequest, RecaptchaV2EnterpriseRequestIn } from './Requests/RecaptchaV2EnterpriseRequest';
 import { RecaptchaV2ProxylessRequest, RecaptchaV2ProxylessRequestIn } from './Requests/RecaptchaV2ProxylessRequest';
 import { RecaptchaV2Request, RecaptchaV2RequestIn } from './Requests/RecaptchaV2Request';
@@ -43,7 +39,6 @@ export default {
   HCaptchaProxylessRequest,
   HCaptchaRequest,
   ImageToTextRequest,
-  RecaptchaV2EnterpriseProxylessRequest,
   RecaptchaV2EnterpriseRequest,
   RecaptchaV2ProxylessRequest,
   RecaptchaV2Request,
@@ -84,8 +79,6 @@ export {
   HCaptchaRequestIn,
   ImageToTextRequest,
   ImageToTextRequestIn,
-  RecaptchaV2EnterpriseProxylessRequest,
-  RecaptchaV2EnterpriseProxylessRequestIn,
   RecaptchaV2EnterpriseRequest,
   RecaptchaV2EnterpriseRequestIn,
   RecaptchaV2ProxylessRequest,

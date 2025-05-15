@@ -1,4 +1,4 @@
-import { CaptchaRequestBase, CaptchaRequestBaseIn } from './CaptchaRequestBase';
+import { CaptchaRequestBase, CaptchaRequestBaseIn } from '../CaptchaRequestBase';
 
 export type RecaptchaV2EnterpriseRequestBaseIn = {
   websiteURL: string;

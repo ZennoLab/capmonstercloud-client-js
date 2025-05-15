@@ -22,7 +22,6 @@ import { TurnstileRequest } from './Requests/TurnstileRequest';
 import { TurnstileProxylessRequest } from './Requests/TurnstileRequestProxyless';
 import { ImageToTextRequest } from './Requests/ImageToTextRequest';
 import { ImageToTextResponse } from './Responses/ImageToTextResponse';
-import { RecaptchaV2EnterpriseProxylessRequest } from './Requests/RecaptchaV2EnterpriseProxylessRequest';
 import { RecaptchaV2EnterpriseResponse } from './Responses/RecaptchaV2EnterpriseResponse';
 import { RecaptchaV2EnterpriseRequest } from './Requests/RecaptchaV2EnterpriseRequest';
 import { RecaptchaV2ProxylessRequest } from './Requests/RecaptchaV2ProxylessRequest';
@@ -220,15 +219,6 @@ export class CapMonsterCloudClient {
     resultTimeouts?: GetResultTimeouts,
     cancellationController?: AbortController,
   ): Promise<CaptchaResult<ImageToTextResponse>>;
-  /**
-   * Solve RecaptchaV2EnterpriseTaskProxyless task
-   * You will get response within 10 - 180 secs period depending on service workload.
-   */
-  public async Solve(
-    task: RecaptchaV2EnterpriseProxylessRequest,
-    resultTimeouts?: GetResultTimeouts,
-    cancellationController?: AbortController,
-  ): Promise<CaptchaResult<RecaptchaV2EnterpriseResponse>>;
   /**
    * Solve RecaptchaV2EnterpriseTask task
    * You will get response within 10 - 180 secs period depending on service workload.
