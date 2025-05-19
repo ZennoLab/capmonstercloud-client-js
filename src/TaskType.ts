@@ -1,7 +1,5 @@
 export enum TaskType {
-  FunCaptchaTaskProxyless = 'FunCaptchaTaskProxyless',
   FunCaptchaTask = 'FunCaptchaTask',
-  GeeTestTaskProxyless = 'GeeTestTaskProxyless',
   GeeTestTask = 'GeeTestTask',
   HCaptchaTaskProxyless = 'HCaptchaTaskProxyless',
   HCaptchaTask = 'HCaptchaTask',
@@ -11,11 +9,8 @@ export enum TaskType {
   NoCaptchaTask = 'NoCaptchaTask',
   RecaptchaV3TaskProxyless = 'RecaptchaV3TaskProxyless',
   TurnstileTask = 'TurnstileTask',
-  TurnstileTaskProxyless = 'TurnstileTaskProxyless',
   ComplexImageTask = 'ComplexImageTask',
   CustomTask = 'CustomTask',
   AmazonTask = 'AmazonTask',
-  AmazonTaskProxyless = 'AmazonTaskProxyless',
-  BinanceTaskProxyless = 'BinanceTaskProxyless',
   BinanceTask = 'BinanceTask',
 }
