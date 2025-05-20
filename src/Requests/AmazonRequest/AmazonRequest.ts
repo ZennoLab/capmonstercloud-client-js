@@ -5,8 +5,8 @@ import { ProxyInfo, ProxyInfoIn } from '../ProxyInfo';
 export type AmazonRequestIn = Pick<AmazonRequestBaseIn, Exclude<keyof AmazonRequestBaseIn, 'type'>> & { proxy?: ProxyInfoIn };
 
 /**
- * Amazon recognition request (without proxy).
- * {@link https://zenno.link/doc-amazon}
+ * Amazon recognition request.
+ * {@link https://zenno.link/doc-amazon-en}
  */
 export class AmazonRequest extends AmazonRequestBase {
   constructor({ proxy, ...restArgsObj }: AmazonRequestIn) {

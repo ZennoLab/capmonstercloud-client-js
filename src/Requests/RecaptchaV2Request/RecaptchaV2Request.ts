@@ -8,7 +8,7 @@ export type RecaptchaV2RequestIn = Pick<RecaptchaV2RequestBaseIn, Exclude<keyof 
 
 /**
  * Recaptcha V2 recognition request.
- * {@link https://zennolab.atlassian.net/wiki/spaces/APIS/pages/373161985/NoCaptchaTaskProxyless+solving+Google+recaptcha}
+ * {@link https://zenno.link/doc-recaptcha2-proxy-en}
  */
 export class RecaptchaV2Request extends RecaptchaV2RequestBase {
   constructor({ proxy, ...argsObj }: RecaptchaV2RequestIn) {

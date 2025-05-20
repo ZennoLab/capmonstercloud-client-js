@@ -75,14 +75,19 @@ DEBUG=cmc-* node app.js
 
 ## Supported captcha recognition requests:
 
+- [AmazonRequest](https://zenno.link/doc-amazon-en)
+- [BasiliskRequest](https://zenno.link/doc-basilisk-en)
+- [BinanceRequest](https://zenno.link/doc-binance-en)
+- [DataDomeRequest](https://zenno.link/doc-datadome-en)
 - [GeeTestRequest](https://zenno.link/doc-geetest-proxy-en)
+- [HcaptchaComplexImageTaskRequest](https://zenno.link/doc-complextask-hc-en)
 - [ImageToTextRequest](https://zenno.link/doc-ImageToTextTask-en)
+- [ImpervaRequest](https://zenno.link/doc-imperva-en})
+- [RecaptchaComplexImageTaskRequest](https://zenno.link/doc-complextask-rc-en)
+- [RecaptchaV2EnterpriseRequest](https://zenno.link/doc-recaptcha2e-proxy-en)
 - [RecaptchaV2Request](https://zenno.link/doc-recaptcha2-proxy-en)
 - [RecaptchaV3ProxylessRequest](https://zenno.link/doc-recaptcha3-en)
-- [RecaptchaV2EnterpriseRequest](https://zenno.link/doc-recaptcha2e-proxy-en)
+- [TenDIRequest](https://zenno.link/doc-tendi-en)
 - [TurnstileRequest](https://zenno.link/doc-turnstile-proxy-en)
-- [RecaptchaComplexImageTaskRequest](https://zenno.link/doc-complextask-rc-en)
-- [HcaptchaComplexImageTaskRequest](https://zenno.link/doc-complextask-hc-en)
-- [DataDome](https://zenno.link/doc-datadome-en)
-- [TenDI](https://zenno.link/doc-tendi-en)
-- [Amazon](https://zenno.link/doc-amazon-en)
+
+

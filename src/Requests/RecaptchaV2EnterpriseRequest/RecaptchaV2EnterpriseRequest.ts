@@ -9,6 +9,7 @@ export type RecaptchaV2EnterpriseRequestIn = Pick<
 
 /**
  * Recaptcha V2 Enterprise recognition request.
+ * {@link https://zenno.link/doc-recaptcha2e-proxy-en}
  */
 
 export class RecaptchaV2EnterpriseRequest extends RecaptchaV2EnterpriseRequestBase {

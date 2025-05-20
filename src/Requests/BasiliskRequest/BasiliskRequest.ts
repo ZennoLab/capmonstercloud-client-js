@@ -7,7 +7,7 @@ export type BasiliskRequestIn = Pick<BasiliskRequestBaseIn, Exclude<keyof Basili
 };
 /**
  * Basilisk recognition request.
- * {@link https://zenno.link/doc-basilisk}
+ * {@link https://zenno.link/doc-basilisk-en}
  */
 export class BasiliskRequest extends BasiliskRequestBase {
   constructor({ proxy, ...argsObj }: BasiliskRequestIn) {
