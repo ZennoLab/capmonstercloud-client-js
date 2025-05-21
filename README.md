@@ -82,12 +82,10 @@ DEBUG=cmc-* node app.js
 - [GeeTestRequest](https://zenno.link/doc-geetest-proxy-en)
 - [HcaptchaComplexImageTaskRequest](https://zenno.link/doc-complextask-hc-en)
 - [ImageToTextRequest](https://zenno.link/doc-ImageToTextTask-en)
-- [ImpervaRequest](https://zenno.link/doc-imperva-en})
+- [ImpervaRequest](https://zenno.link/doc-imperva-en)
 - [RecaptchaComplexImageTaskRequest](https://zenno.link/doc-complextask-rc-en)
 - [RecaptchaV2EnterpriseRequest](https://zenno.link/doc-recaptcha2e-proxy-en)
 - [RecaptchaV2Request](https://zenno.link/doc-recaptcha2-proxy-en)
 - [RecaptchaV3ProxylessRequest](https://zenno.link/doc-recaptcha3-en)
 - [TenDIRequest](https://zenno.link/doc-tendi-en)
 - [TurnstileRequest](https://zenno.link/doc-turnstile-proxy-en)
-
-
