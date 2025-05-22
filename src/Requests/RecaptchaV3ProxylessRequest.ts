@@ -12,7 +12,7 @@ export type RecaptchaV3ProxylessRequestIn = Pick<RecaptchaV3RequestIn, Exclude<k
 
 /**
  * Recaptcha V3 recognition request (without proxy).
- * {@link https://zennolab.atlassian.net/wiki/spaces/APIS/pages/566853650/RecaptchaV3TaskProxyless+solving+Google+ReCaptcha+v.3}
+ * {@link https://zenno.link/doc-recaptcha3-en}
  */
 export class RecaptchaV3ProxylessRequest extends CaptchaRequestBase {
   /**

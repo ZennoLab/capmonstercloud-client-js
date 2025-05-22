@@ -1,29 +1,24 @@
 import { DataDomeRequest } from './DataDomeRequest';
 import { SerializeObject } from './RequestsSerialization';
 import { CapMonsterModules } from '../CapMonsterModules';
-import { RecaptchaV2ProxylessRequest } from './RecaptchaV2ProxylessRequest';
 import { RecaptchaV2Request } from './RecaptchaV2Request';
 import { ImageToTextRequest } from './ImageToTextRequest';
 import { RecaptchaV3ProxylessRequest } from './RecaptchaV3ProxylessRequest';
-import { FunCaptchaProxylessRequest } from './FunCaptchaProxylessRequest';
 import { FunCaptchaRequest } from './FunCaptchaRequest';
-import { HCaptchaProxylessRequest } from './HCaptchaProxylessRequest';
 import { HCaptchaRequest } from './HCaptchaRequest';
-import { GeeTestProxylessRequest } from './GeeTestProxylessRequest';
 import { GeeTestRequest } from './GeeTestRequest';
-import { TenDIRequest } from './TenDIRequest';
-import { RecaptchaV2EnterpriseProxylessRequest } from './RecaptchaV2EnterpriseProxylessRequest';
+import { TenDIRequest } from './TenDIRequest/TenDIRequest';
 import { RecaptchaV2EnterpriseRequest } from './RecaptchaV2EnterpriseRequest';
 import { ComplexImageHCaptchaRequest } from './ComplexImageHCaptchaRequest';
 import { ComplexImageRecaptchaRequest } from './ComplexImageRecaptchaRequest';
 import { ComplexImageFunCaptchaRequest } from './ComplexImageFunCaptchaRequest';
-import { AmazonProxylessRequest } from './AmazonProxylessRequest';
+import { AmazonRequest } from './AmazonRequest';
 
 describe('Check unit tests for SerializeObject()', () => {
   it(`should serialize RecaptchaV2ProxylessRequest`, () => {
     const serialized = SerializeObject({
       clientKey: '<your capmonster.cloud API key>',
-      task: new RecaptchaV2ProxylessRequest({
+      task: new RecaptchaV2Request({
         websiteURL: 'https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=high',
         websiteKey: '6Lcg7CMUAAAAANphynKgn9YAgA4tQ2KI_iqRyTwd',
         recaptchaDataSValue: 'some data-s value',
@@ -35,7 +30,7 @@ describe('Check unit tests for SerializeObject()', () => {
     expect(serialized).toMatchObject({
       clientKey: '<your capmonster.cloud API key>',
       task: {
-        type: 'NoCaptchaTaskProxyless',
+        type: 'NoCaptchaTask',
         websiteURL: 'https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=high',
         websiteKey: '6Lcg7CMUAAAAANphynKgn9YAgA4tQ2KI_iqRyTwd',
         recaptchaDataSValue: 'some data-s value',
@@ -54,11 +49,13 @@ describe('Check unit tests for SerializeObject()', () => {
         recaptchaDataSValue: 'some data-s value',
         userAgent: 'PostmanRuntime/7.29.0',
         cookies: 'cookieA=value#A;cookieB=value#B',
-        proxyType: 'socks4',
-        proxyAddress: 'https://proxy.com',
-        proxyPort: 6045,
-        proxyLogin: 'login',
-        proxyPassword: 'p@ssword',
+        proxy: {
+          proxyType: 'socks4',
+          proxyAddress: 'https://proxy.com',
+          proxyPort: 6045,
+          proxyLogin: 'login',
+          proxyPassword: 'p@ssword',
+        },
       }),
     });
 
@@ -133,7 +130,7 @@ describe('Check unit tests for SerializeObject()', () => {
   it(`should serialize FunCaptchaProxylessRequest`, () => {
     const serialized = SerializeObject({
       clientKey: '<your capmonster.cloud API key>',
-      task: new FunCaptchaProxylessRequest({
+      task: new FunCaptchaRequest({
         websiteURL: 'https://funcaptcha.com/fc/api/nojs/?pkey=69A21A01-CC7B-B9C6-0F9A-E7FA06677FFC',
         websitePublicKey: '69A21A01-CC7B-B9C6-0F9A-E7FA06677FFC',
         data: '{"blob":"dyXvXANMbHj1iDyz.Qj97JtSqR2n%2BuoY1V%2FbdgbrG7p%2FmKiqdU9AwJ6MifEt0np4vfYn6TTJDJEfZDlcz9Q1XMn9przeOV%2FCr2%2FIpi%2FC1s%3D"}',
@@ -144,7 +141,7 @@ describe('Check unit tests for SerializeObject()', () => {
     expect(serialized).toMatchObject({
       clientKey: '<your capmonster.cloud API key>',
       task: {
-        type: 'FunCaptchaTaskProxyless',
+        type: 'FunCaptchaTask',
         websiteURL: 'https://funcaptcha.com/fc/api/nojs/?pkey=69A21A01-CC7B-B9C6-0F9A-E7FA06677FFC',
         websitePublicKey: '69A21A01-CC7B-B9C6-0F9A-E7FA06677FFC',
         data: '{"blob":"dyXvXANMbHj1iDyz.Qj97JtSqR2n%2BuoY1V%2FbdgbrG7p%2FmKiqdU9AwJ6MifEt0np4vfYn6TTJDJEfZDlcz9Q1XMn9przeOV%2FCr2%2FIpi%2FC1s%3D"}',
@@ -161,11 +158,13 @@ describe('Check unit tests for SerializeObject()', () => {
         websitePublicKey: '69A21A01-CC7B-B9C6-0F9A-E7FA06677FFC',
         data: '{"blob":"dyXvXANMbHj1iDyz.Qj97JtSqR2n%2BuoY1V%2FbdgbrG7p%2FmKiqdU9AwJ6MifEt0np4vfYn6TTJDJEfZDlcz9Q1XMn9przeOV%2FCr2%2FIpi%2FC1s%3D"}',
         funcaptchaApiJSSubdomain: 'mywebsite-api.funcaptcha.com',
-        proxyType: 'socks5',
-        proxyAddress: 'https://proxy.com',
-        proxyPort: 6045,
-        proxyLogin: 'login',
-        proxyPassword: 'p@ssword',
+        proxy: {
+          proxyType: 'socks5',
+          proxyAddress: 'https://proxy.com',
+          proxyPort: 6045,
+          proxyLogin: 'login',
+          proxyPassword: 'p@ssword',
+        },
       }),
     });
 
@@ -189,7 +188,7 @@ describe('Check unit tests for SerializeObject()', () => {
   it(`should serialize HCaptchaProxylessRequest`, () => {
     const serialized = SerializeObject({
       clientKey: '<your capmonster.cloud API key>',
-      task: new HCaptchaProxylessRequest({
+      task: new HCaptchaRequest({
         websiteURL: 'https://lessons.zennolab.com/captchas/hcaptcha/?level=easy',
         websiteKey: '472fc7af-86a4-4382-9a49-ca9090474471',
         isInvisible: true,
@@ -200,7 +199,7 @@ describe('Check unit tests for SerializeObject()', () => {
     expect(serialized).toMatchObject({
       clientKey: '<your capmonster.cloud API key>',
       task: {
-        type: 'HCaptchaTaskProxyless',
+        type: 'HCaptchaTask',
         websiteURL: 'https://lessons.zennolab.com/captchas/hcaptcha/?level=easy',
         websiteKey: '472fc7af-86a4-4382-9a49-ca9090474471',
         isInvisible: true,
@@ -218,11 +217,13 @@ describe('Check unit tests for SerializeObject()', () => {
         websiteKey: '472fc7af-86a4-4382-9a49-ca9090474471',
         isInvisible: true,
         data: 'some data',
-        proxyType: 'https',
-        proxyAddress: 'https://proxy.com',
-        proxyPort: 6045,
-        proxyLogin: 'login',
-        proxyPassword: 'p@ssword',
+        proxy: {
+          proxyType: 'https',
+          proxyAddress: 'https://proxy.com',
+          proxyPort: 6045,
+          proxyLogin: 'login',
+          proxyPassword: 'p@ssword',
+        },
       }),
     });
 
@@ -247,7 +248,7 @@ describe('Check unit tests for SerializeObject()', () => {
   it(`should serialize GeeTestProxylessRequestV3`, () => {
     const serialized = SerializeObject({
       clientKey: '<your capmonster.cloud API key>',
-      task: new GeeTestProxylessRequest({
+      task: new GeeTestRequest({
         websiteURL: 'https://example.com/geetest.php',
         gt: '81dc9bdb52d04dc20036dbd8313ed055',
         challenge: 'd93591bdf7860e1e4ee2fca799911215',
@@ -257,7 +258,7 @@ describe('Check unit tests for SerializeObject()', () => {
     expect(serialized).toMatchObject({
       clientKey: '<your capmonster.cloud API key>',
       task: {
-        type: 'GeeTestTaskProxyless',
+        type: 'GeeTestTask',
         websiteURL: 'https://example.com/geetest.php',
         gt: '81dc9bdb52d04dc20036dbd8313ed055',
         challenge: 'd93591bdf7860e1e4ee2fca799911215',
@@ -268,7 +269,7 @@ describe('Check unit tests for SerializeObject()', () => {
   it(`should serialize GeeTestProxylessRequestV4`, () => {
     const serialized = SerializeObject({
       clientKey: '<your capmonster.cloud API key>',
-      task: new GeeTestProxylessRequest({
+      task: new GeeTestRequest({
         websiteURL: 'https://example.com/geetest.php',
         gt: '81dc9bdb52d04dc20036dbd8313ed055',
         challenge: 'd93591bdf7860e1e4ee2fca799911215',
@@ -282,7 +283,7 @@ describe('Check unit tests for SerializeObject()', () => {
     expect(serialized).toMatchObject({
       clientKey: '<your capmonster.cloud API key>',
       task: {
-        type: 'GeeTestTaskProxyless',
+        type: 'GeeTestTask',
         websiteURL: 'https://example.com/geetest.php',
         gt: '81dc9bdb52d04dc20036dbd8313ed055',
         version: '4',
@@ -301,11 +302,13 @@ describe('Check unit tests for SerializeObject()', () => {
         gt: '81dc9bdb52d04dc20036dbd8313ed055',
         challenge: 'd93591bdf7860e1e4ee2fca799911215',
         userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36',
-        proxyType: 'https',
-        proxyAddress: 'https://proxy.com',
-        proxyPort: 6045,
-        proxyLogin: 'login',
-        proxyPassword: 'p@ssword',
+        proxy: {
+          proxyType: 'https',
+          proxyAddress: 'https://proxy.com',
+          proxyPort: 6045,
+          proxyLogin: 'login',
+          proxyPassword: 'p@ssword',
+        },
       }),
     });
 
@@ -337,11 +340,13 @@ describe('Check unit tests for SerializeObject()', () => {
           riskType: 'slide',
         },
         userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36',
-        proxyType: 'https',
-        proxyAddress: 'https://proxy.com',
-        proxyPort: 6045,
-        proxyLogin: 'login',
-        proxyPassword: 'p@ssword',
+        proxy: {
+          proxyType: 'https',
+          proxyAddress: 'https://proxy.com',
+          proxyPort: 6045,
+          proxyLogin: 'login',
+          proxyPassword: 'p@ssword',
+        },
       }),
     });
 
@@ -368,7 +373,7 @@ describe('Check unit tests for SerializeObject()', () => {
   it(`should serialize RecaptchaV2EnterpriseProxylessRequest`, () => {
     const serialized = SerializeObject({
       clientKey: '<your capmonster.cloud API key>',
-      task: new RecaptchaV2EnterpriseProxylessRequest({
+      task: new RecaptchaV2EnterpriseRequest({
         websiteURL: 'https://mydomain.com/page-with-recaptcha-enterprise',
         websiteKey: '6Lcg7CMUAAAAANphynKgn9YAgA4tQ2KI_iqRyTwd',
         enterprisePayload: {
@@ -380,7 +385,7 @@ describe('Check unit tests for SerializeObject()', () => {
     expect(serialized).toMatchObject({
       clientKey: '<your capmonster.cloud API key>',
       task: {
-        type: 'RecaptchaV2EnterpriseTaskProxyless',
+        type: 'RecaptchaV2EnterpriseTask',
         websiteURL: 'https://mydomain.com/page-with-recaptcha-enterprise',
         websiteKey: '6Lcg7CMUAAAAANphynKgn9YAgA4tQ2KI_iqRyTwd',
         enterprisePayload: {
@@ -396,15 +401,17 @@ describe('Check unit tests for SerializeObject()', () => {
       task: new RecaptchaV2EnterpriseRequest({
         websiteURL: 'https://mydomain.com/page-with-recaptcha-enterprise',
         websiteKey: '6Lcg7CMUAAAAANphynKgn9YAgA4tQ2KI_iqRyTwd',
+        userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.132 Safari/537.36',
         enterprisePayload: {
           s: 'SOME_ADDITIONAL_TOKEN',
         },
-        proxyType: 'http',
-        proxyAddress: '8.8.8.8',
-        proxyPort: 8080,
-        proxyLogin: 'proxyLoginHere',
-        proxyPassword: 'proxyPasswordHere',
-        userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.132 Safari/537.36',
+        proxy: {
+          proxyType: 'http',
+          proxyAddress: '8.8.8.8',
+          proxyPort: 8080,
+          proxyLogin: 'proxyLoginHere',
+          proxyPassword: 'proxyPasswordHere',
+        },
       }),
     });
 
@@ -541,6 +548,46 @@ describe('Check unit tests for SerializeObject()', () => {
     });
   });
 
+  it(`should serialize DataDomeRequest with proxy`, () => {
+    const serialized = SerializeObject({
+      clientKey: '<your capmonster.cloud API key>',
+      task: new DataDomeRequest({
+        websiteURL: 'site.com',
+        userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        metadata: {
+          captchaUrl: 'https://geo.captcha-delivery.com/captcha/?initialCid=12434324',
+          datadomeCookie: '',
+        },
+        proxy: {
+          proxyType: 'socks4',
+          proxyAddress: 'https://proxy.com',
+          proxyPort: 6045,
+          proxyLogin: 'login',
+          proxyPassword: 'p@ssword',
+        },
+      }),
+    });
+
+    expect(serialized).toMatchObject({
+      clientKey: '<your capmonster.cloud API key>',
+      task: {
+        type: 'CustomTask',
+        class: 'DataDome',
+        websiteURL: 'site.com',
+        userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        metadata: {
+          captchaUrl: 'https://geo.captcha-delivery.com/captcha/?initialCid=12434324',
+          datadomeCookie: '',
+        },
+        proxyType: 'socks4',
+        proxyAddress: 'https://proxy.com',
+        proxyPort: 6045,
+        proxyLogin: 'login',
+        proxyPassword: 'p@ssword',
+      },
+    });
+  });
+
   it(`should serialize TenDIRequest`, () => {
     const serialized = SerializeObject({
       clientKey: '<your capmonster.cloud API key>',
@@ -563,10 +610,44 @@ describe('Check unit tests for SerializeObject()', () => {
     });
   });
 
+  it(`should serialize TenDIRequest with Proxy`, () => {
+    const serialized = SerializeObject({
+      clientKey: '<your capmonster.cloud API key>',
+      task: new TenDIRequest({
+        websiteURL: 'site.com',
+        userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        websiteKey: '6Lcg7CMUAAAAANphynKgn9YAgA4tQ2KI_iqRyTwd',
+        proxy: {
+          proxyType: 'socks4',
+          proxyAddress: 'https://proxy.com',
+          proxyPort: 6045,
+          proxyLogin: 'login',
+          proxyPassword: 'p@ssword',
+        },
+      }),
+    });
+
+    expect(serialized).toMatchObject({
+      clientKey: '<your capmonster.cloud API key>',
+      task: {
+        type: 'CustomTask',
+        class: 'TenDI',
+        websiteURL: 'site.com',
+        userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        websiteKey: '6Lcg7CMUAAAAANphynKgn9YAgA4tQ2KI_iqRyTwd',
+        proxyType: 'socks4',
+        proxyAddress: 'https://proxy.com',
+        proxyPort: 6045,
+        proxyLogin: 'login',
+        proxyPassword: 'p@ssword',
+      },
+    });
+  });
+
   it(`should serialize AmazonRequest`, () => {
     const serialized = SerializeObject({
       clientKey: '<your capmonster.cloud API key>',
-      task: new AmazonProxylessRequest({
+      task: new AmazonRequest({
         websiteURL: 'site.com',
         websiteKey: '6Lcg7CMUAAAAANphynKgn9YAgA4tQ2KI_iqRyTwd',
         challengeScript: 'https://41bcdd4fb3cb.610cd090.us-east-1.token.awswaf.com/41bcdd4fb3cb/0d21de737ccb/cd77baa6c832/challenge.js',
@@ -579,7 +660,7 @@ describe('Check unit tests for SerializeObject()', () => {
     expect(serialized).toMatchObject({
       clientKey: '<your capmonster.cloud API key>',
       task: {
-        type: 'AmazonTaskProxyless',
+        type: 'AmazonTask',
         websiteURL: 'site.com',
         websiteKey: '6Lcg7CMUAAAAANphynKgn9YAgA4tQ2KI_iqRyTwd',
         challengeScript: 'https://41bcdd4fb3cb.610cd090.us-east-1.token.awswaf.com/41bcdd4fb3cb/0d21de737ccb/cd77baa6c832/challenge.js',
