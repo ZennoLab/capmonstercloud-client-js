@@ -45,6 +45,9 @@ import { BinanceRequest } from './Requests/BinanceRequest';
 import { BinanceResponse } from './Responses/BinanceResponse';
 import { ComplexImageTaskRecognitionRequest } from './Requests/ComplexImageTaskRecognitionRequest';
 import { ComplexImageRecognitionResponse } from './Responses/ComplexImageRecognitionResponse';
+import { ProsopoRequest } from './Requests/ProsopoRequest';
+import { ProsopoResponse } from './Responses/ProsopoResponse';
+
 /**
  * Base type for capmonster.cloud Client exceptions
  */
@@ -312,6 +315,15 @@ export class CapMonsterCloudClient {
     resultTimeouts?: GetResultTimeouts,
     cancellationController?: AbortController,
   ): Promise<CaptchaResult<ComplexImageResponse>>;
+  /**
+   * Solve Prosopo task
+   * You will get response within 10 - 180 secs period depending on service workload.
+   */
+  public async Solve(
+    task: ProsopoRequest,
+    resultTimeouts?: GetResultTimeouts,
+    cancellationController?: AbortController,
+  ): Promise<CaptchaResult<ProsopoResponse>>;
   /**
    * Solve Complex Image FunCaptcha Task
    * You will get response within 10 - 180 secs period depending on service workload.

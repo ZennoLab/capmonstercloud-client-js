@@ -52,11 +52,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     websiteURL: 'https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=high',
     websiteKey: '6Lcg7CMUAAAAANphynKgn9YAgA4tQ2KI_iqRyTwd',
     proxy: {
-        proxyType: 'http',
-        proxyAddress: '8.8.8.8',
-        proxyPort: 8080,
-        proxyLogin: 'proxyLoginHere',
-        proxyPassword: 'proxyPasswordHere',
+      proxyType: 'http',
+      proxyAddress: '8.8.8.8',
+      proxyPort: 8080,
+      proxyLogin: 'proxyLoginHere',
+      proxyPassword: 'proxyPasswordHere',
     },
     userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.132 Safari/537.36',
   });
@@ -83,6 +83,7 @@ DEBUG=cmc-* node app.js
 - [HcaptchaComplexImageTaskRequest](https://zenno.link/doc-complextask-hc-en)
 - [ImageToTextRequest](https://zenno.link/doc-ImageToTextTask-en)
 - [ImpervaRequest](https://zenno.link/doc-imperva-en)
+- [ProsopoRequest](https://zenno.link/doc-prosopo-en)
 - [RecaptchaComplexImageTaskRequest](https://zenno.link/doc-complextask-rc-en)
 - [RecaptchaV2EnterpriseRequest](https://zenno.link/doc-recaptcha2e-proxy-en)
 - [RecaptchaV2Request](https://zenno.link/doc-recaptcha2-proxy-en)
