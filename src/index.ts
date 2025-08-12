@@ -22,6 +22,7 @@ import { BasiliskRequest, BasiliskRequestIn } from './Requests/BasiliskRequest';
 import { ImpervaRequest, ImpervaRequestIn } from './Requests/ImpervaRequest';
 import { BinanceRequest, BinanceRequestIn } from './Requests/BinanceRequest';
 import { ComplexImageRecognitionRequestIn, ComplexImageTaskRecognitionRequest } from './Requests/ComplexImageTaskRecognitionRequest';
+import { ProsopoRequest, ProsopoRequestIn } from './Requests/ProsopoRequest';
 
 export default {
   CapMonsterCloudClientFactory,
@@ -44,6 +45,7 @@ export default {
   ImpervaRequest,
   BinanceRequest,
   ComplexImageTaskRecognitionRequest,
+  ProsopoRequest,
 };
 
 export {
@@ -89,4 +91,6 @@ export {
   BinanceRequestIn,
   ComplexImageTaskRecognitionRequest,
   ComplexImageRecognitionRequestIn,
+  ProsopoRequest,
+  ProsopoRequestIn,
 };

@@ -13,4 +13,5 @@ export enum TaskType {
   CustomTask = 'CustomTask',
   AmazonTask = 'AmazonTask',
   BinanceTask = 'BinanceTask',
+  ProsopoTask = 'ProsopoTask',
 }
