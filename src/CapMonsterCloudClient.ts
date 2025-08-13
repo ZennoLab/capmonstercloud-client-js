@@ -47,6 +47,18 @@ import { ComplexImageTaskRecognitionRequest } from './Requests/ComplexImageTaskR
 import { ComplexImageRecognitionResponse } from './Responses/ComplexImageRecognitionResponse';
 import { ProsopoRequest } from './Requests/ProsopoRequest';
 import { ProsopoResponse } from './Responses/ProsopoResponse';
+import { TemuRequest } from './Requests/TemuRequest';
+import { TemuResponse } from './Responses/TemuResponse';
+
+type CustomTaskUnion = TemuRequest | BasiliskRequest | ImpervaRequest;
+
+type ResponseForCustomTask<T> = T extends TemuRequest
+  ? TemuResponse
+  : T extends BasiliskRequest
+  ? BasiliskResponse
+  : T extends ImpervaRequest
+  ? ImpervaResponse
+  : never;
 
 /**
  * Base type for capmonster.cloud Client exceptions
@@ -235,23 +247,14 @@ export class CapMonsterCloudClient {
     cancellationController?: AbortController,
   ): Promise<CaptchaResult<TenDIResponse>>;
   /**
-   * Solve Basilisk task
+   * Solve CustomTask task
    * You will get response within 10 - 180 secs period depending on service workload.
    */
-  public async Solve(
-    task: BasiliskRequest,
+  public async Solve<T extends CustomTaskUnion>(
+    task: T,
     resultTimeouts?: GetResultTimeouts,
     cancellationController?: AbortController,
-  ): Promise<CaptchaResult<BasiliskResponse>>;
-  /**
-   * Solve Imperva task
-   * You will get response within 10 - 180 secs period depending on service workload.
-   */
-  public async Solve(
-    task: ImpervaRequest,
-    resultTimeouts?: GetResultTimeouts,
-    cancellationController?: AbortController,
-  ): Promise<CaptchaResult<ImpervaResponse>>;
+  ): Promise<CaptchaResult<ResponseForCustomTask<T>>>;
   /**
    * Solve Binance task
    * You will get response within 10 - 180 secs period depending on service workload.
