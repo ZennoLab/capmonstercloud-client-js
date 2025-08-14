@@ -88,5 +88,6 @@ DEBUG=cmc-* node app.js
 - [RecaptchaV2EnterpriseRequest](https://zenno.link/doc-recaptcha2e-proxy-en)
 - [RecaptchaV2Request](https://zenno.link/doc-recaptcha2-proxy-en)
 - [RecaptchaV3ProxylessRequest](https://zenno.link/doc-recaptcha3-en)
+- [Temu](https://zenno.link/doc-temu-en)
 - [TenDIRequest](https://zenno.link/doc-tendi-en)
 - [TurnstileRequest](https://zenno.link/doc-turnstile-proxy-en)

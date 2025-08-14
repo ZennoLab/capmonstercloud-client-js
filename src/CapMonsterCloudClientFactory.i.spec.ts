@@ -16,6 +16,7 @@ import { ComplexImageTaskRecognitionRequest } from './Requests/ComplexImageTaskR
 import { AmazonRequest } from './Requests/AmazonRequest';
 import { HCaptchaRequest } from './Requests/HCaptchaRequest';
 import { ProsopoRequest } from './Requests/ProsopoRequest';
+import { TemuRequest } from './Requests/TemuRequest';
 
 const { version } = require('../package.json'); // eslint-disable-line @typescript-eslint/no-var-requires
 
@@ -1005,6 +1006,87 @@ describe('Check integration tests for CapMonsterCloudClientFactory()', () => {
       'solution.token',
       '0x00016c68747470733a2f2f70726f6e6f6465332e70726f736f706f2e696fc0354550516f4d5a454463354c704e376774784d4d7a5950547a4136',
     );
+
+    expect(await srv.destroy()).toBeUndefined();
+  });
+
+  it('should solve Temu Task', async () => {
+    expect.assertions(5);
+
+    const srv = await createServerMock({
+      responses: [
+        { responseBody: '{"errorId":0,"taskId":1234567}' },
+        {
+          responseBody:
+            '{"errorId":0,"status":"ready","solution":{"domains": {"www.temu.com": {"cookies": {"privacy_setting_detail":"%7B%22firstPAds"}}}, "headers": { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36" }}}',
+        },
+      ],
+    });
+
+    const cmcClient = CapMonsterCloudClientFactory.Create(
+      new ClientOptions({ clientKey: '<your capmonster.cloud API key>', serviceUrl: `http://localhost:${srv.address.port}` }),
+    );
+
+    const temuRequest = new TemuRequest({
+      websiteURL: 'https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=middle',
+      metadata: {
+        cookie: 'region=141; language=en; currency=EUR; api_uid=CnBpI2fwFW2Bo',
+      },
+    });
+
+    const task = await cmcClient.Solve(temuRequest);
+
+    expect(srv.caughtRequests[0]).toHaveProperty(
+      'body',
+      '{"clientKey":"<your capmonster.cloud API key>","task":{"type":"CustomTask","websiteURL":"https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=middle","metadata":{"cookie":"region=141; language=en; currency=EUR; api_uid=CnBpI2fwFW2Bo"},"class":"Temu"},"softId":54}',
+    );
+    expect(srv.caughtRequests[1]).toHaveProperty('body', '{"clientKey":"<your capmonster.cloud API key>","taskId":1234567}');
+    expect(task).toHaveProperty('solution');
+    expect(task).toHaveProperty('solution.domains', { 'www.temu.com': { cookies: { privacy_setting_detail: '%7B%22firstPAds' } } });
+
+    expect(await srv.destroy()).toBeUndefined();
+  });
+
+  it('should solve Temu Task with Proxy', async () => {
+    expect.assertions(5);
+
+    const srv = await createServerMock({
+      responses: [
+        { responseBody: '{"errorId":0,"taskId":1234567}' },
+        {
+          responseBody:
+            '{"errorId":0,"status":"ready","solution":{"domains": {"www.temu.com": {"cookies": {"privacy_setting_detail":"%7B%22firstPAds"}}}, "headers": { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36" }}}',
+        },
+      ],
+    });
+
+    const cmcClient = CapMonsterCloudClientFactory.Create(
+      new ClientOptions({ clientKey: '<your capmonster.cloud API key>', serviceUrl: `http://localhost:${srv.address.port}` }),
+    );
+
+    const temuRequest = new TemuRequest({
+      websiteURL: 'https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=middle',
+      metadata: {
+        cookie: 'region=141; language=en; currency=EUR; api_uid=CnBpI2fwFW2Bo',
+      },
+      proxy: {
+        proxyType: 'http',
+        proxyAddress: '8.8.8.8',
+        proxyPort: 8080,
+        proxyLogin: 'proxyLoginHere',
+        proxyPassword: 'proxyPasswordHere',
+      },
+    });
+
+    const task = await cmcClient.Solve(temuRequest);
+
+    expect(srv.caughtRequests[0]).toHaveProperty(
+      'body',
+      '{"clientKey":"<your capmonster.cloud API key>","task":{"type":"CustomTask","websiteURL":"https://lessons.zennolab.com/captchas/recaptcha/v2_simple.php?level=middle","metadata":{"cookie":"region=141; language=en; currency=EUR; api_uid=CnBpI2fwFW2Bo"},"class":"Temu","proxyType":"http","proxyAddress":"8.8.8.8","proxyPort":8080,"proxyLogin":"proxyLoginHere","proxyPassword":"proxyPasswordHere"},"softId":54}',
+    );
+    expect(srv.caughtRequests[1]).toHaveProperty('body', '{"clientKey":"<your capmonster.cloud API key>","taskId":1234567}');
+    expect(task).toHaveProperty('solution');
+    expect(task).toHaveProperty('solution.domains', { 'www.temu.com': { cookies: { privacy_setting_detail: '%7B%22firstPAds' } } });
 
     expect(await srv.destroy()).toBeUndefined();
   });
