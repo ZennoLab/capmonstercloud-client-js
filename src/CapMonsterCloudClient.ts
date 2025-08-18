@@ -49,6 +49,10 @@ import { ProsopoRequest } from './Requests/ProsopoRequest';
 import { ProsopoResponse } from './Responses/ProsopoResponse';
 import { TemuRequest } from './Requests/TemuRequest';
 import { TemuResponse } from './Responses/TemuResponse';
+import { YidunRequest } from './Requests/YidunRequest';
+import { YidunResponse } from './Responses/YidunResponse';
+import { MTCaptchaRequest } from './Requests/MTCaptchaRequest';
+import { MTCaptchaResponse } from './Responses/MTCaptchaResponse';
 
 type CustomTaskUnion = TemuRequest | BasiliskRequest | ImpervaRequest;
 
@@ -327,6 +331,27 @@ export class CapMonsterCloudClient {
     resultTimeouts?: GetResultTimeouts,
     cancellationController?: AbortController,
   ): Promise<CaptchaResult<ProsopoResponse>>;
+
+  /**
+   * Solve Yidun task
+   * You will get response within 10 - 180 secs period depending on service workload.
+   */
+  public async Solve(
+    task: YidunRequest,
+    resultTimeouts?: GetResultTimeouts,
+    cancellationController?: AbortController,
+  ): Promise<CaptchaResult<YidunResponse>>;
+
+  /**
+   * Solve MTCaptcha task
+   * You will get response within 10 - 180 secs period depending on service workload.
+   */
+  public async Solve(
+    task: MTCaptchaRequest,
+    resultTimeouts?: GetResultTimeouts,
+    cancellationController?: AbortController,
+  ): Promise<CaptchaResult<MTCaptchaResponse>>;
+
   /**
    * Solve Complex Image FunCaptcha Task
    * You will get response within 10 - 180 secs period depending on service workload.

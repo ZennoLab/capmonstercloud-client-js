@@ -83,6 +83,7 @@ DEBUG=cmc-* node app.js
 - [HcaptchaComplexImageTaskRequest](https://zenno.link/doc-complextask-hc-en)
 - [ImageToTextRequest](https://zenno.link/doc-ImageToTextTask-en)
 - [ImpervaRequest](https://zenno.link/doc-imperva-en)
+- [MTCaptcha](https://zenno.link/doc-mt-captcha-en)
 - [ProsopoRequest](https://zenno.link/doc-prosopo-en)
 - [RecaptchaComplexImageTaskRequest](https://zenno.link/doc-complextask-rc-en)
 - [RecaptchaV2EnterpriseRequest](https://zenno.link/doc-recaptcha2e-proxy-en)
@@ -91,3 +92,4 @@ DEBUG=cmc-* node app.js
 - [Temu](https://zenno.link/doc-temu-en)
 - [TenDIRequest](https://zenno.link/doc-tendi-en)
 - [TurnstileRequest](https://zenno.link/doc-turnstile-proxy-en)
+- [Yidun](https://zenno.link/doc-yidun-en)
