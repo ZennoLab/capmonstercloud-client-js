@@ -17,6 +17,7 @@ import { AmazonRequest } from './Requests/AmazonRequest';
 import { HCaptchaRequest } from './Requests/HCaptchaRequest';
 import { ProsopoRequest } from './Requests/ProsopoRequest';
 import { TemuRequest } from './Requests/TemuRequest';
+import { YidunRequest } from './Requests/YidunRequest';
 
 const { version } = require('../package.json'); // eslint-disable-line @typescript-eslint/no-var-requires
 
@@ -1087,6 +1088,44 @@ describe('Check integration tests for CapMonsterCloudClientFactory()', () => {
     expect(srv.caughtRequests[1]).toHaveProperty('body', '{"clientKey":"<your capmonster.cloud API key>","taskId":1234567}');
     expect(task).toHaveProperty('solution');
     expect(task).toHaveProperty('solution.domains', { 'www.temu.com': { cookies: { privacy_setting_detail: '%7B%22firstPAds' } } });
+
+    expect(await srv.destroy()).toBeUndefined();
+  });
+
+  it('should solve Yidun Task Proxyless', async () => {
+    expect.assertions(5);
+
+    const srv = await createServerMock({
+      responses: [
+        { responseBody: '{"errorId":0,"taskId":1234567}' },
+        {
+          responseBody:
+            '{"errorId":0,"status":"ready","solution":{"token":"0x00016c68747470733a2f2f70726f6e6f6465332e70726f736f706f2e696fc0354550516f4d5a454463354c704e376774784d4d7a5950547a4136"}}',
+        },
+      ],
+    });
+
+    const cmcClient = CapMonsterCloudClientFactory.Create(
+      new ClientOptions({ clientKey: '<your capmonster.cloud API key>', serviceUrl: `http://localhost:${srv.address.port}` }),
+    );
+
+    const yidunRequest = new YidunRequest({
+      websiteURL: 'https://id7.cloud.example.com/IframeLogin.html',
+      websiteKey: 'websiteKey',
+    });
+
+    const task = await cmcClient.Solve(yidunRequest);
+
+    expect(srv.caughtRequests[0]).toHaveProperty(
+      'body',
+      '{"clientKey":"<your capmonster.cloud API key>","task":{"type":"YidunTask","websiteURL":"https://id7.cloud.example.com/IframeLogin.html","websiteKey":"websiteKey"},"softId":54}',
+    );
+    expect(srv.caughtRequests[1]).toHaveProperty('body', '{"clientKey":"<your capmonster.cloud API key>","taskId":1234567}');
+    expect(task).toHaveProperty('solution');
+    expect(task).toHaveProperty(
+      'solution.token',
+      '0x00016c68747470733a2f2f70726f6e6f6465332e70726f736f706f2e696fc0354550516f4d5a454463354c704e376774784d4d7a5950547a4136',
+    );
 
     expect(await srv.destroy()).toBeUndefined();
   });

@@ -91,3 +91,4 @@ DEBUG=cmc-* node app.js
 - [Temu](https://zenno.link/doc-temu-en)
 - [TenDIRequest](https://zenno.link/doc-tendi-en)
 - [TurnstileRequest](https://zenno.link/doc-turnstile-proxy-en)
+- [Yidun](https://zenno.link/doc-yidun-en)

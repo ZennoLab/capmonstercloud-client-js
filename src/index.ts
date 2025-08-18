@@ -24,6 +24,7 @@ import { BinanceRequest, BinanceRequestIn } from './Requests/BinanceRequest';
 import { ComplexImageRecognitionRequestIn, ComplexImageTaskRecognitionRequest } from './Requests/ComplexImageTaskRecognitionRequest';
 import { ProsopoRequest, ProsopoRequestIn } from './Requests/ProsopoRequest';
 import { TemuRequest, TemuRequestIn } from './Requests/TemuRequest';
+import { YidunRequest, YidunRequestIn } from './Requests/YidunRequest';
 
 export default {
   CapMonsterCloudClientFactory,
@@ -48,6 +49,7 @@ export default {
   ComplexImageTaskRecognitionRequest,
   ProsopoRequest,
   TemuRequest,
+  YidunRequest,
 };
 
 export {
@@ -97,4 +99,6 @@ export {
   ProsopoRequestIn,
   TemuRequest,
   TemuRequestIn,
+  YidunRequest,
+  YidunRequestIn,
 };
