@@ -103,6 +103,13 @@ export const YidunTaskTimeouts = {
   timeout: 1000 * 80,
 } as GetResultTimeouts;
 
+export const MTCaptchaTaskTimeouts = {
+  firstRequestDelay: 1000 * 1,
+  firstRequestNoCacheDelay: 1000 * 10,
+  requestsInterval: 1000 * 1,
+  timeout: 1000 * 80,
+} as GetResultTimeouts;
+
 export function detectResultTimeouts(task: Task): GetResultTimeouts {
   switch (task.type) {
     case TaskType.FunCaptchaTask:
@@ -135,6 +142,8 @@ export function detectResultTimeouts(task: Task): GetResultTimeouts {
       return ProsopoTaskTimeouts;
     case TaskType.YidunTask:
       return YidunTaskTimeouts;
+    case TaskType.MTCaptchaTask:
+      return MTCaptchaTaskTimeouts;
     default:
       throw new Error(`Could not detect result timeouts for provided task type = ${task.type}`);
   }

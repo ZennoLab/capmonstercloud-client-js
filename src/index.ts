@@ -25,6 +25,7 @@ import { ComplexImageRecognitionRequestIn, ComplexImageTaskRecognitionRequest } 
 import { ProsopoRequest, ProsopoRequestIn } from './Requests/ProsopoRequest';
 import { TemuRequest, TemuRequestIn } from './Requests/TemuRequest';
 import { YidunRequest, YidunRequestIn } from './Requests/YidunRequest';
+import { MTCaptchaRequest, MTCaptchaRequestIn } from './Requests/MTCaptchaRequest';
 
 export default {
   CapMonsterCloudClientFactory,
@@ -50,6 +51,7 @@ export default {
   ProsopoRequest,
   TemuRequest,
   YidunRequest,
+  MTCaptchaRequest,
 };
 
 export {
@@ -101,4 +103,6 @@ export {
   TemuRequestIn,
   YidunRequest,
   YidunRequestIn,
+  MTCaptchaRequest,
+  MTCaptchaRequestIn,
 };

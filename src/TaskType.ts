@@ -15,4 +15,5 @@ export enum TaskType {
   BinanceTask = 'BinanceTask',
   ProsopoTask = 'ProsopoTask',
   YidunTask = 'YidunTask',
+  MTCaptchaTask = 'MTCaptchaTask',
 }
