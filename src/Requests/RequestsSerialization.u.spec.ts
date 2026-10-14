@@ -181,6 +181,8 @@ describe('Check unit tests for SerializeObject()', () => {
           proxyType: 'http',
           proxyAddress: '8.8.8.8',
           proxyPort: 8080,
+          proxyLogin: 'login',
+          proxyPassword: 'password',
         },
       }),
     });
@@ -194,6 +196,8 @@ describe('Check unit tests for SerializeObject()', () => {
         proxyType: 'http',
         proxyAddress: '8.8.8.8',
         proxyPort: 8080,
+        proxyLogin: 'login',
+        proxyPassword: 'password',
       },
     });
   });

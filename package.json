@@ -1,6 +1,6 @@
 {
   "name": "@zennolab_com/capmonstercloud-client",
-  "version": "2.9.1",
+  "version": "3.0.0",
   "description": "Official JS client library for https://capmonster.cloud/ captcha recognition service",
   "main": "dist/index.js",
   "module": "dist/esm/index.js",
