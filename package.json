@@ -1,6 +1,6 @@
 {
   "name": "@zennolab_com/capmonstercloud-client",
-  "version": "2.9.1",
+  "version": "2.9.2",
   "description": "Official JS client library for https://capmonster.cloud/ captcha recognition service",
   "main": "dist/index.js",
   "module": "dist/esm/index.js",
@@ -37,7 +37,10 @@
     "test-integr": "jest -c jest.config.integration.js",
     "self-verify": "node tools/self-verify/run.js",
     "lint": "eslint . --ext .ts,.js",
-    "lint:fix": "eslint . --ext .ts,.js --fix"
+    "lint:fix": "eslint . --ext .ts,.js --fix",
+    "test-types": "tsc --noEmit --strict --skipLibCheck --target ES2020 --module NodeNext --moduleResolution NodeNext tools/self-verify/type-contracts.mts",
+    "test-readme": "node tools/self-verify/run-readme-examples.js",
+    "test-modules": "node tools/self-verify/run-module-matrix.js"
   },
   "author": "",
   "license": "ISC",

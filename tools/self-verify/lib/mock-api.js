@@ -1,3 +1,4 @@
+/* eslint @typescript-eslint/no-var-requires: 0 */
 const http = require('http');
 
 const DEFAULTS = {
@@ -8,6 +9,7 @@ const DEFAULTS = {
 
 function createMockApi(responses) {
   const caughtRequests = [];
+  let taskType;
   const queue = Array.isArray(responses) ? responses.slice() : [];
 
   const server = http.createServer((req, res) => {
@@ -18,8 +20,19 @@ function createMockApi(responses) {
       const route = (req.url || '').split('?')[0];
       caughtRequests.push({ method: req.method, url: req.url, body, userAgent: req.headers['user-agent'] });
 
+      if (route === '/createTask') {
+        try {
+          taskType = JSON.parse(body).task.type;
+        } catch {
+          /* malformed test request */
+        }
+      }
       const queued = queue.length ? queue.shift() : null;
-      const responseBody = (queued && queued.responseBody) || DEFAULTS[route] || '{"errorId":0}';
+      const defaultBody =
+        route === '/getTaskResult' && /Turnstile/.test(taskType || '')
+          ? '{"errorId":0,"status":"ready","solution":{"token":"mock-token"}}'
+          : DEFAULTS[route];
+      const responseBody = (queued && queued.responseBody) || defaultBody || '{"errorId":0}';
       const statusCode = (queued && queued.statusCode) || 200;
       const contentType = (queued && queued.contentType) || 'application/json';
 
@@ -38,6 +51,8 @@ function createMockApi(responses) {
         async close() {
           await new Promise((closeResolve, closeReject) => {
             server.close((err) => (err ? closeReject(err) : closeResolve()));
+            // SDK uses keep-alive agents; idle test sockets must not delay teardown.
+            if (server.closeIdleConnections) server.closeIdleConnections();
           });
         },
       });

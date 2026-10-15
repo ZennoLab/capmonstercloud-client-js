@@ -16,7 +16,10 @@ export type AmazonTokenResponse = {
 };
 
 export type AmazonWafResponse = {
-  'aws-waf-token': string;
+  cookies: {
+    'aws-waf-token': string;
+  };
+  userAgent?: string;
 };
 
 export type AmazonResponse = AmazonTokenResponse | AmazonWafResponse;

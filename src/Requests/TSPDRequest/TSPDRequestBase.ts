@@ -20,7 +20,7 @@ export type TSPDRequestBaseIn = {
    * Browser User-Agent.
    * Provide only the current Windows UA.
    */
-  userAgent: string;
+  userAgent?: string;
   /**
    * Additional metadata required to solve TSPD.
    */
@@ -40,7 +40,7 @@ export abstract class TSPDRequestBase extends CaptchaRequestBase {
   /**
    * Browser User-Agent.
    */
-  public userAgent!: string;
+  public userAgent?: string;
 
   /**
    * Additional data about the captcha challenge (tspdCookie, htmlPageBase64).

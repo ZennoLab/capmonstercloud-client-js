@@ -1,8 +1,9 @@
 import { CaptchaRequestBase, CaptchaRequestBaseIn } from '../CaptchaRequestBase';
 
 export type AlibabaMetadata = {
-  sceneId: string;
-  prefix: string;
+  /** Standard flow uses sceneId/prefix; punish flow uses punishUrl instead. */
+  sceneId?: string;
+  prefix?: string;
   userId?: string;
   userUserId?: string;
   verifyType?: string;

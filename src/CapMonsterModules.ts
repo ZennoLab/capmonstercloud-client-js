@@ -4,6 +4,7 @@
  */
 export enum CapMonsterModules {
   Amazon = 'amazon',
+  Apple = 'apple',
   BotDetect = 'botdetect',
   Facebook = 'facebook',
   Gmx = 'gmx',
@@ -12,7 +13,11 @@ export enum CapMonsterModules {
   MailRu = 'mailru',
   Ok = 'ok',
   OkNew = 'oknew',
+  OkEng = 'okeng',
+  OkRus = 'okrus',
+  PartiallyBlur = 'partiallyblur',
   RamblerRus = 'ramblerrus',
+  RamblerRusNew = 'ramblerrusnew',
   SolveMedia = 'solvemedia',
   Steam = 'steam',
   Vk = 'vk',
@@ -22,6 +27,12 @@ export enum CapMonsterModules {
    */
   YandexNew = 'yandexnew',
   YandexWave = 'yandexwave',
+  YandexWaveLatin = 'yandexwavelatin',
+  Whatsapp = 'whatsapp',
+  WikimediaPaddleEnsemble = 'wikimedia_paddle_ensemble',
+  CaptchaMath = 'captcha_math',
+  Sat = 'sat',
+  BlsText = 'bls_text',
   /**
    * All other text captcha types
    */

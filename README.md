@@ -254,3 +254,12 @@ DEBUG=cmc-* node app.js
 ## 📄 License
 
 [MIT](./LICENSE) © [ZennoLab](https://zennolab.com/) / [CapMonster Cloud](https://capmonster.cloud/en/?utm_source=github&utm_medium=referral&utm_campaign=nodejs_repo_readme)
+
+## Maintainer verification before QA
+
+Run `npm run self-verify` to build and check README examples, CommonJS/ESM,
+public type contracts and SDK requests against a local mock API. Read
+[the self-verification guide](tools/self-verify/README.md) for configuration,
+the AI-agent review prompt, coverage limits and report interpretation.
+The generated report is evidence for the agent's documentation review;
+a passing mock run alone does not establish QA readiness.

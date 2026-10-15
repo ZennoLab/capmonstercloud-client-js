@@ -1,6 +1,9 @@
+/* eslint @typescript-eslint/no-var-requires: 0 */
 const path = require('path');
 const { pathToFileURL } = require('url');
 const { createMockApi } = require('./lib/mock-api');
+const { runResponseMatrix } = require('./run-response-matrix');
+const { runErrorMatrix } = require('./run-error-matrix');
 const { buildRequestFixtures } = require('./request-fixtures');
 
 const ROOT = path.resolve(__dirname, '../..');
@@ -23,14 +26,21 @@ function collectNamedExports(sdk) {
 
 async function loadSdk(kind) {
   if (kind === 'cjs') {
-    return require(CJS_ENTRY);
+    return require('@zennolab_com/capmonstercloud-client');
   }
-  return import(pathToFileURL(ESM_ENTRY).href);
+  return import('@zennolab_com/capmonstercloud-client');
 }
 
 async function runConstructAndSerialize(sdk) {
   const checks = [];
   const fixtures = buildRequestFixtures(sdk);
+  const exportedRequests = Object.keys(sdk).filter(
+    (name) => /Request$/.test(name) && !/Base$/.test(name) && typeof sdk[name] === 'function',
+  );
+  for (const name of exportedRequests) {
+    if (!fixtures.some((f) => f.name === name) && name !== 'CommonCaptchaRequest')
+      checks.push({ name: `coverage:${name}`, status: 'fail', kind: 'analysis', error: 'Exported request has no fixture' });
+  }
 
   for (const fixture of fixtures) {
     const started = Date.now();
@@ -45,6 +55,27 @@ async function runConstructAndSerialize(sdk) {
           const value = extraPath.split('.').reduce((acc, key) => (acc == null ? acc : acc[key]), task);
           assert(value !== undefined && value !== null && value !== '', `${fixture.name}: missing ${extraPath}`);
         }
+      }
+      // Exercise the real serializer and transport, not only constructor properties.
+      const mock = await createMockApi();
+      try {
+        const client = sdk.CapMonsterCloudClientFactory.Create(new sdk.ClientOptions({ clientKey: 'test-key', serviceUrl: mock.url }));
+        const result = await client.Solve(task, FAST_TIMEOUTS);
+        const sent = JSON.parse(mock.caughtRequests[0].body);
+        assert(mock.caughtRequests[0].method === 'POST', 'Expected POST');
+        assert(mock.caughtRequests[0].url === '/createTask', 'Expected createTask route');
+        assert(sent.clientKey === 'test-key', 'Missing clientKey');
+        assert(JSON.stringify(sent.task) === JSON.stringify(task), 'Wire payload differs from task');
+        assert(JSON.parse(mock.caughtRequests[1].body).taskId === 1, 'Wrong polling taskId');
+        assert((result.solution.gRecaptchaResponse || result.solution.token) === 'mock-token', 'Response was not preserved');
+        if (fixture.name === 'HuntRequest')
+          assert(sent.task.metadata.widgetUrl === 'https://captcha.example.com/widget?hash=widget-hash', 'widgetUrl not sent');
+        if (fixture.name === 'AlibabaRequest') {
+          assert(sent.task.metadata.cookieRequired === true, 'cookieRequired not sent');
+          assert(sent.task.metadata.punishUrl.includes('/punish?'), 'punishUrl not sent');
+        }
+      } finally {
+        await mock.close();
       }
       checks.push({
         name: `construct:${fixture.name}`,
@@ -61,7 +92,9 @@ async function runConstructAndSerialize(sdk) {
         docs: fixture.docs,
         durationMs: Date.now() - started,
         error: err instanceof Error ? err.message : String(err),
-        reproduction: `Create ${fixture.name} via ${fixture.name === 'CommonCaptcha' ? 'new CommonCaptcha({ task })' : `new ${fixture.name}({...})`} and inspect task.type / metadata.`,
+        reproduction: `Create ${fixture.name} via ${
+          fixture.name === 'CommonCaptcha' ? 'new CommonCaptcha({ task })' : `new ${fixture.name}({...})`
+        } and inspect task.type / metadata.`,
       });
     }
   }
@@ -213,6 +246,8 @@ async function runKind(kind) {
 
     checks.push(...(await runConstructAndSerialize(sdk)));
     checks.push(...(await runClientFlows(sdk, kind)));
+    checks.push(...(await runErrorMatrix(sdk, kind)));
+    checks.push(...(await runResponseMatrix(sdk, kind)));
 
     return {
       module: kind,
@@ -254,7 +289,7 @@ async function runModuleMatrix() {
       : undefined;
 
   return {
-    status: cjs.status === 'pass' && esm.status === 'pass' ? 'pass' : 'fail',
+    status: cjs.status === 'pass' && esm.status === 'pass' && !exportDiff.onlyCjs.length && !exportDiff.onlyEsm.length ? 'pass' : 'fail',
     cjs,
     esm,
     exportDiff,

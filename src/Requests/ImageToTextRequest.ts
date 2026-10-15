@@ -1,10 +1,9 @@
-import { CapMonsterModules } from '../CapMonsterModules';
 import { CaptchaRequestBase, CaptchaRequestBaseIn } from './CaptchaRequestBase';
 import { TaskType } from '../TaskType';
 
 type ImageToTextRequestBaseIn = {
   body: string;
-  CapMonsterModule?: CapMonsterModules;
+  CapMonsterModule?: string;
   recognizingThreshold?: number;
   Case?: boolean;
   numeric?: 1 | 0;
@@ -24,9 +23,9 @@ export class ImageToTextRequest extends CaptchaRequestBase {
   public body!: string;
 
   /**
-   * Name of recognizing module. Supported module names are
+   * Name of a built-in or custom recognition module. See CapMonsterModules for built-in names.
    */
-  public CapMonsterModule?: CapMonsterModules;
+  public CapMonsterModule?: string;
 
   /**
    * Captcha recognition threshold with a possible value from 0 to 100.
