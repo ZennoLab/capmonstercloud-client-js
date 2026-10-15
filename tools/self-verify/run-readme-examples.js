@@ -1,14 +1,12 @@
+/* eslint @typescript-eslint/no-var-requires: 0 */
 const fs = require('fs');
 const path = require('path');
 const { spawn } = require('child_process');
-const { pathToFileURL } = require('url');
 const { createMockApi } = require('./lib/mock-api');
 
 const ROOT = path.resolve(__dirname, '../..');
 const README = path.join(ROOT, 'README.md');
 const TMP = path.join(__dirname, 'tmp', 'readme-examples');
-const CJS_ENTRY = path.join(ROOT, 'dist', 'index.js');
-const ESM_ENTRY = path.join(ROOT, 'dist', 'esm', 'index.js');
 
 function extractExamples(markdown) {
   const examples = [];
@@ -34,24 +32,15 @@ function extractExamples(markdown) {
 }
 
 function rewriteExample(code, { moduleKind, serviceUrl, live }) {
-  let next = code.replace(
-    /from '@zennolab_com\/capmonstercloud-client'/g,
-    `from '${pathToFileURL(ESM_ENTRY).href}'`,
-  );
-  next = next.replace(
-    /require\('@zennolab_com\/capmonstercloud-client'\)/g,
-    `require(${JSON.stringify(CJS_ENTRY)})`,
-  );
+  let next = code;
 
   if (!live && serviceUrl) {
     next = next.replace(
       /new ClientOptions\(\{\s*clientKey:\s*'YOUR_API_KEY'\s*,?\s*\}\)/g,
-      `new ClientOptions({ clientKey: process.env.CMC_CLIENT_KEY || 'test-key', serviceUrl: ${JSON.stringify(
-        serviceUrl,
-      )} })`,
+      `new ClientOptions({ clientKey: process.env.CMC_CLIENT_KEY || 'test-key', serviceUrl: ${JSON.stringify(serviceUrl)} })`,
     );
   } else {
-    next = next.replace(/'YOUR_API_KEY'/g, "process.env.CMC_CLIENT_KEY || process.env.CAPMONSTER_API_KEY");
+    next = next.replace(/'YOUR_API_KEY'/g, 'process.env.CMC_CLIENT_KEY || process.env.CAPMONSTER_API_KEY');
   }
 
   if (moduleKind === 'esm' && !/\bawait\b/.test(next)) {
@@ -75,7 +64,13 @@ function runNode(filePath, env) {
     child.stderr.on('data', (chunk) => {
       stderr += chunk.toString();
     });
+    const timer = setTimeout(() => child.kill(), 60000);
+    child.on('error', (err) => {
+      clearTimeout(timer);
+      resolve({ code: -1, stdout, stderr: String(err) });
+    });
     child.on('close', (code) => {
+      clearTimeout(timer);
       resolve({ code, stdout, stderr });
     });
   });
@@ -100,7 +95,37 @@ async function runReadmeExamples(options = {}) {
         serviceUrl: mock && mock.url,
         live,
       });
-      fs.writeFileSync(filePath, rewritten);
+      let compile = { diagnostics: [] };
+      if (['ts', 'typescript'].includes(example.language)) {
+        const ts = require('typescript');
+        const sourcePath = filePath.replace(/\.mjs$/, '.mts');
+        fs.writeFileSync(sourcePath, rewritten);
+        const program = ts.createProgram([sourcePath], {
+          target: ts.ScriptTarget.ES2020,
+          module: ts.ModuleKind.NodeNext,
+          moduleResolution: ts.ModuleResolutionKind.NodeNext,
+          strict: true,
+          skipLibCheck: true,
+          noEmit: true,
+        });
+        compile.diagnostics = ts.getPreEmitDiagnostics(program).map((d) => ts.flattenDiagnosticMessageText(d.messageText, '\n'));
+        if (compile.diagnostics.length) {
+          checks.push({
+            name: example.id,
+            kind: 'executed',
+            status: 'fail',
+            error: compile.diagnostics.join('\n'),
+            reproduction: `Inspect ${sourcePath}`,
+          });
+          continue;
+        }
+        fs.writeFileSync(
+          filePath,
+          ts.transpileModule(rewritten, { compilerOptions: { target: ts.ScriptTarget.ES2020, module: ts.ModuleKind.ES2020 } }).outputText,
+        );
+      } else {
+        fs.writeFileSync(filePath, rewritten);
+      }
 
       const callsSolve = /\.Solve\s*\(/.test(example.code);
       if (live && callsSolve && !liveSolve) {
@@ -108,8 +133,7 @@ async function runReadmeExamples(options = {}) {
           name: example.id,
           status: 'skip',
           kind: 'skipped',
-          reason:
-            'Live Solve() is disabled by default to avoid spending API balance. Re-run with --live-solve to execute.',
+          reason: 'Live Solve() is disabled by default to avoid spending API balance. Re-run with --live-solve to execute.',
           module: example.module,
           language: example.language,
         });
@@ -136,7 +160,8 @@ async function runReadmeExamples(options = {}) {
       const stdoutMatch = result.stdout.toLowerCase();
       const looksSuccessful =
         result.code === 0 &&
-        (callsSolve ? stdoutMatch.includes('token') || stdoutMatch.includes('solution') || stdoutMatch.includes('{') : true);
+        !result.stderr.trim() &&
+        (callsSolve ? (live ? stdoutMatch.includes('token') : stdoutMatch.includes('mock-token')) : stdoutMatch.includes('balance'));
 
       checks.push({
         name: example.id,

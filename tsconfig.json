@@ -96,6 +96,7 @@
   "exclude": [
     "node_modules",
     "tests",
+    "tools",
     "dist",
     "src/**/*.spec.ts"
   ]

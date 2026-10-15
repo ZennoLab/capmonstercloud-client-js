@@ -14,4 +14,7 @@ export type RecaptchaResponseBase = {
    * <![CDATA[3AHJ_VuvYIBNBW5yyv0zRYJ75VkOKvhKj9_xGBJKnQimF72rfoq3Iy-DyGHMwLAo6a3]]>
    */
   gRecaptchaResponse: string;
+  /** Use this User-Agent when submitting the solution, if returned by the API. */
+  userAgent?: string;
+  cookies?: Record<string, string>;
 };

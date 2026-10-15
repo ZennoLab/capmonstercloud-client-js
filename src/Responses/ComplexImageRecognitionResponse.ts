@@ -1,8 +1,10 @@
-type RotateAnswer = Array<number>;
-type DoubleAnswer = Array<number>;
-type BetpunchAnswer = Array<number>;
-type BlsAnswer = Array<boolean>;
+/** Click coordinates, in the order required by the task. */
+export type CoordinateAnswer = { X: number; Y: number };
 
+/** Results for numeric, grid, text, audio and coordinate recognition modules. */
 export type ComplexImageRecognitionResponse = {
-  answer: RotateAnswer | DoubleAnswer | BetpunchAnswer | BlsAnswer;
+  answer: Array<number> | Array<boolean> | Array<CoordinateAnswer> | string;
+  metadata?: {
+    AnswerType: 'NumericArray' | 'Grid' | 'Text' | 'Coordinate';
+  };
 };

@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* eslint @typescript-eslint/no-var-requires: 0 */
 const fs = require('fs');
 const path = require('path');
 const { spawn } = require('child_process');
@@ -32,7 +33,13 @@ function runCommand(command, args) {
     child.stderr.on('data', (chunk) => {
       stderr += chunk.toString();
     });
+    const timer = setTimeout(() => child.kill(), 180000);
+    child.on('error', (err) => {
+      clearTimeout(timer);
+      resolve({ code: -1, stdout, stderr: String(err) });
+    });
     child.on('close', (code) => {
+      clearTimeout(timer);
       resolve({ code, stdout, stderr });
     });
   });
@@ -66,7 +73,8 @@ function renderMarkdown(report) {
     '',
     '## Summary',
     '',
-    `- Overall: **${report.status}**`,
+    `- Mechanical checks: **${report.status}**`,
+    `- QA readiness: **${report.qaReadiness}**`,
     `- Build: ${report.build.status}`,
     `- README examples: ${report.readme.status}`,
     `- CommonJS/ESM matrix: ${report.modules.status}`,
@@ -88,18 +96,22 @@ function renderMarkdown(report) {
       }
     }
   };
-  collect([report.build, report.readme, report.modules.cjs, report.modules.esm, report.tests.unit, report.tests.integration]);
-  collect(report.readme.checks);
+  collect([report.types, report.build, report.readme, report.modules.cjs, report.modules.esm, report.tests.unit, report.tests.integration]);
 
   for (const check of executed) {
     lines.push(`- ${check.status === 'pass' ? 'PASS' : 'FAIL'} \`${check.name}\`${check.error ? ` — ${check.error}` : ''}`);
+    if (check.docs) lines.push(`  - Requirement: ${check.docs}`);
+    if (check.error) lines.push(`  - Detail: ${String(check.error).replace(/\n/g, ' ')}`);
     if (check.reproduction && check.status === 'fail') {
       lines.push(`  - Reproduce: \`${check.reproduction}\``);
     }
   }
 
   lines.push('', '## Skipped / unverified', '');
-  const skipped = (report.readme.checks || []).filter((check) => check.status === 'skip' || check.kind === 'skipped');
+  const skipped = [report.build, report.tests.unit, report.tests.integration, ...(report.readme.checks || [])].filter(
+    (check) => check.status === 'skip' || check.kind === 'skipped',
+  );
+  for (const limitation of report.limitations) lines.push(`- ${limitation}`);
   if (skipped.length === 0) {
     lines.push('- None from the mechanical runner.');
   } else {
@@ -143,6 +155,10 @@ async function main() {
 
   if (!args.skipBuild) {
     report.build = await runNpmScript('build');
+    if (report.build.status === 'pass') {
+      report.types = await runNpmScript('test-types');
+      if (report.types.status === 'fail') report.build.status = 'fail';
+    }
   } else {
     report.build = { name: 'npm run build', status: 'skip', kind: 'skipped', reason: '--skip-build' };
   }
@@ -152,7 +168,11 @@ async function main() {
     report.readme = { status: 'skip', kind: 'skipped', reason: 'build failed', checks: [] };
     report.modules = { status: 'skip', kind: 'skipped', reason: 'build failed' };
   } else {
-    report.readme = await runReadmeExamples({ live: args.live, liveSolve: args.liveSolve });
+    try {
+      report.readme = await runReadmeExamples({ live: args.live, liveSolve: args.liveSolve });
+    } catch (err) {
+      report.readme = { status: 'fail', checks: [{ name: 'README runner', kind: 'executed', status: 'fail', error: String(err) }] };
+    }
     report.modules = await runModuleMatrix();
   }
 
@@ -164,17 +184,31 @@ async function main() {
     report.tests.integration = await runNpmScript('test-integr');
   }
 
-  const failed = [
-    report.build,
-    report.readme,
-    report.modules,
-    report.tests.unit,
-    report.tests.integration,
-  ].some((section) => section && section.status === 'fail');
+  if (report.build.status === 'fail') {
+    report.tests.unit = { name: 'npm run test-unit', status: 'skip', kind: 'skipped', reason: 'build or types failed' };
+    report.tests.integration = { name: 'npm run test-integr', status: 'skip', kind: 'skipped', reason: 'build or types failed' };
+  }
+  const failed = [report.build, report.readme, report.modules, report.tests.unit, report.tests.integration].some(
+    (section) => section && section.status === 'fail',
+  );
   report.status = failed ? 'fail' : 'pass';
 
+  report.qaReadiness = 'incomplete';
+  report.runtime = { node: process.version, platform: process.platform };
+  report.limitations = [
+    'Local mocks verify transport and response forwarding; they do not verify real captcha solving or correctness of service responses.',
+    'Required/optional field combinations, proxy modes, cancellation and all response schemas are not exhaustively covered.',
+    'Live API documentation parity for all task families requires the agent workflow; an unchecked catalog is not evidence of parity.',
+    'Jira notification and attachment require an issue URL and a connected Jira account.',
+  ];
+  report.documentation = {
+    kind: 'analysis',
+    status: 'unverified',
+    catalog: 'tools/self-verify/docs-catalog.json',
+    workflow: '.cursor/skills/sdk-self-verify/SKILL.md',
+  };
   fs.writeFileSync(args.out, `${JSON.stringify(report, null, 2)}\n`);
-  const markdownPath = args.out.replace(/\.json$/i, '.md');
+  const markdownPath = /\.json$/i.test(args.out) ? args.out.replace(/\.json$/i, '.md') : `${args.out}.md`;
   fs.writeFileSync(markdownPath, renderMarkdown(report));
 
   console.log(`Wrote ${args.out}`);
